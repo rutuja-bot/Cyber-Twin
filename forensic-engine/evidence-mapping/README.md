@@ -1,85 +1,101 @@
 # Forensic Engine — Evidence Mapping
 
 ## Overview
-Evidence Mapping is the logical module within the forensic engine that connects processed digital evidence to the entities and events involved in the reconstructed cyber incident.
+Evidence Mapping is the logical module within the forensic engine responsible for establishing relationships between raw/processed evidence, extracted events, and incident entities during forward pipeline processing.
 
-It establishes and preserves the relational foundation that links raw forensic artifacts and security logs to high-level incident events, affected assets, and attack trajectories.
+It systematically structures incoming digital evidence into discrete events and maps those events to the specific actors, endpoints, and assets involved in the cyber incident.
 
 ---
 
 ## Architectural Role in Cyber Twin Pipeline
 
-Evidence Mapping bridges normalized evidence artifacts and multi-entity correlation:
+Evidence Mapping operates directly after timestamp normalization and before multi-entity event correlation:
 
 ```text
 Digital Evidence / Security Logs
-               ↓
- Evidence Collection / Ingestion
-               ↓
+              ↓
+          Ingestion
+              ↓
+           Parsing
+              ↓
+        Normalization
+              ↓
       Evidence Processing
-               ↓
-            Parsing
-               ↓
-    Timestamp Normalization
-               ↓
+              ↓
        Evidence Mapping
-               ↓
+              ↓
        Event Correlation
-               ↓
+              ↓
     Incident Reconstruction
+              ↓
+         Cyber Twin Data
+              ↓
+      Evidence Linking
+              ↓
+  Investigation Presentation
+       ┌──────┼──────┬──────┐
+       ↓      ↓      ↓      ↓
+     Graph Timeline Replay 3D
+       └──────┼──────┴──────┘
+              ↓
+       Forensic Findings
+              ↓
+       Forensic Report
 ```
 
-> **Note**: Evidence Mapping is a logical component of the forensic engine, not an independent microservice or standalone database.
+> **Note**: Evidence Mapping is a core module of the forensic engine pipeline. It is not an independent microservice, separate database, or secondary processing engine.
 
 ---
 
-## Relational Hierarchy & Mapping Model
+## Core Responsibility & Forward Pipeline Flow
 
-Evidence Mapping structures evidence chains through the following hierarchy:
+Evidence Mapping answers the fundamental processing question:
 
+$$\textbf{"Which evidence produced or supports which event, and which entities are involved?"}$$
+
+### Directionality Flow
 ```text
-Evidence (Logs, PCAP, File Artifacts)
-   ↓
-Event (Auth, File Access, Network Connection, Process Execution)
-   ↓
-Entities (User, Device, IP Address, File, Server)
-   ↓
-Related Events
-   ↓
-Incident Reconstruction (Cyber Twin)
+Evidence  ───►  Event  ───►  Entity  ───►  Relationship
 ```
 
-### Key Relationships Supported
-- **Authentication**: A login event is explicitly mapped to the specific authentication log evidence that produced it.
-- **File System Activity**: A file-access or modification event is mapped back to its source audit log / file system record.
-- **Network Traffic**: Suspicious network connections, beacons, and data exfiltration events are linked to source packet captures or firewall/flow logs.
-- **Multi-Source Support**: Multiple distinct evidence items can converge to corroborate related events.
-- **Entity Association**: Each event connects to involved users, endpoints, IP addresses, files, and server infrastructure.
-- **Traceable Reconstruction**: Investigators can trace any reconstructed incident event directly back to its supporting digital evidence.
+### Mapping Structure & Example
+```text
+Evidence E001 (Windows Security Log 4624)
+    ↓
+Event EVT001 (Successful Remote Interactive Logon)
+    ↓
+Entities:
+  - User: U001 (admin_service)
+  - Device: D001 (WKSTN-FIN-04)
+  - IP: IP001 (192.168.10.45)
+    ↓
+Relationship:
+  - R001: (U001) AUTHENTICATED_TO (D001) via (IP001)
+```
 
 ---
 
-## Traceability & Stable Identifiers
+## Stable Identifiers & Provenance Schema
 
-To ensure non-repudiation, auditability, and chain of custody, Evidence Mapping mandates stable identifiers across the pipeline:
+To ensure deterministic mapping and cross-module consistency, Evidence Mapping establishes and propagates stable identifiers:
 
-| Identifier | Purpose |
-| :--- | :--- |
-| `case_id` | Identifies the overall forensic investigation case. |
-| `evidence_id` | Uniquely identifies a collected raw/processed digital evidence item. |
-| `event_id` | Identifies a normalized, discrete cyber event extracted from evidence. |
-| `entity_id` | Identifies an actor or system artifact (User, Device, IP, File, Server). |
-| `relationship_id` | Defines a directed link between entities, events, and evidence. |
+| Identifier | Description | Example |
+| :--- | :--- | :--- |
+| `case_id` | Top-level investigation identifier. | `CASE-2026-001` |
+| `evidence_id` | Unique ID for the raw/processed evidence artifact. | `EVD-LOG-0042` |
+| `event_id` | Identifier for the normalized, discrete cyber event. | `EVT-AUTH-108` |
+| `entity_id` | Identifier for a mapped incident entity (User, Device, IP, File, Server). | `ENT-DEV-019` |
+| `relationship_id` | Identifier for a directed relationship between entities and events. | `REL-MAP-501` |
 
 ---
 
-## Investigation Workflow Alignment
+## Distinction: Evidence Mapping vs. Evidence Linking
 
-The purpose of Evidence Mapping extends beyond metadata storage; it establishes the evidence-linked graph required for:
+| Attribute | Evidence Mapping (`evidence-mapping/`) | Evidence Linking (`evidence-linking/`) |
+| :--- | :--- | :--- |
+| **Pipeline Stage** | Pre-correlation (forward processing) | Post-reconstruction (presentation & reporting) |
+| **Direction** | $\text{Evidence} \rightarrow \text{Events} \rightarrow \text{Entities} \rightarrow \text{Relationships}$ | $\text{Investigation Output} \rightarrow \text{Supporting Evidence}$ |
+| **Primary Question** | *"Which evidence produced this event, and what entities are involved?"* | *"What evidence proves and justifies this investigation result?"* |
+| **Primary Consumers** | Correlation Engine, Incident Reconstruction | Relationship Graph, Timeline, Replay, Forensic Report |
 
-$$\text{RECONSTRUCT} \longrightarrow \text{EXPLORE} \longrightarrow \text{REPLAY} \longrightarrow \text{VERIFY}$$
-
-- **Reconstruct**: Assemble disparate logs into a unified, coherent incident narrative.
-- **Explore**: Enable investigators to navigate relationships and attack paths across the Cyber Twin graph.
-- **Replay**: Step through the incident chronologically while maintaining context.
-- **Verify**: Audit every visual finding and assertion against immutable supporting evidence.
+Evidence Mapping constructs the data relationships during log ingestion, whereas Evidence Linking validates and explains conclusions to the forensic investigator.

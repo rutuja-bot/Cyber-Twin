@@ -1,79 +1,95 @@
-# 3D Reconstruction — Supporting Visualization Layer
+# 3D Reconstruction — Cyber Environment Visualization
 
 ## Overview
-This directory houses 3D modeling assets, scene templates, and export utilities for Cyber Twin.
+This directory houses 3D modeling assets, scene configurations, and export pipelines for the Cyber Twin 3D visualization view.
 
-> **CRITICAL ARCHITECTURAL PRINCIPLE**:  
-> The 3D component is an **OPTIONAL / SUPPORTING VISUALIZATION LAYER** of the Cyber Twin.  
-> It is **NOT** the core investigation engine and **NOT** the primary reconstruction mechanism.  
-> Cyber Twin is a **cyber incident and digital forensics investigation system**, not a physical crime scene reconstruction tool.
-
-The 3D layer does **not** replace:
-- Log analysis
-- Evidence processing
-- Evidence mapping
-- Event correlation
-- Timeline reconstruction
-- Relationship graph exploration
-- Investigation replay
+3D is an integral visualization component of the Cyber Twin that provides a **spatial representation of the reconstructed cyber environment and IT infrastructure**. It is not a physical crime-scene investigation system, nor is it an isolated afterthought; rather, it represents the physical/topological layer of the digital investigation alongside the relationship graph and chronological timeline.
 
 ---
 
-## Role of 3D in Cyber Twin
+## Architectural Role in Cyber Twin
 
-The 3D visualization layer provides spatial and visual representation for selected reconstructed cyber infrastructure entities and contextual incident telemetry where useful:
+The Cyber Twin investigation system exposes four primary investigation views in the frontend:
+1. **Relationship Graph**: Entity and attack path topological exploration.
+2. **Chronological Timeline**: Step-by-step incident evolution.
+3. **Investigation Replay**: Interactive chronological playback of attack actions.
+4. **3D Cyber Environment / Infrastructure View**: Spatial representation of affected hosts, network layout, and incident progression.
 
-- **Cyber Infrastructure**: Visualizing servers, racks, workstations, endpoints, and network nodes.
-- **Evidence & Event Markers**: Placing visual indicators corresponding to specific cyber events on affected machines.
-- **Entity Linkages**: Displaying visual cues and connections between compromised systems along an attack path.
-- **Spatial / Location Context**: Representing logical/topological floor or rack placements if such physical or asset-management location data exists in the collected evidence.
+### End-to-End Data Flow
 
-### Data Flow
-
-The 3D visualization layer is strictly a downstream consumer of data that has already been processed and reconstructed:
+The 3D view strictly consumes reconstructed Cyber Twin data:
 
 ```text
+Digital Evidence
+      ↓
 Forensic Engine
       ↓
 Evidence Mapping
       ↓
+Event Correlation
+      ↓
 Incident Reconstruction
+      ↓
+Cyber Twin Data
       ↓
 Backend API
       ↓
-Frontend (Three.js)
+Frontend
       ↓
-[Optional 3D Visualization]
+┌─────────────────┬──────────────────┬─────────────────┐
+│  Relationship   │   Chronological  │    3D Cyber     │
+│  Graph          │   Timeline       │   Environment   │
+└─────────────────┴──────────────────┴─────────────────┘
+                           ↓
+                   Investigation Replay
 ```
 
-The 3D layer **never** independently performs forensic analysis or event correlation.
+> **Strict Architectural Boundary**: The 3D view **never** independently performs log parsing, evidence processing, event correlation, forensic analysis, timeline generation, or evidence mapping. It is purely an interactive visualization of the reconstructed cyber incident.
 
 ---
 
-## Round 2 MVP Scope
+## Represented Entities & Spatial Topologies
 
-### In Scope for Prototype MVP
-- **Basic 3D Visualization**: Lightweight rendering of key infrastructure components in the web frontend via Three.js.
-- **Cyber Entity Representation**: Generic representations for servers, workstations, routers, and compromised hosts.
-- **Evidence / Event Markers**: Visual pins or indicators tagged with stable `event_id` and `evidence_id` keys.
-- **Visual Relationships**: Simple directional links between selected compromised entities.
-- **Element-to-Evidence Linkage**: Interactive selection of 3D nodes to highlight corresponding log entries and timeline events.
-- **Blender Preparation**: Preparing simple, lightweight glTF/GLB models for web consumption.
-- **Modular Extensibility**: Clean separation so additional spatial visualization can be introduced without impacting core investigation engines.
+The 3D Cyber Environment visualizes the assets and entities identified during incident reconstruction:
+- **Core Entities**: Users, endpoints, workstations, on-premise/cloud servers, routers, firewalls, and external IP/network nodes.
+- **Incident Events & Indicators**: Affected systems visually highlighted with status indicators (compromised, beaconing, lateral movement target).
+- **Evidence Markers**: Visual 3D pins placed on affected nodes, linking directly to underlying `evidence_id` and `event_id` records.
+- **Attack Paths & Linkages**: Spatial connection lines illustrating malicious actions (e.g., suspicious connections, data exfiltration, privilege escalation).
 
-### Out of Scope for Round 2
-- Full photogrammetry or 3D scanning.
-- Physical crime-scene or bloodstain/ballistics reconstruction.
-- CCTV-to-3D automated reconstruction.
-- Physics simulations or highly detailed architectural rendering.
-- Autonomous 3D generation from raw crime scene photographs.
-- Independent forensic correlation logic inside the 3D module.
-- Duplicate timeline, replay, or evidence mapping engines.
-- Standalone 3D backend microservice.
+### Visual Layout Examples
+
+```text
+[Server A] ─── (suspicious connection) ───► [Workstation B] ───► [External IP: C2]
+```
+or
+```text
+[Compromised User]
+       ↓
+[Workstation B] (Initial Access / Phishing)
+       ↓
+[Domain Controller / Server A] (Privilege Escalation / Lateral Movement)
+       ↓
+[External IP: 198.51.100.24] (Data Exfiltration)
+```
 
 ---
 
-## Directory Organization
-- `blender/`: Blender scripts and asset-pipeline workflows for exporting lightweight models.
-- `models/`: Exported 3D model files (glTF, GLB) for cyber infrastructure entities and markers.
-- `assets/`: Textures, materials, and environment maps for 3D rendering.
+## Technology Stack & Scope
+
+- **Frontend Visualization**: **Three.js** in the React application renders the interactive 3D canvas, handles camera navigation, node selection, and event marker tooltips.
+- **Model Preparation**: **Blender** is used exclusively for authoring and optimizing lightweight, low-poly 3D models (glTF/GLB) representing hardware assets (racks, servers, workstations, routers).
+
+### Out of Scope
+To maintain focus on digital forensic investigation capabilities, the following are strictly excluded:
+- Photogrammetry or 3D laser scanning.
+- Physical crime-scene, ballistics, or bloodstain reconstruction.
+- CCTV footage 3D spatial extraction.
+- Complex physics simulations.
+- Standalone 3D backend microservices.
+
+---
+
+## Subdirectories
+- `blender/`: Scripts and asset preparation pipelines for exporting lightweight 3D models.
+- `models/`: Production glTF/GLB 3D model assets for cyber infrastructure and evidence markers.
+- `assets/`: Textures, materials, and environment settings.
