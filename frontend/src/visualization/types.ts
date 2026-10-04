@@ -5,6 +5,7 @@
  * - BackendEvent: Strictly matches the v1 Event API contract agreed with Backend.
  * - VisualizationEntity, VisualizationRelationship: Derived strictly from BackendEvent.
  * - CytoscapeNodeData, CytoscapeEdgeData: Element contracts for Cytoscape.js graph rendering.
+ * - IncidentTimelineProps: Prop contract for IncidentTimeline component.
  */
 
 /**
@@ -127,4 +128,16 @@ export interface RelationshipGraphProps {
   layoutName?: string;
   height?: string | number;
   width?: string | number;
+}
+
+/**
+ * IncidentTimeline Component Props.
+ */
+export interface IncidentTimelineProps {
+  events: BackendEvent[];
+  selectedEventId?: string | null;
+  onEventSelect?: (event: BackendEvent) => void;
+  height?: string | number;
+  width?: string | number;
+  title?: string;
 }

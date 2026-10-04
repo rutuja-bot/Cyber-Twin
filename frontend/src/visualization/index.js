@@ -24,6 +24,15 @@ try {
   // ESM or bundler fallback
 }
 
+let IncidentTimeline, formatEventType;
+try {
+  const timelineModule = require('./IncidentTimeline');
+  IncidentTimeline = timelineModule.IncidentTimeline;
+  formatEventType = timelineModule.formatEventType;
+} catch (e) {
+  // ESM or bundler fallback
+}
+
 module.exports = {
   mockEvents,
   isValidBackendEvent,
@@ -34,5 +43,7 @@ module.exports = {
   createCyberTwinDataModel,
   buildCytoscapeElements,
   getCytoscapeStylesheet,
-  RelationshipGraph
+  RelationshipGraph,
+  IncidentTimeline,
+  formatEventType
 };
