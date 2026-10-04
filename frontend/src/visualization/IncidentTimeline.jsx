@@ -78,7 +78,9 @@ export function IncidentTimeline({
   onEventSelect,
   height = '620px',
   width = '100%',
-  title = 'Incident Chronological Timeline'
+  title = 'Incident Chronological Timeline',
+  attackPathOnly = false,
+  attackPathEventIds = null
 }) {
   // Sort events strictly in chronological order
   const sortedEvents = useMemo(() => {
@@ -194,6 +196,8 @@ export function IncidentTimeline({
                 {sortedEvents.map((evt, index) => {
                   const isSelected = evt.event_id === activeId;
                   const cues = getEventVisualCues(evt.event_type);
+                  const isAttack = attackPathEventIds ? attackPathEventIds.includes(evt.event_id) : true;
+                  const isDeemphasized = attackPathOnly && !isAttack;
 
                   return (
                     <div
@@ -207,7 +211,10 @@ export function IncidentTimeline({
                         alignItems: 'flex-start',
                         gap: '16px',
                         cursor: 'pointer',
-                        outline: 'none'
+                        outline: 'none',
+                        opacity: isDeemphasized ? 0.35 : 1.0,
+                        filter: isDeemphasized ? 'grayscale(0.7)' : 'none',
+                        transition: 'all 0.25s ease'
                       }}
                     >
                       {/* Step Number Dot on Spine */}
@@ -235,8 +242,8 @@ export function IncidentTimeline({
                         flex: 1,
                         padding: '12px 16px',
                         borderRadius: '8px',
-                        backgroundColor: isSelected ? '#ffffff' : '#ffffff',
-                        border: isSelected ? `2px solid #2563eb` : '1px solid #e2e8f0',
+                        backgroundColor: '#ffffff',
+                        border: isSelected ? `2px solid #2563eb` : (isDeemphasized ? '1px dashed #cbd5e1' : '1px solid #e2e8f0'),
                         boxShadow: isSelected
                           ? '0 4px 12px rgba(37,99,235,0.12)'
                           : '0 1px 3px rgba(0,0,0,0.04)',
@@ -258,6 +265,32 @@ export function IncidentTimeline({
                             <span style={eventIdBadgeStyle}>
                               {evt.event_id}
                             </span>
+                            {attackPathOnly && (
+                              isAttack ? (
+                                <span style={{
+                                  fontSize: '10px',
+                                  fontWeight: 700,
+                                  padding: '2px 6px',
+                                  borderRadius: '4px',
+                                  backgroundColor: '#fee2e2',
+                                  color: '#991b1b',
+                                  border: '1px solid #f87171'
+                                }}>
+                                  ⚡ Attack Path
+                                </span>
+                              ) : (
+                                <span style={{
+                                  fontSize: '10px',
+                                  fontWeight: 600,
+                                  padding: '2px 6px',
+                                  borderRadius: '4px',
+                                  backgroundColor: '#f1f5f9',
+                                  color: '#64748b'
+                                }}>
+                                  Baseline
+                                </span>
+                              )
+                            )}
                           </div>
 
                           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>

@@ -30,7 +30,10 @@ export function RelationshipGraph({
   onSelectionClear,
   layoutName = 'cose',
   height = '620px',
-  width = '100%'
+  width = '100%',
+  attackPathOnly = false,
+  attackPathNodeIds = null,
+  attackPathEdgeIds = null
 }) {
   const containerRef = useRef(null);
   const cyRef = useRef(null);
@@ -122,39 +125,61 @@ export function RelationshipGraph({
     };
   }, [model, layoutName, onNodeSelect, onEdgeSelect, onSelectionClear]);
 
-  // Synchronize Graph highlighting when selectedEventId prop changes
+  // Synchronize Graph highlighting & Attack Path isolation
   useEffect(() => {
     const cy = cyRef.current;
     if (!cy) return;
 
-    if (!selectedEventId) {
-      // Clear synchronization highlights and restores full visibility
-      cy.elements().removeClass('synced-highlight synced-dimmed');
+    // Reset synchronization and attack path classes
+    cy.elements().removeClass('synced-highlight synced-dimmed');
+
+    // Case 1: Both selectedEventId and attackPathOnly are inactive (Normal Overview)
+    if (!selectedEventId && !attackPathOnly) {
       return;
     }
 
-    // Identify matching nodes (entities involved in selected event)
-    const matchingNodes = cy.nodes().filter(node => {
-      const eventIds = node.data('eventIds') || [];
-      return eventIds.includes(selectedEventId);
-    });
+    // Nodes and edges matching selectedEventId
+    const matchingNodes = selectedEventId
+      ? cy.nodes().filter(node => {
+          const eventIds = node.data('eventIds') || [];
+          return eventIds.includes(selectedEventId);
+        })
+      : cy.collection();
 
-    // Identify matching edges (relationships caused by selected event)
-    const matchingEdges = cy.edges().filter(edge => {
-      return edge.data('eventId') === selectedEventId;
-    });
+    const matchingEdges = selectedEventId
+      ? cy.edges().filter(edge => {
+          return edge.data('eventId') === selectedEventId;
+        })
+      : cy.collection();
 
-    // Apply synchronization highlighting and dim unrelated elements
-    cy.elements().removeClass('synced-highlight synced-dimmed');
+    if (attackPathOnly) {
+      // Attack Path Only Mode:
+      const attackNodesSet = new Set(attackPathNodeIds || []);
+      const attackEdgesSet = new Set(attackPathEdgeIds || []);
 
-    if (matchingNodes.length > 0 || matchingEdges.length > 0) {
-      matchingNodes.addClass('synced-highlight');
-      matchingEdges.addClass('synced-highlight');
+      // Dim elements that are NOT in the attack path
+      const nonAttackNodes = cy.nodes().filter(node => !attackNodesSet.has(node.id()));
+      const nonAttackEdges = cy.edges().filter(edge => !attackEdgesSet.has(edge.id()));
 
-      cy.nodes().not(matchingNodes).addClass('synced-dimmed');
-      cy.edges().not(matchingEdges).addClass('synced-dimmed');
+      nonAttackNodes.addClass('synced-dimmed');
+      nonAttackEdges.addClass('synced-dimmed');
+
+      // Highlight selected event elements if active
+      if (matchingNodes.length > 0 || matchingEdges.length > 0) {
+        matchingNodes.addClass('synced-highlight');
+        matchingEdges.addClass('synced-highlight');
+      }
+    } else {
+      // Standard Event Selection Mode:
+      if (matchingNodes.length > 0 || matchingEdges.length > 0) {
+        matchingNodes.addClass('synced-highlight');
+        matchingEdges.addClass('synced-highlight');
+
+        cy.nodes().not(matchingNodes).addClass('synced-dimmed');
+        cy.edges().not(matchingEdges).addClass('synced-dimmed');
+      }
     }
-  }, [selectedEventId]);
+  }, [selectedEventId, attackPathOnly, attackPathNodeIds, attackPathEdgeIds]);
 
   // Toolbar Actions
   const handleFit = useCallback(() => {

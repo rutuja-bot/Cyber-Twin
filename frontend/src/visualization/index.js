@@ -40,6 +40,39 @@ try {
   // ESM or bundler fallback
 }
 
+let CyberTwin3DView;
+try {
+  CyberTwin3DView = require('./CyberTwin3DView').CyberTwin3DView;
+} catch (e) {
+  // ESM or bundler fallback
+}
+
+const {
+  calculateNextIndex,
+  calculatePrevIndex,
+  getPlaybackIntervalMs,
+  formatReplayProgress,
+  PLAYBACK_SPEEDS
+} = require('./replayEngine');
+
+const {
+  isAttackEvent,
+  getAttackPathEventIds,
+  getAttackPathNodeIds,
+  getAttackPathEdgeIds,
+  identifyAttackPath
+} = require('./attackPath');
+
+const {
+  ZONE_EXTERNAL,
+  ZONE_CORP_LAN,
+  ZONE_RESTRICTED_DC,
+  getZoneDefinitions,
+  classifyEntityZone,
+  getEntity3DSpec,
+  transformModelTo3DScene
+} = require('./cyberTwin3D');
+
 module.exports = {
   mockEvents,
   isValidBackendEvent,
@@ -53,5 +86,23 @@ module.exports = {
   RelationshipGraph,
   IncidentTimeline,
   formatEventType,
-  InvestigationView
+  InvestigationView,
+  CyberTwin3DView,
+  calculateNextIndex,
+  calculatePrevIndex,
+  getPlaybackIntervalMs,
+  formatReplayProgress,
+  PLAYBACK_SPEEDS,
+  isAttackEvent,
+  getAttackPathEventIds,
+  getAttackPathNodeIds,
+  getAttackPathEdgeIds,
+  identifyAttackPath,
+  ZONE_EXTERNAL,
+  ZONE_CORP_LAN,
+  ZONE_RESTRICTED_DC,
+  getZoneDefinitions,
+  classifyEntityZone,
+  getEntity3DSpec,
+  transformModelTo3DScene
 };

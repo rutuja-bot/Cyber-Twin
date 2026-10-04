@@ -131,6 +131,9 @@ export interface RelationshipGraphProps {
   layoutName?: string;
   height?: string | number;
   width?: string | number;
+  attackPathOnly?: boolean;
+  attackPathNodeIds?: string[] | null;
+  attackPathEdgeIds?: string[] | null;
 }
 
 /**
@@ -143,6 +146,8 @@ export interface IncidentTimelineProps {
   height?: string | number;
   width?: string | number;
   title?: string;
+  attackPathOnly?: boolean;
+  attackPathEventIds?: string[] | null;
 }
 
 /**
@@ -151,9 +156,98 @@ export interface IncidentTimelineProps {
 export interface InvestigationViewProps {
   model: CyberTwinDataModel;
   initialEventId?: string | null;
+  initialAttackPathOnly?: boolean;
   onEventSelect?: (event: BackendEvent) => void;
   onNodeSelect?: (nodeData: CytoscapeNodeData) => void;
   onEdgeSelect?: (edgeData: CytoscapeEdgeData) => void;
+  height?: string | number;
+  width?: string | number;
+}
+
+/**
+ * Incident Replay Engine Types & State Contracts.
+ */
+export type ReplaySpeed = 0.5 | 1 | 2 | 5;
+
+export interface ReplayState {
+  currentIndex: number;
+  totalEvents: number;
+  isPlaying: boolean;
+  speed: ReplaySpeed;
+}
+
+/**
+ * Attack Path Analysis Contract.
+ */
+export interface AttackPathAnalysis {
+  attackEventIds: string[];
+  benignEventIds: string[];
+  attackNodeIds: string[];
+  benignNodeIds: string[];
+  attackEdgeIds: string[];
+  benignEdgeIds: string[];
+  summary: {
+    totalEvents: number;
+    attackEventsCount: number;
+    benignEventsCount: number;
+    totalNodes: number;
+    attackNodesCount: number;
+    benignNodesCount: number;
+    totalEdges: number;
+    attackEdgesCount: number;
+    benignEdgesCount: number;
+  };
+}
+
+/**
+ * 3D Cyber Twin Infrastructure Contracts.
+ */
+export interface Zone3D {
+  id: string;
+  name: string;
+  subnet: string;
+  color: number;
+  center: { x: number; y: number; z: number };
+  size: { width: number; depth: number };
+}
+
+export interface Node3D {
+  id: string;
+  name: string;
+  type: EntityType;
+  zone: string;
+  position: { x: number; y: number; z: number };
+  spec: {
+    geometryType: string;
+    dimensions: number[];
+    baseColor: number;
+    emissiveColor: number;
+    label: string;
+    elevation?: number;
+  };
+  eventIds: string[];
+  evidenceIds: string[];
+}
+
+export interface Link3D {
+  id: string;
+  sourceId: string;
+  targetId: string;
+  type: RelationshipType;
+  eventId: string;
+  evidenceId: string;
+  timestamp: string;
+  startPosition: { x: number; y: number; z: number };
+  endPosition: { x: number; y: number; z: number };
+}
+
+export interface CyberTwin3DViewProps {
+  model: CyberTwinDataModel;
+  selectedEventId?: string | null;
+  attackPathOnly?: boolean;
+  attackPathNodeIds?: string[] | null;
+  attackPathEdgeIds?: string[] | null;
+  onNodeSelect?: (nodeData: Node3D) => void;
   height?: string | number;
   width?: string | number;
 }
