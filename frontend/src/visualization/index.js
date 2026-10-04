@@ -33,6 +33,13 @@ try {
   // ESM or bundler fallback
 }
 
+let InvestigationView;
+try {
+  InvestigationView = require('./InvestigationView').InvestigationView;
+} catch (e) {
+  // ESM or bundler fallback
+}
+
 module.exports = {
   mockEvents,
   isValidBackendEvent,
@@ -45,5 +52,6 @@ module.exports = {
   getCytoscapeStylesheet,
   RelationshipGraph,
   IncidentTimeline,
-  formatEventType
+  formatEventType,
+  InvestigationView
 };

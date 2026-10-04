@@ -4,12 +4,17 @@ import { buildCytoscapeElements, getCytoscapeStylesheet } from './graphElements'
 
 /**
  * RelationshipGraph React Component for Cyber Twin
- * 
+ *
  * Renders an interactive, forensic-grade relationship graph representing
  * entities and their interactions extracted from security events.
- * 
+ *
+ * Supports Timeline Synchronization via `selectedEventId`:
+ * When an event is selected, participating entities and triggering edges
+ * are highlighted while unrelated elements are dimmed.
+ *
  * Props:
  * - model: CyberTwinDataModel (required)
+ * - selectedEventId: string | null (optional timeline synchronization prop)
  * - onNodeSelect: (nodeData: Object) => void (optional callback)
  * - onEdgeSelect: (edgeData: Object) => void (optional callback)
  * - onSelectionClear: () => void (optional callback)
@@ -19,6 +24,7 @@ import { buildCytoscapeElements, getCytoscapeStylesheet } from './graphElements'
  */
 export function RelationshipGraph({
   model,
+  selectedEventId = null,
   onNodeSelect,
   onEdgeSelect,
   onSelectionClear,
@@ -32,7 +38,7 @@ export function RelationshipGraph({
   // Inspector state for clicked node or edge
   const [selectedItem, setSelectedItem] = useState(null);
 
-  // Initialize and update Cytoscape instance when model or layout changes
+  // Initialize Cytoscape instance when model or layout changes
   useEffect(() => {
     if (!containerRef.current || !model) return;
 
@@ -115,6 +121,40 @@ export function RelationshipGraph({
       cyRef.current = null;
     };
   }, [model, layoutName, onNodeSelect, onEdgeSelect, onSelectionClear]);
+
+  // Synchronize Graph highlighting when selectedEventId prop changes
+  useEffect(() => {
+    const cy = cyRef.current;
+    if (!cy) return;
+
+    if (!selectedEventId) {
+      // Clear synchronization highlights and restores full visibility
+      cy.elements().removeClass('synced-highlight synced-dimmed');
+      return;
+    }
+
+    // Identify matching nodes (entities involved in selected event)
+    const matchingNodes = cy.nodes().filter(node => {
+      const eventIds = node.data('eventIds') || [];
+      return eventIds.includes(selectedEventId);
+    });
+
+    // Identify matching edges (relationships caused by selected event)
+    const matchingEdges = cy.edges().filter(edge => {
+      return edge.data('eventId') === selectedEventId;
+    });
+
+    // Apply synchronization highlighting and dim unrelated elements
+    cy.elements().removeClass('synced-highlight synced-dimmed');
+
+    if (matchingNodes.length > 0 || matchingEdges.length > 0) {
+      matchingNodes.addClass('synced-highlight');
+      matchingEdges.addClass('synced-highlight');
+
+      cy.nodes().not(matchingNodes).addClass('synced-dimmed');
+      cy.edges().not(matchingEdges).addClass('synced-dimmed');
+    }
+  }, [selectedEventId]);
 
   // Toolbar Actions
   const handleFit = useCallback(() => {
@@ -203,6 +243,19 @@ export function RelationshipGraph({
               fontWeight: 600
             }}>
               Case: {model.case_id}
+            </span>
+          )}
+          {selectedEventId && (
+            <span style={{
+              fontSize: '11px',
+              padding: '2px 8px',
+              backgroundColor: '#fee2e2',
+              color: '#991b1b',
+              borderRadius: '4px',
+              fontWeight: 600,
+              border: '1px solid #fca5a5'
+            }}>
+              Synced Event: {selectedEventId}
             </span>
           )}
           <span style={{ fontSize: '12px', color: '#64748b' }}>
@@ -399,6 +452,10 @@ export function RelationshipGraph({
         <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
           <span style={{ width: 16, height: 2, borderTop: '2px dashed #7C3AED', display: 'inline-block' }} /> ACCESSED
         </span>
+        <span style={{ color: '#cbd5e1' }}>|</span>
+        <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+          <span style={{ width: 10, height: 10, border: '2px solid #EF4444', borderRadius: '50%', display: 'inline-block' }} /> Synced Active
+        </span>
       </div>
     </div>
   );
@@ -437,4 +494,3 @@ const evidenceBadgeStyle = {
 };
 
 export default RelationshipGraph;
-

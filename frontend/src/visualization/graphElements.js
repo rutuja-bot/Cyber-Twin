@@ -57,7 +57,7 @@ function buildCytoscapeElements(model) {
 
 /**
  * Default Cytoscape stylesheet providing clear visual differentiation
- * across entity types and relationship categories for cyber incident analysis.
+ * across entity types, relationship categories, and timeline synchronization states.
  * @returns {Array<Object>} Cytoscape stylesheet rules
  */
 function getCytoscapeStylesheet() {
@@ -80,8 +80,9 @@ function getCytoscapeStylesheet() {
         'height': 44,
         'border-width': 2,
         'border-color': '#334155',
-        'transition-property': 'background-color, border-color, border-width, width, height',
-        'transition-duration': '0.2s'
+        'opacity': 1.0,
+        'transition-property': 'background-color, border-color, border-width, width, height, opacity',
+        'transition-duration': '0.25s'
       }
     },
 
@@ -157,6 +158,29 @@ function getCytoscapeStylesheet() {
       }
     },
 
+    // Synchronization Highlight: Node involved in the selected timeline event
+    {
+      selector: 'node.synced-highlight',
+      style: {
+        'border-color': '#EF4444',
+        'border-width': 4.5,
+        'shadow-blur': 22,
+        'shadow-color': '#EF4444',
+        'shadow-opacity': 0.95,
+        'opacity': 1.0,
+        'z-index': 99
+      }
+    },
+
+    // Synchronization Dimmed: Node unrelated to the selected timeline event
+    {
+      selector: 'node.synced-dimmed',
+      style: {
+        'opacity': 0.22,
+        'text-opacity': 0.22
+      }
+    },
+
     // Base Edge Style (Directed Bezier)
     {
       selector: 'edge',
@@ -177,8 +201,9 @@ function getCytoscapeStylesheet() {
         'text-background-color': '#ffffff',
         'text-background-padding': 2,
         'text-background-shape': 'roundrectangle',
-        'transition-property': 'line-color, target-arrow-color, width',
-        'transition-duration': '0.2s'
+        'opacity': 1.0,
+        'transition-property': 'line-color, target-arrow-color, width, opacity',
+        'transition-duration': '0.25s'
       }
     },
 
@@ -224,6 +249,29 @@ function getCytoscapeStylesheet() {
         'color': '#EF4444',
         'font-weight': '700'
       }
+    },
+
+    // Synchronization Highlight: Edge triggered by the selected timeline event
+    {
+      selector: 'edge.synced-highlight',
+      style: {
+        'line-color': '#EF4444',
+        'target-arrow-color': '#EF4444',
+        'width': 4.0,
+        'opacity': 1.0,
+        'color': '#EF4444',
+        'font-weight': '700',
+        'z-index': 99
+      }
+    },
+
+    // Synchronization Dimmed: Edge unrelated to the selected timeline event
+    {
+      selector: 'edge.synced-dimmed',
+      style: {
+        'opacity': 0.12,
+        'text-opacity': 0
+      }
     }
   ];
 }
@@ -232,4 +280,3 @@ module.exports = {
   buildCytoscapeElements,
   getCytoscapeStylesheet
 };
-

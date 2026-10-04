@@ -6,6 +6,8 @@
  * - VisualizationEntity, VisualizationRelationship: Derived strictly from BackendEvent.
  * - CytoscapeNodeData, CytoscapeEdgeData: Element contracts for Cytoscape.js graph rendering.
  * - IncidentTimelineProps: Prop contract for IncidentTimeline component.
+ * - RelationshipGraphProps: Prop contract for RelationshipGraph component with synchronization.
+ * - InvestigationViewProps: Prop contract for master synchronized InvestigationView component.
  */
 
 /**
@@ -122,6 +124,7 @@ export interface CytoscapeEdgeData {
  */
 export interface RelationshipGraphProps {
   model: CyberTwinDataModel;
+  selectedEventId?: string | null;
   onNodeSelect?: (nodeData: CytoscapeNodeData) => void;
   onEdgeSelect?: (edgeData: CytoscapeEdgeData) => void;
   onSelectionClear?: () => void;
@@ -140,4 +143,17 @@ export interface IncidentTimelineProps {
   height?: string | number;
   width?: string | number;
   title?: string;
+}
+
+/**
+ * Master Synchronized InvestigationView Component Props.
+ */
+export interface InvestigationViewProps {
+  model: CyberTwinDataModel;
+  initialEventId?: string | null;
+  onEventSelect?: (event: BackendEvent) => void;
+  onNodeSelect?: (nodeData: CytoscapeNodeData) => void;
+  onEdgeSelect?: (edgeData: CytoscapeEdgeData) => void;
+  height?: string | number;
+  width?: string | number;
 }
