@@ -1,4 +1,4 @@
 # 3D Reconstruction — Assets
 
 ## Overview
-Stores materials, textures, environment maps, and auxiliary assets for 3D scene reconstruction and visual replay.
+Stores textures, materials, environment maps, and lightweight auxiliary assets used when rendering cyber infrastructure and evidence markers in the 3D visualization view.

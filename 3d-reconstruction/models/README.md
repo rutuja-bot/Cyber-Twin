@@ -1,4 +1,4 @@
 # 3D Reconstruction — Models
 
 ## Overview
-Stores 3D model files (e.g., glTF/GLB, OBJ) representing crime/incident scene structures, server racks, workstations, and evidence markers.
+Stores 3D model files (e.g., glTF/GLB) representing cyber infrastructure components, such as server racks, workstations, network hardware, and evidence markers for optional spatial visualization in the investigation interface.
