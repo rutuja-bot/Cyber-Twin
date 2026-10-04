@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.database.connection import Base, SessionLocal, engine
 from app.database.seed_data import seed_demo_data
 import app.models  # Ensure all models are registered with Base metadata
-from app.routes import cases_router, evidence_router, events_router, findings_router
+from app.routes import cases_router, evidence_router, events_router, findings_router, reconstruction_router
 
 
 @asynccontextmanager
@@ -51,6 +51,7 @@ app.include_router(cases_router)
 app.include_router(evidence_router)
 app.include_router(events_router)
 app.include_router(findings_router)
+app.include_router(reconstruction_router)
 
 
 if __name__ == "__main__":

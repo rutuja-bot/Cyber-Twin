@@ -1,0 +1,597 @@
+﻿{
+  "case_id": "CASE-001",
+  "title": "Compromised Employee Account & Data Exfiltration",
+  "status": "reconstructed",
+  "summary": "Incident investigation for case CASE-001: Reconstructed complete 6-stage attack chain across 5 digital evidence sources (auth.log, endpoint.log, server.log, file_access.log, firewall.log). Attack initiated with compromised employee01 account at 2026-10-04T10:15:00, progressing through PowerShell execution on WORKSTATION-01, lateral SMB access to SRV-CORP-FILE, confidential customer data collection, and exfiltration to external IP 198.51.100.24 at 2026-10-04T10:25:00.",
+  "total_events": 6,
+  "timeline": [
+    {
+      "timeline_event_id": "TL-001",
+      "event_id": "EVT-001",
+      "sequence": 1,
+      "timestamp": "2026-10-04T10:15:00",
+      "stage": "Initial Access",
+      "technique": "Valid Accounts: Domain Accounts (T1078.002)",
+      "description": "Adversary leveraged compromised employee credentials to gain initial access to enterprise infrastructure.",
+      "evidence_id": "EVD-001"
+    },
+    {
+      "timeline_event_id": "TL-002",
+      "event_id": "EVT-002",
+      "sequence": 2,
+      "timestamp": "2026-10-04T10:18:30",
+      "stage": "Execution",
+      "technique": "Command and Scripting Interpreter: PowerShell (T1059.001)",
+      "description": "Execution of obfuscated commands via PowerShell on internal workstation.",
+      "evidence_id": "EVD-002"
+    },
+    {
+      "timeline_event_id": "TL-003",
+      "event_id": "EVT-003",
+      "sequence": 3,
+      "timestamp": "2026-10-04T10:21:05",
+      "stage": "Lateral Movement",
+      "technique": "Remote Services: SMB/Windows Admin Shares (T1021.002)",
+      "description": "Adversary established lateral SMB session across internal network to target enterprise file server.",
+      "evidence_id": "EVD-003"
+    },
+    {
+      "timeline_event_id": "TL-004",
+      "event_id": "EVT-004",
+      "sequence": 4,
+      "timestamp": "2026-10-04T10:22:45",
+      "stage": "Collection",
+      "technique": "Data from Network Shared Drive (T1039)",
+      "description": "Adversary staged and accessed confidential customer files stored on internal network shares.",
+      "evidence_id": "EVD-004"
+    },
+    {
+      "timeline_event_id": "TL-005",
+      "event_id": "EVT-005",
+      "sequence": 5,
+      "timestamp": "2026-10-04T10:24:15",
+      "stage": "Command and Control",
+      "technique": "Application Layer Protocol: Web Protocols (T1071.001)",
+      "description": "Outbound command-and-control connection established from internal host to external suspect IP.",
+      "evidence_id": "EVD-005"
+    },
+    {
+      "timeline_event_id": "TL-006",
+      "event_id": "EVT-006",
+      "sequence": 6,
+      "timestamp": "2026-10-04T10:25:00",
+      "stage": "Exfiltration",
+      "technique": "Exfiltration Over Alternative Protocol: Exfiltration Over Web Service (T1048.003)",
+      "description": "High volume data exfiltration from internal workstation to external adversary infrastructure.",
+      "evidence_id": "EVD-005"
+    }
+  ],
+  "graph": {
+    "nodes": [
+      {
+        "id": "user:employee01",
+        "type": "user",
+        "label": "employee01",
+        "first_seen": "2026-10-04T10:15:00",
+        "last_seen": "2026-10-04T10:22:45",
+        "properties": {
+          "role": "employee"
+        }
+      },
+      {
+        "id": "device:WORKSTATION-01",
+        "type": "workstation",
+        "label": "WORKSTATION-01",
+        "first_seen": "2026-10-04T10:15:00",
+        "last_seen": "2026-10-04T10:22:45",
+        "properties": {
+          "os": "Windows"
+        }
+      },
+      {
+        "id": "ip:192.168.1.20",
+        "type": "ip_address",
+        "label": "192.168.1.20",
+        "first_seen": "2026-10-04T10:15:00",
+        "last_seen": "2026-10-04T10:25:00",
+        "properties": {
+          "network": "internal"
+        }
+      },
+      {
+        "id": "file:powershell.exe",
+        "type": "file_object",
+        "label": "powershell.exe",
+        "first_seen": "2026-10-04T10:18:30",
+        "last_seen": "2026-10-04T10:18:30",
+        "properties": {
+          "path": "powershell.exe"
+        }
+      },
+      {
+        "id": "server:SRV-CORP-FILE",
+        "type": "server",
+        "label": "SRV-CORP-FILE",
+        "first_seen": "2026-10-04T10:21:05",
+        "last_seen": "2026-10-04T10:22:45",
+        "properties": {
+          "role": "file_server"
+        }
+      },
+      {
+        "id": "file:\\SRV-CORP-FILE\\confidential\\customer_data.csv",
+        "type": "file_object",
+        "label": "customer_data.csv",
+        "first_seen": "2026-10-04T10:22:45",
+        "last_seen": "2026-10-04T10:22:45",
+        "properties": {
+          "path": "\\SRV-CORP-FILE\\confidential\\customer_data.csv"
+        }
+      },
+      {
+        "id": "ip:198.51.100.24",
+        "type": "ip_address",
+        "label": "198.51.100.24",
+        "first_seen": "2026-10-04T10:24:15",
+        "last_seen": "2026-10-04T10:25:00",
+        "properties": {
+          "network": "external"
+        }
+      }
+    ],
+    "edges": [
+      {
+        "relationship_id": "REL-001",
+        "source": "user:employee01",
+        "target": "device:WORKSTATION-01",
+        "type": "AUTHENTICATED_TO",
+        "event_id": "EVT-001",
+        "evidence_ids": [
+          "EVD-001"
+        ],
+        "timestamp": "2026-10-04T10:15:00"
+      },
+      {
+        "relationship_id": "REL-002",
+        "source": "device:WORKSTATION-01",
+        "target": "ip:192.168.1.20",
+        "type": "RESOLVED_IP",
+        "event_id": "EVT-001",
+        "evidence_ids": [
+          "EVD-001"
+        ],
+        "timestamp": "2026-10-04T10:15:00"
+      },
+      {
+        "relationship_id": "REL-003",
+        "source": "user:employee01",
+        "target": "device:WORKSTATION-01",
+        "type": "USES",
+        "event_id": "EVT-002",
+        "evidence_ids": [
+          "EVD-002"
+        ],
+        "timestamp": "2026-10-04T10:18:30"
+      },
+      {
+        "relationship_id": "REL-004",
+        "source": "device:WORKSTATION-01",
+        "target": "file:powershell.exe",
+        "type": "EXECUTED",
+        "event_id": "EVT-002",
+        "evidence_ids": [
+          "EVD-002"
+        ],
+        "timestamp": "2026-10-04T10:18:30"
+      },
+      {
+        "relationship_id": "REL-005",
+        "source": "user:employee01",
+        "target": "device:WORKSTATION-01",
+        "type": "USES",
+        "event_id": "EVT-003",
+        "evidence_ids": [
+          "EVD-003"
+        ],
+        "timestamp": "2026-10-04T10:21:05"
+      },
+      {
+        "relationship_id": "REL-006",
+        "source": "device:WORKSTATION-01",
+        "target": "ip:192.168.1.20",
+        "type": "RESOLVED_IP",
+        "event_id": "EVT-003",
+        "evidence_ids": [
+          "EVD-003"
+        ],
+        "timestamp": "2026-10-04T10:21:05"
+      },
+      {
+        "relationship_id": "REL-007",
+        "source": "device:WORKSTATION-01",
+        "target": "server:SRV-CORP-FILE",
+        "type": "CONNECTED_TO",
+        "event_id": "EVT-003",
+        "evidence_ids": [
+          "EVD-003"
+        ],
+        "timestamp": "2026-10-04T10:21:05"
+      },
+      {
+        "relationship_id": "REL-008",
+        "source": "user:employee01",
+        "target": "device:WORKSTATION-01",
+        "type": "USES",
+        "event_id": "EVT-004",
+        "evidence_ids": [
+          "EVD-004"
+        ],
+        "timestamp": "2026-10-04T10:22:45"
+      },
+      {
+        "relationship_id": "REL-009",
+        "source": "device:WORKSTATION-01",
+        "target": "server:SRV-CORP-FILE",
+        "type": "CONNECTED_TO",
+        "event_id": "EVT-004",
+        "evidence_ids": [
+          "EVD-004"
+        ],
+        "timestamp": "2026-10-04T10:22:45"
+      },
+      {
+        "relationship_id": "REL-010",
+        "source": "user:employee01",
+        "target": "file:\\SRV-CORP-FILE\\confidential\\customer_data.csv",
+        "type": "ACCESSED",
+        "event_id": "EVT-004",
+        "evidence_ids": [
+          "EVD-004"
+        ],
+        "timestamp": "2026-10-04T10:22:45"
+      },
+      {
+        "relationship_id": "REL-011",
+        "source": "user:employee01",
+        "target": "device:WORKSTATION-01",
+        "type": "USES",
+        "event_id": "EVT-005",
+        "evidence_ids": [
+          "EVD-005"
+        ],
+        "timestamp": "2026-10-04T10:24:15"
+      },
+      {
+        "relationship_id": "REL-012",
+        "source": "device:WORKSTATION-01",
+        "target": "ip:192.168.1.20",
+        "type": "RESOLVED_IP",
+        "event_id": "EVT-005",
+        "evidence_ids": [
+          "EVD-005"
+        ],
+        "timestamp": "2026-10-04T10:24:15"
+      },
+      {
+        "relationship_id": "REL-013",
+        "source": "device:WORKSTATION-01",
+        "target": "ip:198.51.100.24",
+        "type": "CONNECTED_TO",
+        "event_id": "EVT-005",
+        "evidence_ids": [
+          "EVD-005"
+        ],
+        "timestamp": "2026-10-04T10:24:15"
+      },
+      {
+        "relationship_id": "REL-014",
+        "source": "device:WORKSTATION-01",
+        "target": "ip:192.168.1.20",
+        "type": "RESOLVED_IP",
+        "event_id": "EVT-006",
+        "evidence_ids": [
+          "EVD-005"
+        ],
+        "timestamp": "2026-10-04T10:25:00"
+      },
+      {
+        "relationship_id": "REL-015",
+        "source": "device:WORKSTATION-01",
+        "target": "ip:198.51.100.24",
+        "type": "EXFILTRATED_TO",
+        "event_id": "EVT-006",
+        "evidence_ids": [
+          "EVD-005"
+        ],
+        "timestamp": "2026-10-04T10:25:00"
+      }
+    ]
+  },
+  "attack_progression": [
+    {
+      "stage_id": "STAGE-01",
+      "stage_name": "Initial Access",
+      "tactic": "TA0001",
+      "technique_id": "T1078.002",
+      "technique_name": "Valid Accounts: Domain Accounts",
+      "event_ids": [
+        "EVT-001"
+      ],
+      "summary": "Adversary leveraged compromised employee credentials to gain initial access to enterprise infrastructure."
+    },
+    {
+      "stage_id": "STAGE-02",
+      "stage_name": "Execution",
+      "tactic": "TA0002",
+      "technique_id": "T1059.001",
+      "technique_name": "Command and Scripting Interpreter: PowerShell",
+      "event_ids": [
+        "EVT-002"
+      ],
+      "summary": "Execution of obfuscated commands via PowerShell on internal workstation."
+    },
+    {
+      "stage_id": "STAGE-03",
+      "stage_name": "Lateral Movement",
+      "tactic": "TA0008",
+      "technique_id": "T1021.002",
+      "technique_name": "Remote Services: SMB/Windows Admin Shares",
+      "event_ids": [
+        "EVT-003"
+      ],
+      "summary": "Adversary established lateral SMB session across internal network to target enterprise file server."
+    },
+    {
+      "stage_id": "STAGE-04",
+      "stage_name": "Collection",
+      "tactic": "TA0009",
+      "technique_id": "T1039",
+      "technique_name": "Data from Network Shared Drive",
+      "event_ids": [
+        "EVT-004"
+      ],
+      "summary": "Adversary staged and accessed confidential customer files stored on internal network shares."
+    },
+    {
+      "stage_id": "STAGE-05",
+      "stage_name": "Command and Control",
+      "tactic": "TA0011",
+      "technique_id": "T1071.001",
+      "technique_name": "Application Layer Protocol: Web Protocols",
+      "event_ids": [
+        "EVT-005"
+      ],
+      "summary": "Outbound command-and-control connection established from internal host to external suspect IP."
+    },
+    {
+      "stage_id": "STAGE-06",
+      "stage_name": "Exfiltration",
+      "tactic": "TA0010",
+      "technique_id": "T1048.003",
+      "technique_name": "Exfiltration Over Alternative Protocol: Exfiltration Over Web Service",
+      "event_ids": [
+        "EVT-006"
+      ],
+      "summary": "High volume data exfiltration from internal workstation to external adversary infrastructure."
+    }
+  ],
+  "findings": [
+    {
+      "finding_id": "FND-001",
+      "case_id": "CASE-001",
+      "title": "Compromised Account and Workstation Execution",
+      "description": "Adversary leveraged valid employee01 credentials to authenticate from 192.168.1.20, followed by obfuscated PowerShell execution on WORKSTATION-01.",
+      "severity": "HIGH",
+      "confidence": 0.95,
+      "event_ids": [
+        "EVT-001",
+        "EVT-002"
+      ],
+      "evidence_ids": [
+        "EVD-001",
+        "EVD-002"
+      ]
+    },
+    {
+      "finding_id": "FND-002",
+      "case_id": "CASE-001",
+      "title": "Lateral Movement and Sensitive Data Collection",
+      "description": "Adversary pivoted laterally from WORKSTATION-01 via SMB to file server SRV-CORP-FILE and staged confidential customer records.",
+      "severity": "HIGH",
+      "confidence": 0.94,
+      "event_ids": [
+        "EVT-003",
+        "EVT-004"
+      ],
+      "evidence_ids": [
+        "EVD-003",
+        "EVD-004"
+      ]
+    },
+    {
+      "finding_id": "FND-003",
+      "case_id": "CASE-001",
+      "title": "External Command-and-Control and Data Exfiltration",
+      "description": "Internal workstation 192.168.1.20 initiated external connection and transmitted 8.45MB of confidential records to 198.51.100.24:443.",
+      "severity": "CRITICAL",
+      "confidence": 0.98,
+      "event_ids": [
+        "EVT-005",
+        "EVT-006"
+      ],
+      "evidence_ids": [
+        "EVD-005"
+      ]
+    }
+  ],
+  "events": [
+    {
+      "event_id": "EVT-001",
+      "case_id": "CASE-001",
+      "timestamp": "2026-10-04T10:15:00",
+      "event_type": "suspicious_login",
+      "user": "employee01",
+      "device": "WORKSTATION-01",
+      "source_ip": "192.168.1.20",
+      "destination_ip": null,
+      "file": null,
+      "server": null,
+      "evidence_id": "EVD-001",
+      "mitre_attack": {
+        "technique_id": "T1078.002",
+        "technique_name": "Valid Accounts: Domain Accounts",
+        "tactic": "Initial Access",
+        "subtechnique_id": "T1078.002",
+        "url": "https://attack.mitre.org/techniques/T1078/002/"
+      },
+      "entities": [
+        "user:employee01",
+        "device:WORKSTATION-01",
+        "ip:192.168.1.20"
+      ],
+      "confidence": 0.95,
+      "rule_id": "RULE-MAP-001",
+      "technique_description": "Adversary leveraged compromised employee credentials to gain initial access to enterprise infrastructure."
+    },
+    {
+      "event_id": "EVT-002",
+      "case_id": "CASE-001",
+      "timestamp": "2026-10-04T10:18:30",
+      "event_type": "suspicious_process_spawn",
+      "user": "employee01",
+      "device": "WORKSTATION-01",
+      "source_ip": null,
+      "destination_ip": null,
+      "file": "powershell.exe",
+      "server": null,
+      "evidence_id": "EVD-002",
+      "mitre_attack": {
+        "technique_id": "T1059.001",
+        "technique_name": "Command and Scripting Interpreter: PowerShell",
+        "tactic": "Execution",
+        "subtechnique_id": "T1059.001",
+        "url": "https://attack.mitre.org/techniques/T1059/001/"
+      },
+      "entities": [
+        "user:employee01",
+        "device:WORKSTATION-01",
+        "file:powershell.exe"
+      ],
+      "confidence": 0.98,
+      "rule_id": "RULE-MAP-002",
+      "technique_description": "Execution of obfuscated commands via PowerShell on internal workstation."
+    },
+    {
+      "event_id": "EVT-003",
+      "case_id": "CASE-001",
+      "timestamp": "2026-10-04T10:21:05",
+      "event_type": "internal_server_connection",
+      "user": "employee01",
+      "device": "WORKSTATION-01",
+      "source_ip": "192.168.1.20",
+      "destination_ip": null,
+      "file": null,
+      "server": "SRV-CORP-FILE",
+      "evidence_id": "EVD-003",
+      "mitre_attack": {
+        "technique_id": "T1021.002",
+        "technique_name": "Remote Services: SMB/Windows Admin Shares",
+        "tactic": "Lateral Movement",
+        "subtechnique_id": "T1021.002",
+        "url": "https://attack.mitre.org/techniques/T1021/002/"
+      },
+      "entities": [
+        "user:employee01",
+        "device:WORKSTATION-01",
+        "ip:192.168.1.20",
+        "server:SRV-CORP-FILE"
+      ],
+      "confidence": 0.92,
+      "rule_id": "RULE-MAP-003",
+      "technique_description": "Adversary established lateral SMB session across internal network to target enterprise file server."
+    },
+    {
+      "event_id": "EVT-004",
+      "case_id": "CASE-001",
+      "timestamp": "2026-10-04T10:22:45",
+      "event_type": "sensitive_file_access",
+      "user": "employee01",
+      "device": "WORKSTATION-01",
+      "source_ip": null,
+      "destination_ip": null,
+      "file": "\\SRV-CORP-FILE\\confidential\\customer_data.csv",
+      "server": "SRV-CORP-FILE",
+      "evidence_id": "EVD-004",
+      "mitre_attack": {
+        "technique_id": "T1039",
+        "technique_name": "Data from Network Shared Drive",
+        "tactic": "Collection",
+        "subtechnique_id": null,
+        "url": "https://attack.mitre.org/techniques/T1039/"
+      },
+      "entities": [
+        "user:employee01",
+        "device:WORKSTATION-01",
+        "server:SRV-CORP-FILE",
+        "file:\\SRV-CORP-FILE\\confidential\\customer_data.csv"
+      ],
+      "confidence": 0.96,
+      "rule_id": "RULE-MAP-004",
+      "technique_description": "Adversary staged and accessed confidential customer files stored on internal network shares."
+    },
+    {
+      "event_id": "EVT-005",
+      "case_id": "CASE-001",
+      "timestamp": "2026-10-04T10:24:15",
+      "event_type": "suspicious_network_connection",
+      "user": null,
+      "device": null,
+      "source_ip": "192.168.1.20",
+      "destination_ip": "198.51.100.24",
+      "file": null,
+      "server": null,
+      "evidence_id": "EVD-005",
+      "mitre_attack": {
+        "technique_id": "T1071.001",
+        "technique_name": "Application Layer Protocol: Web Protocols",
+        "tactic": "Command and Control",
+        "subtechnique_id": "T1071.001",
+        "url": "https://attack.mitre.org/techniques/T1071/001/"
+      },
+      "entities": [
+        "ip:192.168.1.20",
+        "ip:198.51.100.24"
+      ],
+      "confidence": 0.88,
+      "rule_id": "RULE-MAP-005",
+      "technique_description": "Outbound command-and-control connection established from internal host to external suspect IP."
+    },
+    {
+      "event_id": "EVT-006",
+      "case_id": "CASE-001",
+      "timestamp": "2026-10-04T10:25:00",
+      "event_type": "outbound_data_transfer",
+      "user": null,
+      "device": null,
+      "source_ip": "192.168.1.20",
+      "destination_ip": "198.51.100.24",
+      "file": null,
+      "server": null,
+      "evidence_id": "EVD-005",
+      "mitre_attack": {
+        "technique_id": "T1048.003",
+        "technique_name": "Exfiltration Over Alternative Protocol: Exfiltration Over Web Service",
+        "tactic": "Exfiltration",
+        "subtechnique_id": "T1048.003",
+        "url": "https://attack.mitre.org/techniques/T1048/003/"
+      },
+      "entities": [
+        "ip:192.168.1.20",
+        "ip:198.51.100.24"
+      ],
+      "confidence": 0.97,
+      "rule_id": "RULE-MAP-006",
+      "technique_description": "High volume data exfiltration from internal workstation to external adversary infrastructure."
+    }
+  ]
+}
