@@ -127,6 +127,59 @@ class TestForensicPipelineEndToEnd(unittest.TestCase):
         # All 5 simulated logs must be represented via their evidence IDs
         self.assertTrue({"EVD-001", "EVD-002", "EVD-003", "EVD-004", "EVD-005"}.issubset(evidence_ids))
 
+    def test_incident_reconstruction_json_structure(self):
+        """Verify the generated incident_reconstruction.json artifact structure and properties."""
+        reconstruction_file = REPO_ROOT / "data" / "processed" / "incident_reconstruction.json"
+        self.assertTrue(reconstruction_file.exists(), "incident_reconstruction.json does not exist")
+
+        with open(reconstruction_file, "r", encoding="utf-8") as f:
+            data = json.load(f)
+
+        self.assertEqual(data["case_id"], "CASE-001")
+        self.assertEqual(data["status"], "reconstructed")
+        self.assertIn("timeline", data)
+        self.assertIn("graph", data)
+        self.assertIn("attack_progression", data)
+        self.assertIn("findings", data)
+        self.assertIn("events", data)
+
+        # Graph verification
+        graph = data["graph"]
+        self.assertGreaterEqual(len(graph["nodes"]), 5)
+        self.assertGreaterEqual(len(graph["edges"]), 5)
+
+        # Attack progression verification
+        stages = [s["stage_name"] for s in data["attack_progression"]]
+        self.assertIn("Initial Access", stages)
+        self.assertIn("Execution", stages)
+        self.assertIn("Lateral Movement", stages)
+        self.assertIn("Collection", stages)
+        self.assertIn("Command and Control", stages)
+        self.assertIn("Exfiltration", stages)
+
+        # Findings verification
+        finding_ids = [f["finding_id"] for f in data["findings"]]
+        self.assertIn("FND-001", finding_ids)
+        self.assertIn("FND-002", finding_ids)
+        self.assertIn("FND-003", finding_ids)
+
+    def test_run_full_pipeline_helper(self):
+        """Verify run() helper outputs both files and returns events and reconstructed incident."""
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            evts_out = Path(tmp_dir) / "events.json"
+            recon_out = Path(tmp_dir) / "recon.json"
+
+            events, incident = run(
+                raw_dir=self.raw_dir,
+                events_output=evts_out,
+                reconstruction_output=recon_out,
+                case_id="CASE-001",
+            )
+            self.assertEqual(len(events), 6)
+            self.assertEqual(incident.total_events, 6)
+            self.assertTrue(evts_out.exists())
+            self.assertTrue(recon_out.exists())
+
 
 if __name__ == "__main__":
     unittest.main()
