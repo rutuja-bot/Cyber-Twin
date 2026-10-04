@@ -30,10 +30,10 @@ def seed_demo_data(db: Session) -> None:
     db.commit()
 
     # 2. Simulated Evidence Artifacts with actual SHA-256 hashes
-    evd_1_content = "2026-10-04 10:01:12 auth.log: Accepted password for employee01 from 185.220.101.5 port 44321 ssh2"
-    evd_2_content = "2026-10-04 10:04:30 endpoint.log: Process powershell.exe -enc SQBFAFgA spawned by employee01 on WS-101 (PID: 4912)"
-    evd_3_content = "2026-10-04 10:07:45 file_access.log: READ ACCESS on \\\\SRV-CORP-FILE\\confidential\\customer_data.csv by employee01"
-    evd_4_content = "2026-10-04 10:11:00 firewall.log: OUTBOUND TCP 192.168.10.45:49152 -> 198.51.100.24:443 BYTES_SENT=8452100"
+    evd_1_content = "2026-10-04 10:15:00 auth.log: Accepted password for employee01 from 192.168.1.20 port 44321 ssh2"
+    evd_2_content = "2026-10-04 10:18:30 endpoint.log: Process powershell.exe -enc SQBFAFgA spawned by employee01 on WORKSTATION-01 (PID: 4912)"
+    evd_3_content = "2026-10-04 10:22:45 file_access.log: READ ACCESS on \\\\SRV-CORP-FILE\\confidential\\customer_data.csv by employee01"
+    evd_4_content = "2026-10-04 10:25:00 firewall.log: OUTBOUND TCP 192.168.1.20:49152 -> 198.51.100.24:443 BYTES_SENT=8452100"
 
     evidence_items = [
         EvidenceModel(
@@ -41,7 +41,7 @@ def seed_demo_data(db: Session) -> None:
             case_id="CASE-001",
             type="auth_log",
             source="auth.log",
-            timestamp="2026-10-04T10:01:12",
+            timestamp="2026-10-04T10:15:00",
             hash=calculate_sha256(evd_1_content),
         ),
         EvidenceModel(
@@ -49,7 +49,7 @@ def seed_demo_data(db: Session) -> None:
             case_id="CASE-001",
             type="endpoint_log",
             source="endpoint.log",
-            timestamp="2026-10-04T10:04:30",
+            timestamp="2026-10-04T10:18:30",
             hash=calculate_sha256(evd_2_content),
         ),
         EvidenceModel(
@@ -57,7 +57,7 @@ def seed_demo_data(db: Session) -> None:
             case_id="CASE-001",
             type="file_access_log",
             source="file_access.log",
-            timestamp="2026-10-04T10:07:45",
+            timestamp="2026-10-04T10:22:45",
             hash=calculate_sha256(evd_3_content),
         ),
         EvidenceModel(
@@ -65,7 +65,7 @@ def seed_demo_data(db: Session) -> None:
             case_id="CASE-001",
             type="firewall_log",
             source="firewall.log",
-            timestamp="2026-10-04T10:11:00",
+            timestamp="2026-10-04T10:25:00",
             hash=calculate_sha256(evd_4_content),
         ),
     ]
@@ -73,46 +73,58 @@ def seed_demo_data(db: Session) -> None:
         db.add(item)
     db.commit()
 
-    # 3. Simulated Correlated Events
+    # 3. Simulated Correlated Events (aligned with v1 Event contract)
     events = [
         EventModel(
             event_id="EVT-001",
             case_id="CASE-001",
-            timestamp="2026-10-04T10:01:12",
-            event_type="LOGIN_SUCCESS",
+            timestamp="2026-10-04T10:15:00",
+            event_type="suspicious_login",
             user="employee01",
-            device="WS-101",
-            source_ip="185.220.101.5",
+            device="WORKSTATION-01",
+            source_ip="192.168.1.20",
+            destination_ip=None,
+            file=None,
+            server=None,
             evidence_id="EVD-001",
         ),
         EventModel(
             event_id="EVT-002",
             case_id="CASE-001",
-            timestamp="2026-10-04T10:04:30",
-            event_type="SUSPICIOUS_PROCESS_SPAWN",
+            timestamp="2026-10-04T10:18:30",
+            event_type="suspicious_process_spawn",
             user="employee01",
-            device="WS-101",
-            source_ip="185.220.101.5",
+            device="WORKSTATION-01",
+            source_ip=None,
+            destination_ip=None,
+            file="powershell.exe",
+            server=None,
             evidence_id="EVD-002",
         ),
         EventModel(
             event_id="EVT-003",
             case_id="CASE-001",
-            timestamp="2026-10-04T10:07:45",
-            event_type="SENSITIVE_FILE_ACCESS",
+            timestamp="2026-10-04T10:22:45",
+            event_type="sensitive_file_access",
             user="employee01",
-            device="WS-101",
+            device="WORKSTATION-01",
             source_ip=None,
+            destination_ip=None,
+            file="\\\\SRV-CORP-FILE\\confidential\\customer_data.csv",
+            server="SRV-CORP-FILE",
             evidence_id="EVD-003",
         ),
         EventModel(
             event_id="EVT-004",
             case_id="CASE-001",
-            timestamp="2026-10-04T10:11:00",
-            event_type="OUTBOUND_DATA_TRANSFER",
+            timestamp="2026-10-04T10:25:00",
+            event_type="outbound_data_transfer",
             user="employee01",
-            device="WS-101",
-            source_ip="192.168.10.45",
+            device="WORKSTATION-01",
+            source_ip="192.168.1.20",
+            destination_ip="198.51.100.24",
+            file=None,
+            server=None,
             evidence_id="EVD-004",
         ),
     ]
@@ -126,7 +138,7 @@ def seed_demo_data(db: Session) -> None:
             finding_id="FND-001",
             case_id="CASE-001",
             title="Possible Account Compromise",
-            description="Suspicious login followed by abnormal workstation activity from an untrusted IP address.",
+            description="Suspicious login followed by abnormal workstation activity from an internal address.",
             severity="HIGH",
             confidence=0.91,
             event_ids=["EVT-001", "EVT-002"],

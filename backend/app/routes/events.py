@@ -25,7 +25,7 @@ def list_case_events(case_id: str, db: Session = Depends(get_db)):
 
 @router.post("", response_model=EventResponse, status_code=status.HTTP_201_CREATED)
 def create_case_event(case_id: str, event_in: EventCreate, db: Session = Depends(get_db)):
-    """Record a normalized event from the forensic engine under a specific case."""
+    """Record a normalized event under a specific case."""
     case = db.query(CaseModel).filter(CaseModel.case_id == case_id).first()
     if not case:
         raise HTTPException(
@@ -50,6 +50,9 @@ def create_case_event(case_id: str, event_in: EventCreate, db: Session = Depends
         user=event_in.user,
         device=event_in.device,
         source_ip=event_in.source_ip,
+        destination_ip=event_in.destination_ip,
+        file=event_in.file,
+        server=event_in.server,
         evidence_id=event_in.evidence_id,
     )
     db.add(db_event)

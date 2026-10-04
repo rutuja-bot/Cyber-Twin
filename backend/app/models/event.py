@@ -14,6 +14,9 @@ class EventModel(Base):
     user = Column(String, nullable=True)
     device = Column(String, nullable=True)
     source_ip = Column(String, nullable=True)
+    destination_ip = Column(String, nullable=True)
+    file = Column(String, nullable=True)
+    server = Column(String, nullable=True)
     evidence_id = Column(String, ForeignKey("evidence.evidence_id"), nullable=True, index=True)
 
     case = relationship("CaseModel", back_populates="events")
