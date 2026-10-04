@@ -4,6 +4,7 @@
  * Defines the contract-bound data structures for the Cyber Twin Visualization Layer.
  * - BackendEvent: Strictly matches the v1 Event API contract agreed with Backend.
  * - VisualizationEntity, VisualizationRelationship: Derived strictly from BackendEvent.
+ * - CytoscapeNodeData, CytoscapeEdgeData: Element contracts for Cytoscape.js graph rendering.
  */
 
 /**
@@ -82,5 +83,48 @@ export interface CyberTwinDataModel {
   entities: VisualizationEntity[];
   relationships: VisualizationRelationship[];
   evidence_map: Record<string, EvidenceTrace>;
+  getEntityById?: (id: string) => VisualizationEntity | null;
+  getEventsByEntity?: (entityId: string) => BackendEvent[];
+  getEventsByEvidence?: (evidenceId: string) => BackendEvent[];
+  getRelationshipsByEvent?: (eventId: string) => VisualizationRelationship[];
 }
 
+/**
+ * Cytoscape Node Data Contract.
+ */
+export interface CytoscapeNodeData {
+  id: string;
+  label: string;
+  entityType: EntityType;
+  firstSeen: string;
+  lastSeen: string;
+  eventIds: string[];
+  evidenceIds: string[];
+}
+
+/**
+ * Cytoscape Edge Data Contract.
+ */
+export interface CytoscapeEdgeData {
+  id: string;
+  source: string;
+  target: string;
+  label: RelationshipType;
+  relationshipType: RelationshipType;
+  eventId: string;
+  evidenceId: string;
+  timestamp: string;
+}
+
+/**
+ * RelationshipGraph Component Props.
+ */
+export interface RelationshipGraphProps {
+  model: CyberTwinDataModel;
+  onNodeSelect?: (nodeData: CytoscapeNodeData) => void;
+  onEdgeSelect?: (edgeData: CytoscapeEdgeData) => void;
+  onSelectionClear?: () => void;
+  layoutName?: string;
+  height?: string | number;
+  width?: string | number;
+}

@@ -12,6 +12,18 @@ const {
   createCyberTwinDataModel
 } = require('./dataAdapter');
 
+const {
+  buildCytoscapeElements,
+  getCytoscapeStylesheet
+} = require('./graphElements');
+
+let RelationshipGraph;
+try {
+  RelationshipGraph = require('./RelationshipGraph').RelationshipGraph;
+} catch (e) {
+  // ESM or bundler fallback
+}
+
 module.exports = {
   mockEvents,
   isValidBackendEvent,
@@ -19,6 +31,8 @@ module.exports = {
   deriveEntities,
   deriveRelationships,
   buildEvidenceMap,
-  createCyberTwinDataModel
+  createCyberTwinDataModel,
+  buildCytoscapeElements,
+  getCytoscapeStylesheet,
+  RelationshipGraph
 };
-
