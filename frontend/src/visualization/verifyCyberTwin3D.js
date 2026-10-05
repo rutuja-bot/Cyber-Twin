@@ -1,6 +1,6 @@
 /**
  * Verification Suite for Cyber Twin 3D Infrastructure Layer (Task 3)
- * 
+ *
  * Verifies:
  * 1. Three.js dependency resolves cleanly in Node/frontend environment.
  * 2. cyberTwin3D layout transformation module exists and exports contracts.
@@ -26,22 +26,28 @@
  * 10. Confirmation of protected files status.
  */
 
-const fs = require('fs');
-const path = require('path');
-const THREE = require('three');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import * as THREE from 'three';
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+const mockEvents = require('./mockEvents.json');
 
-const {
-  mockEvents,
-  createCyberTwinDataModel,
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+import { createCyberTwinDataModel } from './dataAdapter.js';
+import {
   ZONE_EXTERNAL,
   ZONE_CORP_LAN,
   ZONE_RESTRICTED_DC,
   getZoneDefinitions,
   classifyEntityZone,
   getEntity3DSpec,
-  transformModelTo3DScene,
-  identifyAttackPath
-} = require('./index');
+  transformModelTo3DScene
+} from './cyberTwin3D.js';
+import { identifyAttackPath } from './attackPath.js';
 
 console.log('================================================================');
 console.log('   CYBER TWIN 3D INFRASTRUCTURE LAYER VERIFICATION (TASK 3)    ');
@@ -251,4 +257,3 @@ if (allPassed) {
   process.exit(1);
 }
 console.log('================================================================\n');
-

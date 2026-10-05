@@ -1,69 +1,47 @@
 /**
  * Cyber Twin Visualization Module Entry Point
+ * ESM Module structure supporting full integration with Backend reconstruction data.
  */
 
-const mockEvents = require('./mockEvents.json');
-const {
+import mockEvents from './mockEvents.json';
+
+import {
   isValidBackendEvent,
   sortEventsChronologically,
   deriveEntities,
   deriveRelationships,
   buildEvidenceMap,
-  createCyberTwinDataModel
-} = require('./dataAdapter');
+  createCyberTwinDataModel,
+  createModelFromReconstruction
+} from './dataAdapter.js';
 
-const {
+import {
   buildCytoscapeElements,
   getCytoscapeStylesheet
-} = require('./graphElements');
+} from './graphElements.js';
 
-let RelationshipGraph;
-try {
-  RelationshipGraph = require('./RelationshipGraph').RelationshipGraph;
-} catch (e) {
-  // ESM or bundler fallback
-}
+import { RelationshipGraph } from './RelationshipGraph.jsx';
+import { IncidentTimeline, formatEventType } from './IncidentTimeline.jsx';
+import { InvestigationView } from './InvestigationView.jsx';
+import { CyberTwin3DView } from './CyberTwin3DView.jsx';
 
-let IncidentTimeline, formatEventType;
-try {
-  const timelineModule = require('./IncidentTimeline');
-  IncidentTimeline = timelineModule.IncidentTimeline;
-  formatEventType = timelineModule.formatEventType;
-} catch (e) {
-  // ESM or bundler fallback
-}
-
-let InvestigationView;
-try {
-  InvestigationView = require('./InvestigationView').InvestigationView;
-} catch (e) {
-  // ESM or bundler fallback
-}
-
-let CyberTwin3DView;
-try {
-  CyberTwin3DView = require('./CyberTwin3DView').CyberTwin3DView;
-} catch (e) {
-  // ESM or bundler fallback
-}
-
-const {
+import {
   calculateNextIndex,
   calculatePrevIndex,
   getPlaybackIntervalMs,
   formatReplayProgress,
   PLAYBACK_SPEEDS
-} = require('./replayEngine');
+} from './replayEngine.js';
 
-const {
+import {
   isAttackEvent,
   getAttackPathEventIds,
   getAttackPathNodeIds,
   getAttackPathEdgeIds,
   identifyAttackPath
-} = require('./attackPath');
+} from './attackPath.js';
 
-const {
+import {
   ZONE_EXTERNAL,
   ZONE_CORP_LAN,
   ZONE_RESTRICTED_DC,
@@ -71,9 +49,9 @@ const {
   classifyEntityZone,
   getEntity3DSpec,
   transformModelTo3DScene
-} = require('./cyberTwin3D');
+} from './cyberTwin3D.js';
 
-module.exports = {
+export {
   mockEvents,
   isValidBackendEvent,
   sortEventsChronologically,
@@ -81,6 +59,42 @@ module.exports = {
   deriveRelationships,
   buildEvidenceMap,
   createCyberTwinDataModel,
+  createModelFromReconstruction,
+  buildCytoscapeElements,
+  getCytoscapeStylesheet,
+  RelationshipGraph,
+  IncidentTimeline,
+  formatEventType,
+  InvestigationView,
+  CyberTwin3DView,
+  calculateNextIndex,
+  calculatePrevIndex,
+  getPlaybackIntervalMs,
+  formatReplayProgress,
+  PLAYBACK_SPEEDS,
+  isAttackEvent,
+  getAttackPathEventIds,
+  getAttackPathNodeIds,
+  getAttackPathEdgeIds,
+  identifyAttackPath,
+  ZONE_EXTERNAL,
+  ZONE_CORP_LAN,
+  ZONE_RESTRICTED_DC,
+  getZoneDefinitions,
+  classifyEntityZone,
+  getEntity3DSpec,
+  transformModelTo3DScene
+};
+
+export default {
+  mockEvents,
+  isValidBackendEvent,
+  sortEventsChronologically,
+  deriveEntities,
+  deriveRelationships,
+  buildEvidenceMap,
+  createCyberTwinDataModel,
+  createModelFromReconstruction,
   buildCytoscapeElements,
   getCytoscapeStylesheet,
   RelationshipGraph,

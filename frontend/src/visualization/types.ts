@@ -1,6 +1,6 @@
 /**
  * Cyber Twin Visualization Types
- * 
+ *
  * Defines the contract-bound data structures for the Cyber Twin Visualization Layer.
  * - BackendEvent: Strictly matches the v1 Event API contract agreed with Backend.
  * - VisualizationEntity, VisualizationRelationship: Derived strictly from BackendEvent.
@@ -50,9 +50,14 @@ export interface VisualizationEntity {
  * Relationship Types derived from event interactions.
  */
 export type RelationshipType =
+  | 'AUTHENTICATED_TO'
+  | 'RESOLVED_IP'
   | 'USES'
+  | 'EXECUTED'
   | 'CONNECTED_TO'
-  | 'ACCESSED';
+  | 'ACCESSED'
+  | 'EXFILTRATED_TO'
+  | string;
 
 /**
  * Derived Relationship in the Cyber Twin visualization.
@@ -64,6 +69,7 @@ export interface VisualizationRelationship {
   type: RelationshipType;
   event_id: string;
   evidence_id: string;
+  evidence_ids?: string[];
   timestamp: string;
 }
 
@@ -78,11 +84,103 @@ export interface EvidenceTrace {
 }
 
 /**
+ * Canonical Backend Timeline Item Contract.
+ */
+export interface BackendTimelineItem {
+  timeline_event_id: string;
+  event_id: string;
+  sequence: number;
+  timestamp: string;
+  stage: string;
+  technique: string;
+  description: string;
+  evidence_id: string | null;
+}
+
+/**
+ * Canonical Backend Graph Node Contract.
+ */
+export interface BackendGraphNode {
+  id: string;
+  type: string;
+  label: string;
+  first_seen: string;
+  last_seen: string;
+  properties?: Record<string, any>;
+}
+
+/**
+ * Canonical Backend Graph Edge Contract.
+ */
+export interface BackendGraphEdge {
+  relationship_id: string;
+  source: string;
+  target: string;
+  type: string;
+  event_id: string;
+  evidence_ids?: string[];
+  timestamp: string;
+}
+
+/**
+ * Canonical Backend Attack Stage Contract.
+ */
+export interface BackendAttackStage {
+  stage_id: string;
+  stage_name: string;
+  tactic: string;
+  technique_id: string;
+  technique_name: string;
+  event_ids: string[];
+  summary: string;
+}
+
+/**
+ * Canonical Backend Finding Contract.
+ */
+export interface BackendFinding {
+  finding_id: string;
+  case_id: string;
+  title: string;
+  description: string;
+  severity: string;
+  confidence: number;
+  event_ids: string[];
+  evidence_ids: string[];
+}
+
+/**
+ * Canonical Full Backend Reconstruction Data Contract.
+ */
+export interface BackendReconstructionData {
+  case_id: string;
+  title?: string;
+  status?: string;
+  summary?: string;
+  total_events?: number;
+  timeline?: BackendTimelineItem[];
+  graph?: {
+    nodes: BackendGraphNode[];
+    edges: BackendGraphEdge[];
+  };
+  attack_progression?: BackendAttackStage[];
+  findings?: BackendFinding[];
+  events?: BackendEvent[];
+}
+
+/**
  * Reusable Cyber Twin Data Model exposed to visual components.
  */
 export interface CyberTwinDataModel {
   case_id: string;
+  title?: string;
+  status?: string;
+  summary?: string;
+  total_events?: number;
   events: BackendEvent[];
+  timeline?: BackendTimelineItem[];
+  attack_progression?: BackendAttackStage[];
+  findings?: BackendFinding[];
   entities: VisualizationEntity[];
   relationships: VisualizationRelationship[];
   evidence_map: Record<string, EvidenceTrace>;
@@ -90,6 +188,7 @@ export interface CyberTwinDataModel {
   getEventsByEntity?: (entityId: string) => BackendEvent[];
   getEventsByEvidence?: (evidenceId: string) => BackendEvent[];
   getRelationshipsByEvent?: (eventId: string) => VisualizationRelationship[];
+  getTimelineItemByEvent?: (eventId: string) => BackendTimelineItem | null;
 }
 
 /**
@@ -140,9 +239,10 @@ export interface RelationshipGraphProps {
  * IncidentTimeline Component Props.
  */
 export interface IncidentTimelineProps {
-  events: BackendEvent[];
+  events?: BackendEvent[];
+  timeline?: BackendTimelineItem[] | null;
   selectedEventId?: string | null;
-  onEventSelect?: (event: BackendEvent) => void;
+  onEventSelect?: (event: BackendEvent | BackendTimelineItem) => void;
   height?: string | number;
   width?: string | number;
   title?: string;

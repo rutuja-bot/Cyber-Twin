@@ -1,6 +1,6 @@
 /**
  * Verification Suite for Cyber Twin Incident Replay Playback Engine
- * 
+ *
  * Verifies:
  * 1. Replay Engine utility functions (calculateNextIndex, calculatePrevIndex, getPlaybackIntervalMs, formatReplayProgress).
  * 2. Boundary conditions:
@@ -12,18 +12,24 @@
  * 6. InvestigationView component integration (replay controls, accessible names, aria labels, toolbar markup).
  */
 
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+const mockEvents = require('./mockEvents.json');
 
-const {
+import {
   calculateNextIndex,
   calculatePrevIndex,
   getPlaybackIntervalMs,
   formatReplayProgress,
   PLAYBACK_SPEEDS
-} = require('./replayEngine');
+} from './replayEngine.js';
 
-const { mockEvents, createCyberTwinDataModel } = require('./index');
+import { createCyberTwinDataModel } from './dataAdapter.js';
 
 console.log('================================================================');
 console.log('   CYBER TWIN INCIDENT REPLAY PLAYBACK VERIFICATION SUITE       ');

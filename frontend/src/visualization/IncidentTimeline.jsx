@@ -3,7 +3,7 @@ import React, { useState, useMemo } from 'react';
 /**
  * Formats a raw snake_case or kebab-case event_type string into a human-readable title.
  * Generic and does not rely on any specific event names.
- * @param {string} eventType 
+ * @param {string} eventType
  * @returns {string}
  */
 export function formatEventType(eventType) {
@@ -17,7 +17,7 @@ export function formatEventType(eventType) {
 /**
  * Returns dynamic visual theme cues based on generic event characteristics.
  * Generic keyword heuristic; does not hardcode event IDs.
- * @param {string} eventType 
+ * @param {string} eventType
  * @returns {{ badgeBg: string, badgeColor: string, borderColor: string }}
  */
 function getEventVisualCues(eventType) {
@@ -55,17 +55,45 @@ function getEventVisualCues(eventType) {
 }
 
 /**
+ * Helper to get badge colors for MITRE ATT&CK stages
+ */
+function getStageVisualCues(stage) {
+  const lower = (stage || '').toLowerCase();
+  if (lower.includes('initial access')) {
+    return { bg: '#fef3c7', color: '#92400e', border: '#f59e0b' };
+  }
+  if (lower.includes('execution')) {
+    return { bg: '#ffedd5', color: '#9a3412', border: '#ea580c' };
+  }
+  if (lower.includes('lateral movement') || lower.includes('lateral')) {
+    return { bg: '#f3e8ff', color: '#6b21a8', border: '#a855f7' };
+  }
+  if (lower.includes('collection')) {
+    return { bg: '#e0e7ff', color: '#3730a3', border: '#6366f1' };
+  }
+  if (lower.includes('command') || lower.includes('c2')) {
+    return { bg: '#ffe4e6', color: '#9f1239', border: '#f43f5e' };
+  }
+  if (lower.includes('exfiltration') || lower.includes('exfil')) {
+    return { bg: '#fee2e2', color: '#991b1b', border: '#ef4444' };
+  }
+  return { bg: '#f1f5f9', color: '#334155', border: '#94a3b8' };
+}
+
+/**
  * IncidentTimeline React Component for Cyber Twin
- * 
+ *
  * Renders an interactive, chronological forensic timeline of events with:
  * - Chronological event ordering
+ * - MITRE ATT&CK stage & technique tracking (Initial Access -> Exfiltration)
  * - Dynamic entity badges (User, Device, IP, File, Server)
  * - Evidence ID link badges
  * - Click-to-select with full 11-field Event v1 Inspector
  * - Generic, contract-bound data handling (zero hardcoding)
- * 
+ *
  * Props:
- * - events: Array<BackendEvent> (required)
+ * - events: Array<BackendEvent> (optional if timeline provided)
+ * - timeline: Array<BackendTimelineItem> (optional canonical reconstruction timeline)
  * - selectedEventId: string | null (optional controlled selection)
  * - onEventSelect: (event: BackendEvent) => void (optional callback)
  * - height: string | number (default: '620px')
@@ -74,6 +102,7 @@ function getEventVisualCues(eventType) {
  */
 export function IncidentTimeline({
   events = [],
+  timeline = [],
   selectedEventId = null,
   onEventSelect,
   height = '620px',
@@ -82,16 +111,54 @@ export function IncidentTimeline({
   attackPathOnly = false,
   attackPathEventIds = null
 }) {
+  // Timeline item map indexed by event_id
+  const timelineMap = useMemo(() => {
+    const map = new Map();
+    if (Array.isArray(timeline)) {
+      for (const item of timeline) {
+        if (item.event_id) {
+          map.set(item.event_id, item);
+        }
+      }
+    }
+    return map;
+  }, [timeline]);
+
+  // Derive effective events list (from events or timeline fallback)
+  const effectiveEvents = useMemo(() => {
+    if (Array.isArray(events) && events.length > 0) return events;
+    if (Array.isArray(timeline) && timeline.length > 0) {
+      return timeline.map(tl => ({
+        event_id: tl.event_id,
+        case_id: tl.case_id || 'CASE-001',
+        timestamp: tl.timestamp,
+        event_type: tl.stage || 'Incident Step',
+        user: null,
+        device: null,
+        source_ip: null,
+        destination_ip: null,
+        file: null,
+        server: null,
+        evidence_id: tl.evidence_id || null,
+        stage: tl.stage,
+        technique: tl.technique,
+        description: tl.description,
+        sequence: tl.sequence
+      }));
+    }
+    return [];
+  }, [events, timeline]);
+
   // Sort events strictly in chronological order
   const sortedEvents = useMemo(() => {
-    if (!Array.isArray(events)) return [];
-    return [...events].sort((a, b) => {
+    if (!Array.isArray(effectiveEvents)) return [];
+    return [...effectiveEvents].sort((a, b) => {
       const timeA = new Date(a.timestamp).getTime();
       const timeB = new Date(b.timestamp).getTime();
       if (timeA !== timeB) return timeA - timeB;
       return (a.event_id || '').localeCompare(b.event_id || '');
     });
-  }, [events]);
+  }, [effectiveEvents]);
 
   // Internal selection state (fallback if selectedEventId not provided externally)
   const [internalSelectedId, setInternalSelectedId] = useState(null);
@@ -105,6 +172,12 @@ export function IncidentTimeline({
   const activeEvent = useMemo(() => {
     return sortedEvents.find(e => e.event_id === activeId) || null;
   }, [sortedEvents, activeId]);
+
+  // Active event's timeline enrichment
+  const activeTimelineInfo = useMemo(() => {
+    if (!activeEvent) return null;
+    return timelineMap.get(activeEvent.event_id) || (activeEvent.stage ? activeEvent : null);
+  }, [activeEvent, timelineMap]);
 
   const handleEventClick = (evt) => {
     setInternalSelectedId(evt.event_id);
@@ -166,7 +239,7 @@ export function IncidentTimeline({
 
       {/* 2. Main Content Split View (Timeline List on Left, Inspector on Right) */}
       <div style={{ display: 'flex', flex: 1, minHeight: 0, overflow: 'hidden' }}>
-        
+
         {/* Left Pane: Scrollable Timeline */}
         <div style={{
           flex: 1,
@@ -333,6 +406,49 @@ export function IncidentTimeline({
                             </span>
                           )}
                         </div>
+
+                        {/* MITRE ATT&CK Stage & Description (when present in canonical timeline) */}
+                        {(() => {
+                          const tlInfo = timelineMap.get(evt.event_id) || (evt.stage ? evt : null);
+                          if (!tlInfo || !tlInfo.stage) return null;
+                          const stageCues = getStageVisualCues(tlInfo.stage);
+                          return (
+                            <div style={{
+                              marginTop: '8px',
+                              padding: '8px 10px',
+                              borderRadius: '6px',
+                              backgroundColor: '#f8fafc',
+                              border: '1px solid #e2e8f0',
+                              display: 'flex',
+                              flexDirection: 'column',
+                              gap: '4px'
+                            }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
+                                <span style={{
+                                  fontSize: '10px',
+                                  fontWeight: 700,
+                                  padding: '2px 6px',
+                                  borderRadius: '4px',
+                                  backgroundColor: stageCues.bg,
+                                  color: stageCues.color,
+                                  border: `1px solid ${stageCues.border}`
+                                }}>
+                                  Stage: {tlInfo.stage}
+                                </span>
+                                {tlInfo.technique && (
+                                  <span style={{ fontSize: '11px', color: '#475569', fontWeight: 600 }}>
+                                    {tlInfo.technique}
+                                  </span>
+                                )}
+                              </div>
+                              {tlInfo.description && (
+                                <div style={{ fontSize: '11px', color: '#64748b', fontStyle: 'italic', lineHeight: 1.35 }}>
+                                  {tlInfo.description}
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })()}
                       </div>
                     </div>
                   );
@@ -407,6 +523,44 @@ export function IncidentTimeline({
                 <InspectorRow label="Server" value={activeEvent.server} />
                 <InspectorRow label="Evidence ID" value={activeEvent.evidence_id} isEvidence />
               </div>
+
+              {/* MITRE ATT&CK Stage Details if present */}
+              {activeTimelineInfo && activeTimelineInfo.stage && (
+                <div style={{
+                  padding: '12px',
+                  borderRadius: '6px',
+                  backgroundColor: '#fffbeb',
+                  border: '1px solid #fde68a',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '6px'
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <span style={{
+                      fontSize: '10px',
+                      fontWeight: 700,
+                      textTransform: 'uppercase',
+                      padding: '2px 6px',
+                      borderRadius: '4px',
+                      backgroundColor: getStageVisualCues(activeTimelineInfo.stage).bg,
+                      color: getStageVisualCues(activeTimelineInfo.stage).color,
+                      border: `1px solid ${getStageVisualCues(activeTimelineInfo.stage).border}`
+                    }}>
+                      Stage {activeTimelineInfo.sequence || '—'}: {activeTimelineInfo.stage}
+                    </span>
+                  </div>
+                  {activeTimelineInfo.technique && (
+                    <div style={{ fontSize: '12px', fontWeight: 600, color: '#92400e' }}>
+                      {activeTimelineInfo.technique}
+                    </div>
+                  )}
+                  {activeTimelineInfo.description && (
+                    <div style={{ fontSize: '11px', color: '#78350f', lineHeight: 1.4 }}>
+                      {activeTimelineInfo.description}
+                    </div>
+                  )}
+                </div>
+              )}
 
               {/* Forensic Traceability Callout */}
               <div style={{

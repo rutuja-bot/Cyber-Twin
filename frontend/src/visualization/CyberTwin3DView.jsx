@@ -4,7 +4,7 @@ import { transformModelTo3DScene } from './cyberTwin3D';
 
 /**
  * CyberTwin3DView Component for Cyber Twin
- * 
+ *
  * Lightweight 3D spatial reconstruction of enterprise cyber infrastructure using Three.js:
  * - Enterprise network zones (External Ingress/Egress, Corporate LAN, Restricted Data Center)
  * - 3D primitive representations (Servers -> Towers, Workstations -> Boxes, Users -> Cylinders, IPs -> Octahedrons, Files -> Floaters)
@@ -13,7 +13,7 @@ import { transformModelTo3DScene } from './cyberTwin3D';
  * - Replay Engine Synchronization (smoothly highlights active event hosts and vectors)
  * - Animated threat beams showing lateral movement, C2 transmission, and data exfiltration
  * - Complete memory cleanup on unmount
- * 
+ *
  * Props:
  * - model: CyberTwinDataModel (required)
  * - selectedEventId: string | null (optional controlled focus)
@@ -613,4 +613,3 @@ export function CyberTwin3DView({
 }
 
 export default CyberTwin3DView;
-

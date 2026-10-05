@@ -1,0 +1,1 @@
+2026-10-04 10:22:45 [FILE_AUDIT] Host=SRV-CORP-FILE User=employee01 File="\\SRV-CORP-FILE\confidential\customer_data.csv" Access=READ Status=SUCCESS

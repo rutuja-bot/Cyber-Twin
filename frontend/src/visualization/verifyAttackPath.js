@@ -1,6 +1,6 @@
 /**
  * Verification Suite for Cyber Twin Attack Path Highlighting & Isolation Toggle (Task 2)
- * 
+ *
  * Verifies:
  * 1. Attack path pure utility functions export correctly from attackPath.js and index.js.
  * 2. Attack-path detection works with the existing mock dataset:
@@ -19,23 +19,30 @@
  * 8. Backward-compatibility: RelationshipGraph and IncidentTimeline preserve all previous contracts.
  */
 
-const fs = require('fs');
-const path = require('path');
-const cytoscape = require('cytoscape');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import cytoscape from 'cytoscape';
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+const mockEvents = require('./mockEvents.json');
 
-const {
-  mockEvents,
-  createCyberTwinDataModel,
-  buildCytoscapeElements,
-  getCytoscapeStylesheet,
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+import { createCyberTwinDataModel } from './dataAdapter.js';
+import { buildCytoscapeElements, getCytoscapeStylesheet } from './graphElements.js';
+import {
   isAttackEvent,
   getAttackPathEventIds,
   getAttackPathNodeIds,
   getAttackPathEdgeIds,
-  identifyAttackPath,
+  identifyAttackPath
+} from './attackPath.js';
+import {
   calculateNextIndex,
   calculatePrevIndex
-} = require('./index');
+} from './replayEngine.js';
 
 console.log('================================================================');
 console.log('   CYBER TWIN ATTACK PATH ISOLATION VERIFICATION (TASK 2)       ');

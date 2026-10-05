@@ -1,6 +1,6 @@
 /**
  * Verification Script for Cyber Twin Incident Timeline (Milestone 2)
- * 
+ *
  * Verifies:
  * 1. Mock event data loads and conforms to Backend Event v1 contract.
  * 2. Events are sorted strictly in chronological order.
@@ -13,15 +13,20 @@
  * 9. Integration with CyberTwinDataModel and existing exports.
  */
 
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+const mockEvents = require('./mockEvents.json');
 
-const {
-  mockEvents,
+import {
   sortEventsChronologically,
   isValidBackendEvent,
   createCyberTwinDataModel
-} = require('./index');
+} from './dataAdapter.js';
 
 console.log('================================================================');
 console.log('   CYBER TWIN INCIDENT TIMELINE VERIFICATION                   ');

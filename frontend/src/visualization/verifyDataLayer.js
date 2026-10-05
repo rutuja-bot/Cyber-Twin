@@ -1,6 +1,6 @@
 /**
  * Verification Script for Cyber Twin Visualization Data Layer (Stage 1)
- * 
+ *
  * Verifies:
  * 1. Mock dataset strictly follows Backend Event v1 contract.
  * 2. Entities are correctly derived from event fields.
@@ -9,15 +9,18 @@
  * 5. Evidence IDs remain 100% traceable.
  */
 
-const {
-  mockEvents,
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+const mockEvents = require('./mockEvents.json');
+
+import {
   isValidBackendEvent,
   sortEventsChronologically,
   deriveEntities,
   deriveRelationships,
   buildEvidenceMap,
   createCyberTwinDataModel
-} = require('./index');
+} from './dataAdapter.js';
 
 console.log('================================================================');
 console.log('   CYBER TWIN VISUALIZATION DATA LAYER VERIFICATION (STAGE 1)   ');
@@ -138,4 +141,3 @@ if (allPassed) {
   process.exit(1);
 }
 console.log('================================================================\n');
-

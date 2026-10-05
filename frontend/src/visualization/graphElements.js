@@ -1,8 +1,9 @@
 /**
  * Cytoscape Element Builder and Stylesheet for Cyber Twin Relationship Graph
- * 
- * Transforms the generic CyberTwinDataModel into Cytoscape.js nodes and edges,
- * ensuring strict visual differentiation, entity type semantics, and evidence traceability.
+ *
+ * Transforms the CyberTwinDataModel into Cytoscape.js nodes and edges,
+ * ensuring strict visual differentiation, canonical entity types, and all
+ * backend relationship categories (AUTHENTICATED_TO, RESOLVED_IP, USES, EXECUTED, CONNECTED_TO, ACCESSED, EXFILTRATED_TO).
  */
 
 /**
@@ -10,7 +11,7 @@
  * @param {Object} model - CyberTwinDataModel instance
  * @returns {Array<Object>} Cytoscape element definition objects
  */
-function buildCytoscapeElements(model) {
+export function buildCytoscapeElements(model) {
   if (!model || !Array.isArray(model.entities) || !Array.isArray(model.relationships)) {
     throw new Error('buildCytoscapeElements requires a valid CyberTwinDataModel with entities and relationships arrays.');
   }
@@ -19,23 +20,31 @@ function buildCytoscapeElements(model) {
 
   // 1. Build Nodes from model.entities
   for (const entity of model.entities) {
+    let normType = entity.type || 'device';
+    if (normType === 'workstation') normType = 'device';
+    if (normType === 'ip_address') normType = 'ip';
+    if (normType === 'file_object') normType = 'file';
+
     elements.push({
       group: 'nodes',
       data: {
         id: entity.id,
         label: entity.name,
-        entityType: entity.type, // 'user' | 'device' | 'ip' | 'file' | 'server'
+        entityType: normType, // 'user' | 'device' | 'ip' | 'file' | 'server'
         firstSeen: entity.first_seen,
         lastSeen: entity.last_seen,
         eventIds: entity.event_ids || [],
         evidenceIds: entity.evidence_ids || []
       },
-      classes: `entity-node entity-${entity.type}`
+      classes: `entity-node entity-${normType}`
     });
   }
 
   // 2. Build Edges from model.relationships
   for (const rel of model.relationships) {
+    const safeType = (rel.type || 'CONNECTED_TO').toLowerCase().replace(/[^a-z0-9]/g, '_');
+    const evIds = Array.isArray(rel.evidence_ids) ? rel.evidence_ids : (rel.evidence_id ? [rel.evidence_id] : []);
+
     elements.push({
       group: 'edges',
       data: {
@@ -43,12 +52,13 @@ function buildCytoscapeElements(model) {
         source: rel.source_id,
         target: rel.target_id,
         label: rel.type,
-        relationshipType: rel.type, // 'USES' | 'CONNECTED_TO' | 'ACCESSED'
+        relationshipType: rel.type,
         eventId: rel.event_id,
-        evidenceId: rel.evidence_id,
+        evidenceId: rel.evidence_id || evIds[0] || '',
+        evidenceIds: evIds,
         timestamp: rel.timestamp
       },
-      classes: `relationship-edge rel-${rel.type.toLowerCase()}`
+      classes: `relationship-edge rel-${safeType}`
     });
   }
 
@@ -60,7 +70,7 @@ function buildCytoscapeElements(model) {
  * across entity types, relationship categories, and timeline synchronization states.
  * @returns {Array<Object>} Cytoscape stylesheet rules
  */
-function getCytoscapeStylesheet() {
+export function getCytoscapeStylesheet() {
   return [
     // Base Node Style
     {
@@ -207,6 +217,27 @@ function getCytoscapeStylesheet() {
       }
     },
 
+    // Relationship: AUTHENTICATED_TO (Sky Blue)
+    {
+      selector: 'edge.rel-authenticated_to',
+      style: {
+        'line-color': '#0284C7',
+        'target-arrow-color': '#0284C7',
+        'width': 2.4
+      }
+    },
+
+    // Relationship: RESOLVED_IP (Slate dotted)
+    {
+      selector: 'edge.rel-resolved_ip',
+      style: {
+        'line-color': '#64748B',
+        'target-arrow-color': '#64748B',
+        'line-style': 'dotted',
+        'width': 1.8
+      }
+    },
+
     // Relationship: USES (Blue solid)
     {
       selector: 'edge.rel-uses',
@@ -214,6 +245,16 @@ function getCytoscapeStylesheet() {
         'line-color': '#2563EB',
         'target-arrow-color': '#2563EB',
         'width': 2.2
+      }
+    },
+
+    // Relationship: EXECUTED (Orange solid)
+    {
+      selector: 'edge.rel-executed',
+      style: {
+        'line-color': '#EA580C',
+        'target-arrow-color': '#EA580C',
+        'width': 2.4
       }
     },
 
@@ -236,6 +277,17 @@ function getCytoscapeStylesheet() {
         'line-style': 'dashed',
         'line-dash-pattern': [6, 3],
         'width': 2
+      }
+    },
+
+    // Relationship: EXFILTRATED_TO (Red prominent)
+    {
+      selector: 'edge.rel-exfiltrated_to',
+      style: {
+        'line-color': '#DC2626',
+        'target-arrow-color': '#DC2626',
+        'width': 3.2,
+        'arrow-scale': 1.4
       }
     },
 
@@ -276,7 +328,7 @@ function getCytoscapeStylesheet() {
   ];
 }
 
-module.exports = {
+export default {
   buildCytoscapeElements,
   getCytoscapeStylesheet
 };

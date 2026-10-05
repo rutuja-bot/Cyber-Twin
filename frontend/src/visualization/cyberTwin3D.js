@@ -1,25 +1,25 @@
 /**
  * Cyber Twin 3D Infrastructure Layout & Transformation Helper
- * 
- * Maps the 2D CyberTwinDataModel (entities, relationships, and events) into a 
+ *
+ * Maps the CyberTwinDataModel (entities, relationships, and events) into a
  * spatial 3D cyber infrastructure topology adhering to CYBER_TWIN_REPLAY_SPEC.md:
  * - Zone 1 (External Ingress/Egress): Internet Gateway, Adversary Ingress IP, C2 Egress
  * - Zone 2 (Corporate Workstation Subnet): User Endpoints, Workstation devices, local payloads/files
  * - Zone 3 (Restricted Data Center): High-value databases, internal servers, vault assets
- * 
+ *
  * Provides deterministic 3D layout coordinates, primitive geometry specs, and threat beam definitions.
  */
 
 // Zone Identifiers
-const ZONE_EXTERNAL = 'zone_external';
-const ZONE_CORP_LAN = 'zone_corp_lan';
-const ZONE_RESTRICTED_DC = 'zone_restricted_dc';
+export const ZONE_EXTERNAL = 'zone_external';
+export const ZONE_CORP_LAN = 'zone_corp_lan';
+export const ZONE_RESTRICTED_DC = 'zone_restricted_dc';
 
 /**
  * Returns static definitions for enterprise cyber infrastructure zones.
  * @returns {Array<Object>}
  */
-function getZoneDefinitions() {
+export function getZoneDefinitions() {
   return [
     {
       id: ZONE_EXTERNAL,
@@ -51,11 +51,11 @@ function getZoneDefinitions() {
 /**
  * Classifies an entity into an enterprise infrastructure zone.
  * Generic and deterministic; evaluates entity type and network naming/IP patterns.
- * 
+ *
  * @param {Object} entity - VisualizationEntity
  * @returns {string} Zone ID
  */
-function classifyEntityZone(entity) {
+export function classifyEntityZone(entity) {
   if (!entity) return ZONE_CORP_LAN;
 
   const type = entity.type || '';
@@ -63,12 +63,12 @@ function classifyEntityZone(entity) {
   const id = (entity.id || '').toLowerCase();
 
   // 1. Servers and Data Center Assets -> Restricted Data Center
-  if (type === 'server' || name.includes('server') || name.includes('db-') || name.includes('vault') || name.includes('dc-')) {
+  if (type === 'server' || name.includes('server') || name.includes('srv-') || name.includes('db-') || name.includes('vault') || name.includes('dc-')) {
     return ZONE_RESTRICTED_DC;
   }
 
   // 2. IP Addresses: check subnets
-  if (type === 'ip') {
+  if (type === 'ip' || type === 'ip_address') {
     if (name.startsWith('192.168.2.') || name.startsWith('10.10.2.') || name.startsWith('172.16.2.')) {
       return ZONE_RESTRICTED_DC;
     }
@@ -80,13 +80,13 @@ function classifyEntityZone(entity) {
   }
 
   // 3. User, Device, Workstation, and local files -> Corporate LAN
-  if (type === 'device' || type === 'user') {
+  if (type === 'device' || type === 'workstation' || type === 'user') {
     return ZONE_CORP_LAN;
   }
 
-  if (type === 'file') {
-    // If file is associated with database/vault, place in DC, else Corp LAN
-    if (name.includes('vault') || name.includes('database')) {
+  if (type === 'file' || type === 'file_object') {
+    // If file is associated with database/vault/server share, place in DC, else Corp LAN
+    if (name.includes('srv-') || name.includes('vault') || name.includes('database')) {
       return ZONE_RESTRICTED_DC;
     }
     return ZONE_CORP_LAN;
@@ -97,11 +97,11 @@ function classifyEntityZone(entity) {
 
 /**
  * Assigns 3D primitive geometry attributes based on entity type.
- * 
- * @param {Object} entity 
+ *
+ * @param {Object} entity
  * @returns {Object} { geometryType, dimensions, baseColor, emissiveColor }
  */
-function getEntity3DSpec(entity) {
+export function getEntity3DSpec(entity) {
   const type = entity.type || 'device';
 
   switch (type) {
@@ -114,6 +114,7 @@ function getEntity3DSpec(entity) {
         label: entity.name
       };
     case 'device':
+    case 'workstation':
       return {
         geometryType: 'box',
         dimensions: [1.8, 1.4, 1.8], // Workstation / host box
@@ -129,7 +130,8 @@ function getEntity3DSpec(entity) {
         emissiveColor: 0x1d4ed8,
         label: entity.name
       };
-    case 'ip': {
+    case 'ip':
+    case 'ip_address': {
       const isExternal = classifyEntityZone(entity) === ZONE_EXTERNAL;
       return {
         geometryType: 'octahedron',
@@ -140,6 +142,7 @@ function getEntity3DSpec(entity) {
       };
     }
     case 'file':
+    case 'file_object':
       return {
         geometryType: 'cylinder',
         dimensions: [0.8, 0.8, 1.2, 12], // Floating artifact barrel
@@ -161,12 +164,12 @@ function getEntity3DSpec(entity) {
 
 /**
  * Transforms a CyberTwinDataModel into 3D scene elements with deterministic coordinates.
- * 
+ *
  * @param {Object} model - CyberTwinDataModel
  * @param {Object} [options] - Optional layout configuration
  * @returns {Object} { nodes: Array<Object>, links: Array<Object>, zones: Array<Object>, summary: Object }
  */
-function transformModelTo3DScene(model, options = {}) {
+export function transformModelTo3DScene(model, options = {}) {
   const entities = (model && Array.isArray(model.entities)) ? model.entities : [];
   const relationships = (model && Array.isArray(model.relationships)) ? model.relationships : [];
   const events = (model && Array.isArray(model.events)) ? model.events : [];
@@ -224,7 +227,7 @@ function transformModelTo3DScene(model, options = {}) {
       }
 
       // If file entity, float directly above ground
-      if (ent.type === 'file') {
+      if (ent.type === 'file' || ent.type === 'file_object') {
         y = 3.6;
       }
 
@@ -258,6 +261,7 @@ function transformModelTo3DScene(model, options = {}) {
         type: rel.type,
         eventId: rel.event_id,
         evidenceId: rel.evidence_id,
+        evidenceIds: rel.evidence_ids || (rel.evidence_id ? [rel.evidence_id] : []),
         timestamp: rel.timestamp,
         startPosition: startPos,
         endPosition: endPos
@@ -280,7 +284,7 @@ function transformModelTo3DScene(model, options = {}) {
   };
 }
 
-module.exports = {
+export default {
   ZONE_EXTERNAL,
   ZONE_CORP_LAN,
   ZONE_RESTRICTED_DC,
@@ -289,4 +293,3 @@ module.exports = {
   getEntity3DSpec,
   transformModelTo3DScene
 };
-

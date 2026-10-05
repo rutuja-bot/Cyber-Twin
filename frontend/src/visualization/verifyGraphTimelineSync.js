@@ -1,6 +1,6 @@
 /**
  * Verification Script for Cyber Twin Graph <-> Timeline Synchronization (Milestone 3)
- * 
+ *
  * Verifies:
  * 1. Timeline and Graph can share unified selectedEventId state.
  * 2. Selecting an event correctly identifies participating graph entities.

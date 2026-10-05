@@ -13,7 +13,7 @@ import { identifyAttackPath } from './attackPath';
 
 /**
  * InvestigationView Component for Cyber Twin
- * 
+ *
  * Comprehensive investigator-facing workbench integrating:
  * 1. Case Header with dynamic telemetry (case_id, events, entities, relationships, evidence counts)
  * 2. Attack Path Only Toggle (isolating adversary progression: Patient Zero -> Pivots -> Target)
@@ -23,7 +23,7 @@ import { identifyAttackPath } from './attackPath';
  * 6. 3D Cyber Twin Infrastructure Layer (Three.js spatial enterprise topology and animated threat beams)
  * 7. Forensic Evidence & Correlation Inspector (deep evidence traceability into evidence_map)
  * 8. Investigation Status & Footer bar (active focus indicator, quick clear focus)
- * 
+ *
  * Synchronization Architecture:
  * - Timeline event selection illuminates corresponding nodes & edges in both 2D and 3D graphs.
  * - Graph edge selection with a triggering_event_id focuses that event in the timeline and graphs.
@@ -31,7 +31,7 @@ import { identifyAttackPath } from './attackPath';
  * - Attack Path toggle isolates attack nodes and edges while strongly dimming non-attack background elements.
  * - Clear Focus action completely restores full graph visibility and unselects the timeline.
  * - 100% generic: zero hardcoded mock event IDs, entity IDs, or case IDs.
- * 
+ *
  * Props:
  * - model: CyberTwinDataModel (required)
  * - initialEventId: string | null (optional)
@@ -259,6 +259,32 @@ export function InvestigationView({
     setSelectedGraphItem(null);
   }, []);
 
+  if (!model) {
+    return (
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width,
+        height,
+        backgroundColor: '#0f172a',
+        color: '#94a3b8',
+        borderRadius: '12px',
+        border: '1px solid #334155',
+        fontFamily: 'system-ui, -apple-system, sans-serif'
+      }}>
+        <div style={{ textAlign: 'center' }}>
+          <div style={{ fontSize: '32px', marginBottom: '8px' }}>🛡️</div>
+          <div style={{ fontSize: '15px', fontWeight: 600, color: '#f8fafc' }}>
+            No Investigation Model Loaded
+          </div>
+          <div style={{ fontSize: '12px', color: '#64748b', marginTop: '4px' }}>
+            Provide a valid CyberTwinDataModel or Reconstruction payload.
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={{
@@ -736,6 +762,7 @@ export function InvestigationView({
         }}>
           <IncidentTimeline
             events={model?.events || []}
+            timeline={model?.timeline || []}
             selectedEventId={selectedEventId}
             onEventSelect={handleTimelineEventSelect}
             attackPathOnly={attackPathOnly}

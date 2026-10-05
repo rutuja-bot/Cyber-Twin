@@ -1,14 +1,14 @@
 # Cyber Twin Visualization & Incident Replay Specification
 
-**Document Status**: Specification / Working Draft  
-**Lead Author**: Person 4 — Cyber Twin Visualization & Replay Lead (Sakshi)  
-**Target Version**: She Solves 3.0 — Round 2 Architecture & Visualization Standard  
+**Document Status**: Specification / Working Draft
+**Lead Author**: Person 4 — Cyber Twin Visualization & Replay Lead (Sakshi)
+**Target Version**: She Solves 3.0 — Round 2 Architecture & Visualization Standard
 
 ---
 
 ## 1. Purpose
 
-The purpose of this document is to define the functional, operational, and visual behavior of the **Cyber Twin Visualization and Incident Replay System**. 
+The purpose of this document is to define the functional, operational, and visual behavior of the **Cyber Twin Visualization and Incident Replay System**.
 
 The Cyber Twin serves as the central visual and analytical abstraction of the project, allowing forensic investigators and evaluators to observe, explore, scrub through, and verify the reconstruction of a cyber incident from raw digital evidence to high-level attack vectors. This specification establishes a shared contract across all sub-disciplines (Backend, Forensics, Frontend, and Visualization) so that visual components reflect forensically sound, evidence-backed states.
 

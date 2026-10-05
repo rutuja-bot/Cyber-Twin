@@ -1,6 +1,6 @@
 /**
  * Verification Script for Cyber Twin Relationship Graph (Stage 1B)
- * 
+ *
  * Verifies:
  * 1. Cytoscape elements are correctly generated from CyberTwinDataModel.
  * 2. Nodes expose id, entityType, label, eventIds, evidenceIds.
@@ -12,16 +12,18 @@
  * 8. Clear visual differentiation exists in the stylesheet for all entity types.
  */
 
-const cytoscape = require('cytoscape');
-const fs = require('fs');
-const path = require('path');
+import cytoscape from 'cytoscape';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+const mockEvents = require('./mockEvents.json');
 
-const {
-  mockEvents,
-  createCyberTwinDataModel,
-  buildCytoscapeElements,
-  getCytoscapeStylesheet
-} = require('./index');
+import { createCyberTwinDataModel } from './dataAdapter.js';
+import { buildCytoscapeElements, getCytoscapeStylesheet } from './graphElements.js';
 
 console.log('================================================================');
 console.log('   CYBER TWIN RELATIONSHIP GRAPH VERIFICATION (STAGE 1B)        ');
@@ -79,7 +81,10 @@ assert(expectedEntityTypes.every(t => foundEntityTypes.has(t)),
 
 // 4. Edge Contract & Attributes Verification
 console.log('\n--- 4. Edge Contract & Attributes Verification ---');
-const expectedRelTypes = ['USES', 'CONNECTED_TO', 'ACCESSED'];
+const expectedRelTypes = [
+  'USES', 'CONNECTED_TO', 'ACCESSED',
+  'AUTHENTICATED_TO', 'RESOLVED_IP', 'EXECUTED', 'EXFILTRATED_TO'
+];
 const foundRelTypes = new Set();
 
 edges.forEach(edge => {
