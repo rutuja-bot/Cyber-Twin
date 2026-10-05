@@ -1,0 +1,80 @@
+[
+  {
+    "event_id": "EVT-001",
+    "case_id": "CASE-001",
+    "timestamp": "2026-10-04T10:15:00",
+    "event_type": "suspicious_login",
+    "user": "employee01",
+    "device": "WORKSTATION-01",
+    "source_ip": "192.168.1.20",
+    "destination_ip": null,
+    "file": null,
+    "server": null,
+    "evidence_id": "EVD-001"
+  },
+  {
+    "event_id": "EVT-002",
+    "case_id": "CASE-001",
+    "timestamp": "2026-10-04T10:18:30",
+    "event_type": "suspicious_process_spawn",
+    "user": "employee01",
+    "device": "WORKSTATION-01",
+    "source_ip": null,
+    "destination_ip": null,
+    "file": "powershell.exe",
+    "server": null,
+    "evidence_id": "EVD-002"
+  },
+  {
+    "event_id": "EVT-003",
+    "case_id": "CASE-001",
+    "timestamp": "2026-10-04T10:21:05",
+    "event_type": "internal_server_connection",
+    "user": "employee01",
+    "device": "WORKSTATION-01",
+    "source_ip": "192.168.1.20",
+    "destination_ip": null,
+    "file": null,
+    "server": "SRV-CORP-FILE",
+    "evidence_id": "EVD-003"
+  },
+  {
+    "event_id": "EVT-004",
+    "case_id": "CASE-001",
+    "timestamp": "2026-10-04T10:22:45",
+    "event_type": "sensitive_file_access",
+    "user": "employee01",
+    "device": "WORKSTATION-01",
+    "source_ip": null,
+    "destination_ip": null,
+    "file": "\\SRV-CORP-FILE\\confidential\\customer_data.csv",
+    "server": "SRV-CORP-FILE",
+    "evidence_id": "EVD-004"
+  },
+  {
+    "event_id": "EVT-005",
+    "case_id": "CASE-001",
+    "timestamp": "2026-10-04T10:24:15",
+    "event_type": "suspicious_network_connection",
+    "user": null,
+    "device": null,
+    "source_ip": "192.168.1.20",
+    "destination_ip": "198.51.100.24",
+    "file": null,
+    "server": null,
+    "evidence_id": "EVD-005"
+  },
+  {
+    "event_id": "EVT-006",
+    "case_id": "CASE-001",
+    "timestamp": "2026-10-04T10:25:00",
+    "event_type": "outbound_data_transfer",
+    "user": null,
+    "device": null,
+    "source_ip": "192.168.1.20",
+    "destination_ip": "198.51.100.24",
+    "file": null,
+    "server": null,
+    "evidence_id": "EVD-005"
+  }
+]

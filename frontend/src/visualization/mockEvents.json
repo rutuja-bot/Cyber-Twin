@@ -1,0 +1,93 @@
+[
+  {
+    "event_id": "EVT-001",
+    "case_id": "CASE-001",
+    "timestamp": "2026-10-04T08:30:00",
+    "event_type": "normal_login",
+    "user": "employee01",
+    "device": "WORKSTATION-01",
+    "source_ip": "192.168.1.50",
+    "destination_ip": null,
+    "file": null,
+    "server": null,
+    "evidence_id": "EVD-001"
+  },
+  {
+    "event_id": "EVT-002",
+    "case_id": "CASE-001",
+    "timestamp": "2026-10-04T09:12:15",
+    "event_type": "suspicious_login",
+    "user": "employee01",
+    "device": "WORKSTATION-01",
+    "source_ip": "198.51.100.44",
+    "destination_ip": null,
+    "file": null,
+    "server": null,
+    "evidence_id": "EVD-002"
+  },
+  {
+    "event_id": "EVT-003",
+    "case_id": "CASE-001",
+    "timestamp": "2026-10-04T09:15:30",
+    "event_type": "suspicious_process_execution",
+    "user": "employee01",
+    "device": "WORKSTATION-01",
+    "source_ip": null,
+    "destination_ip": null,
+    "file": "powershell_payload.ps1",
+    "server": null,
+    "evidence_id": "EVD-003"
+  },
+  {
+    "event_id": "EVT-004",
+    "case_id": "CASE-001",
+    "timestamp": "2026-10-04T09:20:00",
+    "event_type": "file_access",
+    "user": "employee01",
+    "device": "WORKSTATION-01",
+    "source_ip": null,
+    "destination_ip": null,
+    "file": "confidential_financials.xlsx",
+    "server": null,
+    "evidence_id": "EVD-004"
+  },
+  {
+    "event_id": "EVT-005",
+    "case_id": "CASE-001",
+    "timestamp": "2026-10-04T09:25:45",
+    "event_type": "internal_server_connection",
+    "user": "employee01",
+    "device": "WORKSTATION-01",
+    "source_ip": "192.168.1.50",
+    "destination_ip": "192.168.2.10",
+    "file": null,
+    "server": "DB-FINANCE-01",
+    "evidence_id": "EVD-005"
+  },
+  {
+    "event_id": "EVT-006",
+    "case_id": "CASE-001",
+    "timestamp": "2026-10-04T09:40:10",
+    "event_type": "external_connection",
+    "user": "employee01",
+    "device": "WORKSTATION-01",
+    "source_ip": "192.168.1.50",
+    "destination_ip": "203.0.113.88",
+    "file": null,
+    "server": null,
+    "evidence_id": "EVD-006"
+  },
+  {
+    "event_id": "EVT-007",
+    "case_id": "CASE-001",
+    "timestamp": "2026-10-04T09:45:00",
+    "event_type": "data_transfer",
+    "user": "employee01",
+    "device": "WORKSTATION-01",
+    "source_ip": "192.168.1.50",
+    "destination_ip": "203.0.113.88",
+    "file": "exfil_archive.zip",
+    "server": null,
+    "evidence_id": "EVD-007"
+  }
+]

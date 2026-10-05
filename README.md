@@ -1,215 +1,147 @@
 # Cyber-Twin
+**Cyber Twin — Interactive Cyber Incident Reconstruction & Replay for Digital Forensic Investigation**
 
-Interactive digital forensic incident reconstruction and investigation platform that correlates fragmented security evidence into a synchronized investigation workbench.
+*She Solves 3.0 (Round 2) — Prototype Submission*
+*Team:* **Let Her Code**
 
-## Problem
+---
 
-Modern cybersecurity investigations require piecing together evidence scattered across isolated logs—including authentication records, endpoint process activity, internal server requests, file share audits, and perimeter network firewalls.
+## 1. Executive Summary & Problem Statement
 
-Because each source uses different formats, timestamps, and identifiers, investigators must manually correlate events to determine what happened, when it occurred, and which assets were impacted. This manual process causes investigation delays, missed attack paths, and high cognitive overhead during critical incident response.
+Digital forensic investigators face critical friction when analyzing enterprise cyber incidents:
+- **Fragmented Cybersecurity Data**: Security event data is scattered across isolated log repositories (authentication logs, endpoint activity, server audits, firewall traffic, file systems).
+- **Manual Correlation Overhead**: Security Operations Center (SOC) teams spend hours manually stitching timestamps, IP addresses, and process trees across dissimilar log formats.
+- **Lack of Interactive Temporal Replay**: Static flat logs fail to convey the dynamic, spatial, and chronological progression of an intrusion campaign.
 
-## Solution
+**Cyber Twin** transforms fragmented digital forensic logs into an interactive, spatial, and temporal digital twin of the cyber environment. Investigators can observe the attack unfolding step-by-step, inspect correlated entities, trace evidence chains of custody, and verify forensic conclusions with cryptographic certainty.
 
-Cyber-Twin automates the transition from raw security logs to a coherent, reconstructed incident story. The platform ingests multi-source evidence, normalizes timestamps into UTC, discovers entities and relationships, and maps observed actions to the MITRE ATT&CK framework.
+---
 
-Investigators interact with the reconstructed incident through a synchronized workbench featuring a 2D topological relationship graph, a chronological timeline, an attack-path isolation toggle, a lightweight 3D Cyber Twin infrastructure view, and a time-series replay engine. The result is faster, more intuitive, and verifiable digital forensic investigation.
+## 2. Core Solution Pillars (Round 1 PPT Alignment)
 
-## Key Features
+1. **Incident Reconstruction**:
+   - Ingestion and parsing of heterogeneous enterprise logs (`auth.log`, `endpoint.log`, `server.log`, `file_access.log`, `firewall.log`).
+   - Normalization into standardized v1 Event JSON schema with UTC ISO-8601 timestamps.
+   - Deterministic correlation into a STIX 2.1-compliant multi-entity knowledge graph.
 
-- **Multi-Source Ingestion:** Ingests authentication, endpoint, web server, file access, and firewall logs.
-- **Automated Normalization:** Standardizes multi-format timestamps to UTC ISO-8601 and maps records to a canonical 11-field event model.
-- **Deterministic Correlation:** Links discrete events by user accounts, device hostnames, IP addresses, servers, and files.
-- **Chronological Timeline:** Sequences attack progression with MITRE ATT&CK tactical classifications.
-- **Evidence Traceability:** Maintains cryptographic SHA-256 hashes and explicit provenance from findings back to raw evidence artifacts.
-- **2D Relationship Graph:** Interactive network topology powered by Cytoscape.js using force-directed physics layout.
-- **Attack-Path Isolation:** Dedicated toggle that highlights the adversarial kill chain while dimming background network activity.
-- **3D Cyber Twin Layer:** Procedural Three.js visualization organizing infrastructure into External, Corporate LAN, and Datacenter security zones with animated threat beams.
-- **Incident Replay Engine:** Chronological playback controls (Play, Pause, Step, Scrubber) with variable speeds (0.5x to 5x).
-- **Forensic Inspector:** Contextual drawer detailing entity first/last seen times, associated IPs, and supporting evidence.
+2. **Interactive Investigation**:
+   - **Chronological Timeline**: Millisecond-accurate event progression mapped to MITRE ATT&CK tactics and techniques.
+   - **Topological Relationship Graph**: Cytoscape.js interactive network graph mapping users, workstations, servers, files, and IPs.
+   - **Bidirectional Timeline ↔ Graph Synchronization**: Selecting any timeline event isolates active nodes and edges in the graph; inspecting graph nodes filters timeline activity.
+   - **3D Cyber Environment**: Three.js spatial infrastructure stage representing enterprise hosts, internal servers, network perimeter, and exfiltration corridors.
+   - **Temporal Attack Replay**: VCR-style playback engine with variable speed (0.5x–4x), step controls, scrubber, and dynamic state-change descriptions.
 
-## How It Works
+3. **Evidence-Linked Analysis**:
+   - **Deterministic Evidence Traceability**: Every event, node, edge, and finding maintains explicit linkage to raw source evidence artifacts (`EVD-001` to `EVD-005`).
+   - **Cryptographic Chain of Custody**: SHA-256 integrity hash verification prevents evidence tampering.
+   - **Corroborated Findings**: Automated detection of attack phases with confidence scoring and MITRE ATT&CK tactic/technique attribution.
+   - **Audit-Ready Reporting**: Exportable forensic findings report with executive summaries and tactical remediation guidance.
 
-```mermaid
-flowchart LR
-    A[Raw Evidence Logs] --> B[Forensic Ingestion & Parsing]
-    B --> C[Normalization & MITRE Mapping]
-    C --> D[Multi-Entity Correlation]
-    D --> E[FastAPI Backend & Persistence]
-    E --> F[Investigation Workbench]
-    F --> G1[2D Graph]
-    F --> G2[Timeline]
-    F --> G3[3D Cyber Twin]
-    F --> G4[Replay Engine]
-```
+---
 
-1. **Ingestion:** Reads heterogeneous log files and extracts structured fields without data loss.
-2. **Parsing & Normalization:** Converts varying timestamps to UTC and standardizes event schemas.
-3. **Evidence Mapping:** Identifies threat behaviors and maps them to MITRE ATT&CK techniques.
-4. **Correlation:** Discovers entities and directed relationships across disparate log sources.
-5. **Incident Reconstruction:** Synthesizes the full incident graph, timeline, and forensic findings.
-6. **API Delivery:** FastAPI backend persists cases and serves graph/timeline payloads over REST.
-7. **Visual Investigation:** Analyst investigates, isolates attack paths, and replays the attack.
+## 3. Technology Stack & Implementation Architecture
 
-## Investigation Workflow
-
-A typical investigation flow in Cyber-Twin:
-
-1. **Select Case:** Load an active investigation (e.g., `CASE-001`).
-2. **Review Timeline:** Scan the reconstructed chronological attack sequence with tactical MITRE badges.
-3. **Inspect Entities:** Identify involved user accounts, source workstations, destination IPs, and targeted servers.
-4. **Explore the Graph:** Click nodes and edges in the 2D relationship graph to trace lateral movement.
-5. **Isolate Attack Path:** Toggle **Attack Path Only** to filter out benign telemetry and illuminate the adversary's route.
-6. **Replay in 3D:** Use replay transport controls to watch the intrusion unfold spatially across enterprise network zones.
-7. **Verify Evidence:** Inspect supporting evidence artifacts and SHA-256 hashes for any highlighted event.
-
-## Demo Scenario
-
-The included demonstration (`CASE-001`) reconstructs an unauthorized lateral movement and data exfiltration intrusion:
-
-```text
-Compromised Account (employee01 on WORKSTATION-01 via auth.log)
-    ↓
-PowerShell Reconnaissance (powershell.exe spawn via endpoint.log)
-    ↓
-Lateral Movement (SMB connection to SRV-CORP-FILE via server.log)
-    ↓
-Sensitive File Staging (customer_data.csv access via file_access.log)
-    ↓
-Command & Control (Outbound TCP connection to 198.51.100.24 via firewall.log)
-    ↓
-Data Exfiltration (Bulk data transfer over port 443 via firewall.log)
-```
-
-- **Involved Assets:** `WORKSTATION-01` (`192.168.1.20`), `SRV-CORP-FILE`, `198.51.100.24`
-- **Reconstructed Output:** 6 chronological events, 7 entities, 15 directed relationships, and 3 correlated critical findings.
-
-## Technology Stack
-
-| Layer | Technologies | Purpose |
+| Layer | Prototype Implementation | Scalable Production Target |
 |---|---|---|
-| **Frontend** | React 19, JavaScript, TypeScript, Vite | Interactive analyst workbench and state synchronization |
-| **2D Visualization** | Cytoscape.js | Dynamic force-directed entity-relationship network graph |
-| **3D Visualization** | Three.js (WebGL) | Spatial digital twin infrastructure view with enterprise zones |
-| **Backend API** | FastAPI, Uvicorn, Pydantic | Asynchronous REST API and schema validation |
-| **Data & ORM** | SQLite, PostgreSQL, SQLAlchemy | Relational persistence for cases, evidence, events, and findings |
-| **Forensic Engine** | Python 3.9+ | Multi-source log parsing, normalization, and correlation logic |
-| **Testing** | pytest, unittest, Node.js | Automated unit, API, integration, and verification suites |
+| **Frontend UI & Replay** | React 18, Vite, TypeScript, Tailwind/Cyber CSS, Lucide React | React 18 + Next.js SSR / Electron Desktop App |
+| **2D Graph Visualization** | Cytoscape.js (COSE layout, interactive node/edge inspection) | Cytoscape.js + Neo4j Bloom |
+| **3D Cyber Environment** | Three.js (Spatial infrastructure representation, packet animations) | Three.js WebGL / WebGPU |
+| **Backend REST APIs** | FastAPI, Python 3.12, Pydantic v2, Uvicorn | FastAPI, Docker Container, Kubernetes |
+| **Database & Models** | SQLite (SQLAlchemy ORM, in-memory & file storage) | PostgreSQL (Relational) + Neo4j (Graph DB) |
+| **Forensic Engine** | Python 3 regex & structured log parsers, STIX 2.1 graph correlation | Apache Kafka / Flink streaming + STIX 2.1 pipeline |
+| **Evidence Integrity** | SHA-256 cryptographic hashing & line-level evidence anchors | SHA-256 + Immutable Ledger / WORM storage |
 
-## Project Structure
+*Note on Physical vs. Digital Forensics:*
+The Cyber Twin prototype is strictly focused on **enterprise digital cybersecurity log forensics**. References in early exploratory concepts to physical crime scenes, CCTV, Blender, or OpenCV are part of future multi-modal research roadmap initiatives, while the active prototype implements pure digital log parsing, network topology, and 3D cyber infrastructure replay.
+
+---
+
+## 4. Canonical Demonstration Case (`CASE-001`)
+
+The prototype ships with a verified end-to-end multi-stage intrusion dataset:
+- **Case Title**: Unauthorized Access and Exfiltration Incident (`CASE-001`)
+- **Evidence Sources (5)**: `auth.log` (`EVD-001`), `endpoint.log` (`EVD-002`), `server.log` (`EVD-003`), `file_access.log` (`EVD-004`), `firewall.log` (`EVD-005`)
+- **Normalized Events (6)**:
+  1. `EVT-001` (10:15:00): Compromised account login (`employee01` from `192.168.1.20` to `WORKSTATION-01`)
+  2. `EVT-002` (10:18:30): Obfuscated PowerShell execution (`powershell.exe -enc SQBFAFgA...`)
+  3. `EVT-003` (10:21:05): Lateral SMB session to enterprise server `SRV-CORP-FILE`
+  4. `EVT-004` (10:22:45): Unauthorized access to confidential customer records (`customer_data.csv`)
+  5. `EVT-005` (10:24:15): Outbound command-and-control connection to external IP `198.51.100.24`
+  6. `EVT-006` (10:25:00): High-volume data exfiltration (8.45 MB) to external adversary infrastructure
+- **Correlated Entities (7)**: `user:employee01`, `device:WORKSTATION-01`, `ip:192.168.1.20`, `file:powershell.exe`, `server:SRV-CORP-FILE`, `file:\SRV-CORP-FILE\confidential\customer_data.csv`, `ip:198.51.100.24`
+- **Directed Graph Edges (15)**: `AUTHENTICATED_TO`, `RESOLVED_IP`, `USES`, `EXECUTED`, `CONNECTED_TO`, `ACCESSED`, `EXFILTRATED_TO`
+- **Forensic Findings (3)**:
+  - `FND-001`: Compromised Account and Workstation Execution (Confidence 0.95, High)
+  - `FND-002`: Lateral Movement and Sensitive Data Collection (Confidence 0.94, High)
+  - `FND-003`: External Command-and-Control and Data Exfiltration (Confidence 0.98, Critical)
+
+---
+
+## 5. Repository Structure
 
 ```text
 Cyber-Twin/
-├── backend/            # FastAPI application, SQLAlchemy models, REST routers, and API tests
-├── data/               # Raw multi-source evidence logs and processed reconstruction JSON artifacts
-├── docs/               # Architecture blueprints, specifications, and workflows
-├── forensic-engine/    # Log ingestion, parsers, normalizer, MITRE mapper, and correlator
-├── frontend/           # React investigation workbench, Cytoscape graph, and Three.js 3D layer
-├── tests/              # Forensic engine unit test suite (38 automated tests)
-├── LICENSE             # MIT License file
-└── README.md           # Project documentation
+├── frontend/                 # React 18, Vite, Cytoscape.js & Three.js investigation UI
+│   ├── src/
+│   │   ├── api/              # Live FastAPI client & service abstraction
+│   │   ├── components/       # Timeline, Graph, Replay, 3D Twin, Evidence, Report components
+│   │   ├── visualization/    # Verification and integration test runners
+│   │   ├── mock/             # Certified forensic offline fallback dataset
+│   │   └── types/            # Data contracts aligning with architecture specification
+├── backend/                  # FastAPI REST backend
+│   ├── app/
+│   │   ├── models/           # SQLAlchemy ORM models (Case, Evidence, Event, Finding)
+│   │   ├── schemas/          # Pydantic v2 validation contracts
+│   │   ├── routes/           # REST endpoints (/cases, /reconstruction, /evidence, /timeline)
+│   │   └── services/         # Forensic loader & SQLite database persistence
+│   └── tests/                # Automated backend test suite (36 tests)
+├── forensic-engine/          # Digital forensics pipeline
+│   ├── ingestion/            # Raw log collectors
+│   ├── parsing/              # Regex parsers for auth, endpoint, server, file, firewall logs
+│   ├── normalization/        # Event contract schema normalization
+│   └── correlation/          # STIX 2.1 knowledge graph correlation engine
+├── tests/                    # Forensic pipeline test suite (38 tests)
+├── data/
+│   ├── raw/                  # Raw log files for CASE-001
+│   └── processed/            # Normalized events and incident_reconstruction.json
+└── docs/                     # Architectural and integration documentation
 ```
 
-## Getting Started
+---
+
+## 6. Running the Prototype
 
 ### Prerequisites
+- Python 3.10+
+- Node.js 18+ & npm 9+
 
-- **Python:** 3.9 or higher
-- **Node.js:** 18.0 or higher
-- **PowerShell:** Windows PowerShell 5.1 or Core 7+
-
----
-
-### 1. Run the Forensic Pipeline
-
-Generate the processed reconstruction artifacts from raw evidence logs:
-
-```powershell
-python forensic-engine/pipeline.py
+### Start the FastAPI Backend
+```bash
+# In repository root:
+python -m uvicorn backend.app.main:app --host 0.0.0.0 --port 8000
 ```
+Backend API docs available at: `http://localhost:8000/docs`
 
----
-
-### 2. Start the Backend API
-
-```powershell
-# Navigate to backend
-cd backend
-
-# Create and activate virtual environment
-python -m venv venv
-.\venv\Scripts\Activate.ps1
-
-# Install backend dependencies
-pip install -r requirements.txt
-
-# Start FastAPI server
-python -m uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload
-```
-
-- **API Base:** `http://127.0.0.1:8000`
-- **Swagger Documentation:** `http://127.0.0.1:8000/docs`
-- **Health Endpoint:** `http://127.0.0.1:8000/health`
-
----
-
-### 3. Start the Frontend
-
-Open a new PowerShell terminal:
-
-```powershell
-# Navigate to frontend
+### Start the Frontend Investigation UI
+```bash
 cd frontend
-
-# Install dependencies (use npm.cmd on Windows if script execution policy applies)
-npm.cmd install
-
-# Start Vite development server
-npm.cmd run dev
+npm install
+npm run dev
 ```
+Open your browser at: `http://localhost:5173`
 
-- **Frontend Workbench:** `http://localhost:5173`
+### Verification Commands
+```bash
+# Forensic engine tests:
+python -m pytest tests -v
 
----
+# Backend REST tests:
+python -m pytest backend/tests -v
 
-## Verification
+# Frontend core integration verification:
+node frontend/src/visualization/verifyFrontendIntegration.js
+node frontend/src/visualization/verifyCoreIntegration.js
 
-The repository includes test suites verifying data integrity, backend functionality, and visualization components:
-
-| Subsystem | Test Suite | Verification Command | Status |
-|---|---|---|:---:|
-| **Forensic Pipeline** | 38 Python `unittest` tests | `python -m unittest discover tests -v` | Verified |
-| **Backend REST API** | 36 `pytest` tests | `python -m pytest backend/tests -v` | Verified |
-| **Core Integration** | Node.js verification script | `node frontend/src/visualization/verifyCoreIntegration.js` | Verified |
-| **2D Graph & Timeline**| Node.js verification scripts | `node frontend/src/visualization/verifyRelationshipGraph.js` | Verified |
-| **3D Cyber Twin** | Node.js verification script | `node frontend/src/visualization/verifyCyberTwin3D.js` | Verified |
-| **Attack Path & Replay**| Node.js verification scripts | `node frontend/src/visualization/verifyAttackPath.js` | Verified |
-
----
-
-## Why Cyber-Twin
-
-- **Unifies Fragmented Evidence:** Eliminates manual correlation across isolated log files by synthesizing evidence into one relational model.
-- **Narrates the Attack Story:** Translates raw, technical log lines into an understandable, chronological kill chain sequence.
-- **Dual Visual Context:** Pairs topological lateral movement (2D) with physical infrastructure enterprise zones (3D).
-- **Interactive Replay:** Enables security teams to step through an incident as it happened, improving debriefs and remediation.
-- **Strict Evidence Traceability:** Anchors every graph node, timeline item, and finding to verifiable SHA-256 evidence records.
-
----
-
-## Prototype Scope
-
-Cyber-Twin is a functional prototype built for digital forensic demonstration, incident reconstruction, and evaluation. It focuses on deterministic log correlation, MITRE ATT&CK mapping, and synchronized visual triage across enterprise network environments.
-
-## Future Scope
-
-- **Additional Ingestion Connectors:** Native parsers for cloud audit trails (AWS CloudTrail, Azure Monitor, Kubernetes).
-- **Scalable Graph Backend:** Direct integration with dedicated graph databases (e.g., Neo4j) for querying enterprise-scale topologies.
-- **Automated Reporting:** One-click generation of court-ready forensic incident PDF summaries.
-- **Authentication & RBAC:** Multi-tenant access controls and analyst activity audit logging.
-- **Containerized Orchestration:** Docker Compose configuration for single-command full-stack deployment.
-
----
-
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+# Frontend production build:
+npm --prefix frontend run build
+```
