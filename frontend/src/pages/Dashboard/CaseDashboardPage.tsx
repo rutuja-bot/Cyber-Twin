@@ -1,17 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  Briefcase,
   Plus,
   Search,
-  Filter,
   ArrowRight,
-  FolderOpen,
-  Calendar,
-  User,
-  ShieldAlert,
-  FileCheck,
-  CheckCircle2,
   Table as TableIcon,
   LayoutGrid
 } from 'lucide-react';
@@ -19,7 +11,7 @@ import { useInvestigation } from '../../context/InvestigationContext';
 import { Badge } from '../../components/common/Badge';
 import { Button } from '../../components/common/Button';
 import { Modal } from '../../components/common/Modal';
-import { Case, SeverityLevel, CaseStatus } from '../../types';
+import { SeverityLevel } from '../../types';
 import { createCase } from '../../api/cases';
 
 export const CaseDashboardPage: React.FC = () => {
@@ -29,7 +21,7 @@ export const CaseDashboardPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [severityFilter, setSeverityFilter] = useState<string>('all');
-  const [viewMode, setViewMode] = useState<'grid' | 'table'>('grid');
+  const [viewMode, setViewMode] = useState<'grid' | 'table'>('table');
 
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -74,8 +66,8 @@ export const CaseDashboardPage: React.FC = () => {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-      {/* Top Banner / Actions */}
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+      {/* Top Bar */}
       <div
         style={{
           display: 'flex',
@@ -83,58 +75,62 @@ export const CaseDashboardPage: React.FC = () => {
           alignItems: 'center',
           justifyContent: 'space-between',
           gap: '1rem',
-          borderBottom: '1px solid #1e293b',
+          borderBottom: '1px solid #24315C',
           paddingBottom: '1.25rem'
         }}
       >
         <div>
-          <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#f8fafc' }}>
-            Case Management Vault
+          <h1 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#F5F7FF', letterSpacing: '-0.02em' }}>
+            Incident Cases
           </h1>
-          <p style={{ fontSize: '0.875rem', color: '#94a3b8', marginTop: '0.2rem' }}>
-            Active digital forensic dossiers and incident reconstruction workspaces
+          <p style={{ fontSize: '0.825rem', color: '#A7B0C8', marginTop: '0.2rem' }}>
+            Active forensic investigation workspaces and evidence dossiers
           </p>
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          {/* Grid / Table Toggle */}
-          <div style={{ display: 'flex', background: '#0d1424', padding: '0.25rem', borderRadius: '6px', border: '1px solid #1e293b' }}>
-            <button
-              onClick={() => setViewMode('grid')}
-              style={{
-                background: viewMode === 'grid' ? '#1e293b' : 'transparent',
-                border: 'none',
-                color: viewMode === 'grid' ? '#00f2fe' : '#94a3b8',
-                padding: '0.35rem 0.55rem',
-                borderRadius: '4px',
-                cursor: 'pointer',
-                display: 'flex'
-              }}
-              title="Grid View"
-            >
-              <LayoutGrid size={16} />
-            </button>
+          {/* View Toggle */}
+          <div style={{ display: 'flex', background: '#101936', padding: '0.2rem', borderRadius: '8px', border: '1px solid #24315C' }}>
             <button
               onClick={() => setViewMode('table')}
               style={{
-                background: viewMode === 'table' ? '#1e293b' : 'transparent',
+                background: viewMode === 'table' ? '#151F46' : 'transparent',
                 border: 'none',
-                color: viewMode === 'table' ? '#00f2fe' : '#94a3b8',
-                padding: '0.35rem 0.55rem',
-                borderRadius: '4px',
+                color: viewMode === 'table' ? '#00B7FF' : '#717E9E',
+                padding: '0.35rem 0.6rem',
+                borderRadius: '6px',
                 cursor: 'pointer',
-                display: 'flex'
+                display: 'flex',
+                boxShadow: viewMode === 'table' ? '0 0 10px rgba(0, 183, 255, 0.2)' : 'none'
               }}
               title="Table View"
             >
-              <TableIcon size={16} />
+              <TableIcon size={15} />
+            </button>
+            <button
+              onClick={() => setViewMode('grid')}
+              style={{
+                background: viewMode === 'grid' ? '#151F46' : 'transparent',
+                border: 'none',
+                color: viewMode === 'grid' ? '#00B7FF' : '#717E9E',
+                padding: '0.35rem 0.6rem',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                display: 'flex',
+                boxShadow: viewMode === 'grid' ? '0 0 10px rgba(0, 183, 255, 0.2)' : 'none'
+              }}
+              title="Grid View"
+            >
+              <LayoutGrid size={15} />
             </button>
           </div>
 
           <Button
             variant="primary"
-            icon={<Plus size={16} />}
+            size="sm"
+            icon={<Plus size={15} />}
             onClick={() => setIsModalOpen(true)}
+            style={{ boxShadow: '0 4px 16px rgba(22, 119, 255, 0.35)' }}
           >
             New Investigation
           </Button>
@@ -146,19 +142,20 @@ export const CaseDashboardPage: React.FC = () => {
         style={{
           display: 'flex',
           flexWrap: 'wrap',
-          gap: '1rem',
+          gap: '0.85rem',
           alignItems: 'center',
-          background: '#0d1424',
-          padding: '1rem',
-          borderRadius: '8px',
-          border: '1px solid #1e293b'
+          background: '#101936',
+          padding: '0.85rem 1rem',
+          borderRadius: '10px',
+          border: '1px solid #24315C',
+          boxShadow: '0 4px 20px rgba(5, 8, 22, 0.4)'
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flex: 1, minWidth: '240px' }}>
-          <Search size={18} color="#64748b" />
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flex: 1, minWidth: '220px' }}>
+          <Search size={16} color="#00B7FF" />
           <input
             type="text"
-            placeholder="Search by Case ID, title, or incident type..."
+            placeholder="Filter by Case ID, title, or incident type..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             style={{
@@ -166,24 +163,24 @@ export const CaseDashboardPage: React.FC = () => {
               background: 'transparent',
               border: 'none',
               outline: 'none',
-              color: '#f8fafc',
-              fontSize: '0.875rem'
+              color: '#F5F7FF',
+              fontSize: '0.84rem'
             }}
           />
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', flexWrap: 'wrap' }}>
           {/* Status Filter */}
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
             style={{
-              background: '#090f1d',
-              border: '1px solid #2d3b55',
-              color: '#cbd5e1',
-              padding: '0.45rem 0.75rem',
+              background: '#080E22',
+              border: '1px solid #24315C',
+              color: '#F5F7FF',
+              padding: '0.4rem 0.75rem',
               borderRadius: '6px',
-              fontSize: '0.8rem',
+              fontSize: '0.78rem',
               outline: 'none',
               cursor: 'pointer'
             }}
@@ -199,12 +196,12 @@ export const CaseDashboardPage: React.FC = () => {
             value={severityFilter}
             onChange={(e) => setSeverityFilter(e.target.value)}
             style={{
-              background: '#090f1d',
-              border: '1px solid #2d3b55',
-              color: '#cbd5e1',
-              padding: '0.45rem 0.75rem',
+              background: '#080E22',
+              border: '1px solid #24315C',
+              color: '#F5F7FF',
+              padding: '0.4rem 0.75rem',
               borderRadius: '6px',
-              fontSize: '0.8rem',
+              fontSize: '0.78rem',
               outline: 'none',
               cursor: 'pointer'
             }}
@@ -218,15 +215,71 @@ export const CaseDashboardPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Grid View */}
-      {viewMode === 'grid' ? (
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))',
-            gap: '1.5rem'
-          }}
-        >
+      {/* Table View (Default) */}
+      {viewMode === 'table' ? (
+        <div style={{ background: '#101936', border: '1px solid #24315C', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 20px rgba(5, 8, 22, 0.4)' }}>
+          <table className="forensic-table">
+            <thead>
+              <tr>
+                <th style={{ width: '130px' }}>Case ID</th>
+                <th>Case Name & Type</th>
+                <th style={{ width: '100px' }}>Severity</th>
+                <th style={{ width: '110px' }}>Status</th>
+                <th style={{ width: '140px' }}>Last Activity</th>
+                <th style={{ width: '130px' }}>Investigator</th>
+                <th style={{ width: '90px' }}>Evidence</th>
+                <th style={{ width: '110px', textAlign: 'right' }}>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredCases.map((c) => {
+                const isActive = activeCase?.case_id === c.case_id;
+
+                return (
+                  <tr key={c.case_id} style={{ background: isActive ? 'rgba(22, 119, 255, 0.12)' : undefined }}>
+                    <td style={{ fontFamily: 'JetBrains Mono, monospace', color: '#00B7FF', fontWeight: 600 }}>
+                      {c.case_id}
+                    </td>
+                    <td>
+                      <div style={{ fontWeight: 600, color: '#F5F7FF' }}>{c.title}</div>
+                      <div style={{ fontSize: '0.72rem', color: '#717E9E' }}>{c.incident_type}</div>
+                    </td>
+                    <td>
+                      <Badge variant={c.severity} size="sm">{c.severity}</Badge>
+                    </td>
+                    <td>
+                      <Badge variant={c.status} size="sm">{c.status}</Badge>
+                    </td>
+                    <td style={{ fontSize: '0.75rem', fontFamily: 'JetBrains Mono, monospace', color: '#A7B0C8' }}>
+                      {c.last_activity.replace('T', ' ').replace('Z', '')}
+                    </td>
+                    <td style={{ color: '#F5F7FF' }}>
+                      {c.investigator}
+                    </td>
+                    <td style={{ fontFamily: 'JetBrains Mono, monospace', color: '#4DEBFF' }}>
+                      {c.evidence_count} items
+                    </td>
+                    <td style={{ textAlign: 'right' }}>
+                      <Button
+                        size="sm"
+                        variant={isActive ? 'primary' : 'outline'}
+                        onClick={() => {
+                          setActiveCaseId(c.case_id);
+                          navigate('/investigation');
+                        }}
+                      >
+                        {isActive ? 'Active' : 'Open'}
+                      </Button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        /* Grid View */
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '1.25rem' }}>
           {filteredCases.map((c) => {
             const isActive = activeCase?.case_id === c.case_id;
 
@@ -235,227 +288,132 @@ export const CaseDashboardPage: React.FC = () => {
                 key={c.case_id}
                 className="cyber-card"
                 style={{
-                  borderColor: isActive ? '#00f2fe' : '#1e293b',
-                  boxShadow: isActive ? '0 0 20px rgba(0, 242, 254, 0.2)' : 'none',
+                  background: '#101936',
+                  borderColor: isActive ? '#00B7FF' : '#24315C',
+                  boxShadow: isActive ? '0 4px 24px rgba(0, 183, 255, 0.18)' : '0 4px 20px rgba(5, 8, 22, 0.5)',
+                  borderRadius: '12px',
                   display: 'flex',
                   flexDirection: 'column',
                   justifyContent: 'space-between',
-                  gap: '1.25rem'
+                  gap: '1rem',
+                  padding: '1.25rem'
                 }}
               >
                 <div>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
-                    <span
-                      style={{
-                        fontFamily: 'JetBrains Mono, monospace',
-                        fontSize: '0.8rem',
-                        fontWeight: 700,
-                        color: '#00f2fe'
-                      }}
-                    >
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.65rem' }}>
+                    <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.78rem', fontWeight: 700, color: '#00B7FF' }}>
                       {c.case_id}
                     </span>
-                    <div style={{ display: 'flex', gap: '0.4rem' }}>
+                    <div style={{ display: 'flex', gap: '0.35rem' }}>
                       <Badge variant={c.severity} size="sm">{c.severity}</Badge>
                       <Badge variant={c.status} size="sm">{c.status}</Badge>
                     </div>
                   </div>
 
-                  <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#f8fafc', lineHeight: 1.3 }}>
+                  <h3 style={{ fontSize: '0.975rem', fontWeight: 700, color: '#F5F7FF', lineHeight: 1.35 }}>
                     {c.title}
                   </h3>
 
-                  <p style={{ fontSize: '0.825rem', color: '#94a3b8', marginTop: '0.5rem', lineHeight: 1.5 }}>
+                  <p style={{ fontSize: '0.78rem', color: '#A7B0C8', marginTop: '0.45rem', lineHeight: 1.45 }}>
                     {c.description}
                   </p>
                 </div>
 
                 <div>
-                  {/* Case stats row */}
-                  <div
-                    style={{
-                      display: 'grid',
-                      gridTemplateColumns: 'repeat(3, 1fr)',
-                      gap: '0.5rem',
-                      background: '#090f1d',
-                      padding: '0.65rem',
-                      borderRadius: '6px',
-                      border: '1px solid #1e293b',
-                      textAlign: 'center',
-                      marginBottom: '1rem'
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', color: '#717E9E', marginBottom: '0.85rem' }}>
+                    <span>Lead: <strong style={{ color: '#F5F7FF' }}>{c.investigator}</strong></span>
+                    <span style={{ color: '#4DEBFF' }}>{c.evidence_count} evidence items</span>
+                  </div>
+
+                  <Button
+                    size="sm"
+                    variant={isActive ? 'primary' : 'outline'}
+                    style={{ width: '100%' }}
+                    onClick={() => {
+                      setActiveCaseId(c.case_id);
+                      navigate('/investigation');
                     }}
                   >
-                    <div>
-                      <div style={{ fontSize: '0.68rem', color: '#64748b', textTransform: 'uppercase' }}>Evidence</div>
-                      <div style={{ fontSize: '0.9rem', fontWeight: 700, color: '#f8fafc', fontFamily: 'JetBrains Mono, monospace' }}>
-                        {c.evidence_count}
-                      </div>
-                    </div>
-                    <div>
-                      <div style={{ fontSize: '0.68rem', color: '#64748b', textTransform: 'uppercase' }}>Alerts</div>
-                      <div style={{ fontSize: '0.9rem', fontWeight: 700, color: '#ef4444', fontFamily: 'JetBrains Mono, monospace' }}>
-                        {c.suspicious_event_count}
-                      </div>
-                    </div>
-                    <div>
-                      <div style={{ fontSize: '0.68rem', color: '#64748b', textTransform: 'uppercase' }}>Entities</div>
-                      <div style={{ fontSize: '0.9rem', fontWeight: 700, color: '#38bdf8', fontFamily: 'JetBrains Mono, monospace' }}>
-                        {c.entity_count}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Investigator and Action */}
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <div style={{ fontSize: '0.75rem', color: '#64748b' }}>
-                      Lead: <span style={{ color: '#cbd5e1' }}>{c.investigator}</span>
-                    </div>
-
-                    <Button
-                      size="sm"
-                      variant={isActive ? 'primary' : 'secondary'}
-                      icon={<ArrowRight size={14} />}
-                      onClick={() => {
-                        setActiveCaseId(c.case_id);
-                        navigate('/investigation');
-                      }}
-                    >
-                      {isActive ? 'Workspace Active' : 'Open Case'}
-                    </Button>
-                  </div>
+                    {isActive ? 'Workspace Active' : 'Open Investigation'}
+                  </Button>
                 </div>
               </div>
             );
           })}
         </div>
-      ) : (
-        /* Table View */
-        <div style={{ background: '#0d1424', border: '1px solid #1e293b', borderRadius: '8px', overflow: 'hidden' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.85rem' }}>
-            <thead>
-              <tr style={{ background: '#090f1d', borderBottom: '1px solid #1e293b', color: '#94a3b8' }}>
-                <th style={{ padding: '0.75rem 1rem' }}>Case ID</th>
-                <th style={{ padding: '0.75rem 1rem' }}>Title & Type</th>
-                <th style={{ padding: '0.75rem 1rem' }}>Severity</th>
-                <th style={{ padding: '0.75rem 1rem' }}>Status</th>
-                <th style={{ padding: '0.75rem 1rem' }}>Evidence / Alerts</th>
-                <th style={{ padding: '0.75rem 1rem' }}>Investigator</th>
-                <th style={{ padding: '0.75rem 1rem', textAlign: 'right' }}>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredCases.map((c) => (
-                <tr key={c.case_id} style={{ borderBottom: '1px solid #1e293b' }}>
-                  <td style={{ padding: '0.75rem 1rem', fontFamily: 'JetBrains Mono, monospace', color: '#00f2fe', fontWeight: 700 }}>
-                    {c.case_id}
-                  </td>
-                  <td style={{ padding: '0.75rem 1rem' }}>
-                    <div style={{ fontWeight: 600, color: '#f8fafc' }}>{c.title}</div>
-                    <div style={{ fontSize: '0.75rem', color: '#64748b' }}>{c.incident_type}</div>
-                  </td>
-                  <td style={{ padding: '0.75rem 1rem' }}>
-                    <Badge variant={c.severity} size="sm">{c.severity}</Badge>
-                  </td>
-                  <td style={{ padding: '0.75rem 1rem' }}>
-                    <Badge variant={c.status} size="sm">{c.status}</Badge>
-                  </td>
-                  <td style={{ padding: '0.75rem 1rem', fontFamily: 'JetBrains Mono, monospace' }}>
-                    {c.evidence_count} files / <span style={{ color: '#ef4444' }}>{c.suspicious_event_count} alerts</span>
-                  </td>
-                  <td style={{ padding: '0.75rem 1rem', color: '#cbd5e1' }}>
-                    {c.investigator}
-                  </td>
-                  <td style={{ padding: '0.75rem 1rem', textAlign: 'right' }}>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => {
-                        setActiveCaseId(c.case_id);
-                        navigate('/investigation');
-                      }}
-                    >
-                      Open
-                    </Button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
       )}
 
-      {/* New Investigation Modal */}
+      {/* New Case Modal */}
       <Modal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title="Initialize New Cyber Incident Investigation"
-        subtitle="Provision a dedicated Cyber Twin correlation workspace"
+        title="Create Forensic Case"
+        subtitle="Initialize new incident workspace"
       >
-        <form onSubmit={handleCreateCase} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+        <form onSubmit={handleCreateCase} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           <div>
-            <label style={{ fontSize: '0.8rem', color: '#94a3b8', fontWeight: 600, display: 'block', marginBottom: '0.4rem' }}>
-              Incident Title *
+            <label style={{ fontSize: '0.75rem', color: '#9ca3af', fontWeight: 600, display: 'block', marginBottom: '0.3rem' }}>
+              Case Title *
             </label>
             <input
               type="text"
               required
-              placeholder="e.g., Unauthorized Lateral Movement & Kerberoasting"
+              placeholder="e.g., Lateral Movement & Kerberoasting"
               value={newTitle}
               onChange={(e) => setNewTitle(e.target.value)}
               style={{
                 width: '100%',
-                background: '#090f1d',
-                border: '1px solid #2d3b55',
-                borderRadius: '6px',
-                padding: '0.6rem 0.85rem',
-                color: '#f8fafc',
-                fontSize: '0.875rem',
+                background: '#090d16',
+                border: '1px solid #283548',
+                borderRadius: '4px',
+                padding: '0.5rem 0.75rem',
+                color: '#f9fafb',
+                fontSize: '0.8125rem',
                 outline: 'none'
               }}
             />
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
             <div>
-              <label style={{ fontSize: '0.8rem', color: '#94a3b8', fontWeight: 600, display: 'block', marginBottom: '0.4rem' }}>
-                Incident Classification
+              <label style={{ fontSize: '0.75rem', color: '#9ca3af', fontWeight: 600, display: 'block', marginBottom: '0.3rem' }}>
+                Incident Type
               </label>
               <select
                 value={newType}
                 onChange={(e) => setNewType(e.target.value)}
                 style={{
                   width: '100%',
-                  background: '#090f1d',
-                  border: '1px solid #2d3b55',
-                  borderRadius: '6px',
-                  padding: '0.6rem 0.85rem',
-                  color: '#f8fafc',
-                  fontSize: '0.875rem',
+                  background: '#090d16',
+                  border: '1px solid #283548',
+                  borderRadius: '4px',
+                  padding: '0.5rem 0.75rem',
+                  color: '#f9fafb',
+                  fontSize: '0.8125rem',
                   outline: 'none'
                 }}
               >
                 <option value="Data Exfiltration / Account Takeover">Data Exfiltration / Account Takeover</option>
                 <option value="Ransomware Staging & Lateral Movement">Ransomware Staging & Lateral Movement</option>
                 <option value="Cloud Credential Compromise">Cloud Credential Compromise</option>
-                <option value="Supply Chain / Malicious Dependency">Supply Chain / Malicious Dependency</option>
               </select>
             </div>
 
             <div>
-              <label style={{ fontSize: '0.8rem', color: '#94a3b8', fontWeight: 600, display: 'block', marginBottom: '0.4rem' }}>
-                Initial Severity
+              <label style={{ fontSize: '0.75rem', color: '#9ca3af', fontWeight: 600, display: 'block', marginBottom: '0.3rem' }}>
+                Severity
               </label>
               <select
                 value={newSeverity}
                 onChange={(e) => setNewSeverity(e.target.value as SeverityLevel)}
                 style={{
                   width: '100%',
-                  background: '#090f1d',
-                  border: '1px solid #2d3b55',
-                  borderRadius: '6px',
-                  padding: '0.6rem 0.85rem',
-                  color: '#f8fafc',
-                  fontSize: '0.875rem',
+                  background: '#090d16',
+                  border: '1px solid #283548',
+                  borderRadius: '4px',
+                  padding: '0.5rem 0.75rem',
+                  color: '#f9fafb',
+                  fontSize: '0.8125rem',
                   outline: 'none'
                 }}
               >
@@ -468,34 +426,34 @@ export const CaseDashboardPage: React.FC = () => {
           </div>
 
           <div>
-            <label style={{ fontSize: '0.8rem', color: '#94a3b8', fontWeight: 600, display: 'block', marginBottom: '0.4rem' }}>
-              Incident Scope & Background
+            <label style={{ fontSize: '0.75rem', color: '#9ca3af', fontWeight: 600, display: 'block', marginBottom: '0.3rem' }}>
+              Description
             </label>
             <textarea
-              rows={4}
-              placeholder="Describe suspected vector, affected assets, and initial alerts..."
+              rows={3}
+              placeholder="Initial details, scope, or alert reference..."
               value={newDesc}
               onChange={(e) => setNewDesc(e.target.value)}
               style={{
                 width: '100%',
-                background: '#090f1d',
-                border: '1px solid #2d3b55',
-                borderRadius: '6px',
-                padding: '0.6rem 0.85rem',
-                color: '#f8fafc',
-                fontSize: '0.875rem',
+                background: '#090d16',
+                border: '1px solid #283548',
+                borderRadius: '4px',
+                padding: '0.5rem 0.75rem',
+                color: '#f9fafb',
+                fontSize: '0.8125rem',
                 outline: 'none',
                 resize: 'vertical'
               }}
             />
           </div>
 
-          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem', marginTop: '0.5rem' }}>
-            <Button variant="secondary" onClick={() => setIsModalOpen(false)} type="button">
+          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem', marginTop: '0.5rem' }}>
+            <Button variant="secondary" size="sm" onClick={() => setIsModalOpen(false)} type="button">
               Cancel
             </Button>
-            <Button variant="primary" type="submit" disabled={creating}>
-              {creating ? 'Initializing...' : 'Create Case & Launch'}
+            <Button variant="primary" size="sm" type="submit" disabled={creating}>
+              {creating ? 'Creating...' : 'Create Case'}
             </Button>
           </div>
         </form>

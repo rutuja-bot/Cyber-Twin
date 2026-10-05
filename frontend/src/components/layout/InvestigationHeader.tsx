@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShieldAlert, User, Calendar, Clock, Terminal, CheckCircle2 } from 'lucide-react';
+import { User, Clock, Terminal } from 'lucide-react';
 import { useInvestigation } from '../../context/InvestigationContext';
 import { Badge } from '../common/Badge';
 
@@ -11,9 +11,10 @@ export const InvestigationHeader: React.FC = () => {
   return (
     <div
       style={{
-        background: '#0a101f',
-        borderBottom: '1px solid #1e293b',
-        padding: '1.25rem 2rem',
+        background: 'rgba(10, 16, 36, 0.9)',
+        backdropFilter: 'blur(10px)',
+        borderBottom: '1px solid #24315C',
+        padding: '0.85rem 2rem',
         display: 'flex',
         flexWrap: 'wrap',
         alignItems: 'center',
@@ -22,39 +23,37 @@ export const InvestigationHeader: React.FC = () => {
       }}
     >
       <div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.4rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.25rem' }}>
           <span
             style={{
               fontFamily: 'JetBrains Mono, monospace',
-              fontSize: '0.85rem',
+              fontSize: '0.78rem',
               fontWeight: 700,
-              color: '#00f2fe',
-              background: 'rgba(0, 242, 254, 0.1)',
-              padding: '0.2rem 0.5rem',
-              borderRadius: '4px',
-              border: '1px solid rgba(0, 242, 254, 0.3)'
+              color: '#00B7FF',
+              background: '#151F46',
+              padding: '0.15rem 0.5rem',
+              borderRadius: '6px',
+              border: '1px solid rgba(0, 183, 255, 0.35)',
+              boxShadow: '0 0 10px rgba(0, 183, 255, 0.15)'
             }}
           >
             {activeCase?.case_id || 'LOADING...'}
           </span>
-          <Badge variant={activeCase?.severity || 'info'} pulse={activeCase?.severity === 'critical'}>
+          <Badge variant={activeCase?.severity || 'info'}>
             {activeCase?.severity}
           </Badge>
           <Badge variant={activeCase?.status || 'open'}>
             {activeCase?.status}
           </Badge>
-          <span style={{ fontSize: '0.8rem', color: '#64748b' }}>•</span>
-          <span style={{ fontSize: '0.85rem', color: '#94a3b8', fontWeight: 500 }}>
+          <span style={{ fontSize: '0.75rem', color: '#24315C' }}>•</span>
+          <span style={{ fontSize: '0.78rem', color: '#A7B0C8', fontWeight: 500 }}>
             {activeCase?.incident_type}
           </span>
         </div>
 
-        <h1 style={{ fontSize: '1.45rem', fontWeight: 800, color: '#f8fafc', letterSpacing: '-0.02em' }}>
+        <h1 style={{ fontSize: '1.2rem', fontWeight: 700, color: '#F5F7FF' }}>
           {activeCase?.title}
         </h1>
-        <p style={{ fontSize: '0.85rem', color: '#94a3b8', marginTop: '0.25rem', maxWidth: '900px' }}>
-          {activeCase?.description}
-        </p>
       </div>
 
       {/* Forensic Metadata Strip */}
@@ -62,46 +61,35 @@ export const InvestigationHeader: React.FC = () => {
         style={{
           display: 'flex',
           flexWrap: 'wrap',
-          gap: '1.5rem',
-          background: 'rgba(13, 20, 36, 0.7)',
-          padding: '0.75rem 1.25rem',
+          gap: '1.25rem',
+          background: '#101936',
+          padding: '0.55rem 1rem',
           borderRadius: '8px',
-          border: '1px solid #1e293b'
+          border: '1px solid #24315C',
+          boxShadow: '0 2px 10px rgba(5, 8, 22, 0.5)'
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <User size={16} color="#38bdf8" />
-          <div>
-            <div style={{ fontSize: '0.68rem', color: '#64748b', textTransform: 'uppercase', fontWeight: 600 }}>
-              Lead Investigator
-            </div>
-            <div style={{ fontSize: '0.8rem', fontWeight: 600, color: '#f1f5f9' }}>
-              {activeCase?.investigator}
-            </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+          <User size={14} color="#00B7FF" />
+          <div style={{ fontSize: '0.75rem' }}>
+            <span style={{ color: '#717E9E' }}>Lead: </span>
+            <span style={{ color: '#F5F7FF', fontWeight: 600 }}>{activeCase?.investigator}</span>
           </div>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <Clock size={16} color="#a855f7" />
-          <div>
-            <div style={{ fontSize: '0.68rem', color: '#64748b', textTransform: 'uppercase', fontWeight: 600 }}>
-              Time Range (UTC)
-            </div>
-            <div style={{ fontSize: '0.8rem', fontFamily: 'JetBrains Mono, monospace', color: '#f1f5f9' }}>
-              02:14:00 — 02:55:00 UTC
-            </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+          <Clock size={14} color="#00B7FF" />
+          <div style={{ fontSize: '0.75rem' }}>
+            <span style={{ color: '#717E9E' }}>Window: </span>
+            <span style={{ color: '#F5F7FF', fontFamily: 'JetBrains Mono, monospace' }}>02:14:00 — 02:55:00 UTC</span>
           </div>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <Terminal size={16} color="#10b981" />
-          <div>
-            <div style={{ fontSize: '0.68rem', color: '#64748b', textTransform: 'uppercase', fontWeight: 600 }}>
-              Correlated Artifacts
-            </div>
-            <div style={{ fontSize: '0.8rem', fontWeight: 700, color: '#10b981' }}>
-              {activeCase?.evidence_count} files / {activeCase?.suspicious_event_count} alerts
-            </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+          <Terminal size={14} color="#00B7FF" />
+          <div style={{ fontSize: '0.75rem' }}>
+            <span style={{ color: '#717E9E' }}>Artifacts: </span>
+            <span style={{ color: '#4DEBFF', fontWeight: 600 }}>{activeCase?.evidence_count} files / {activeCase?.suspicious_event_count} alerts</span>
           </div>
         </div>
       </div>

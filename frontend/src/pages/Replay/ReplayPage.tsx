@@ -63,24 +63,24 @@ export const ReplayPage: React.FC = () => {
           alignItems: 'center',
           justifyContent: 'space-between',
           gap: '1rem',
-          borderBottom: '1px solid #1e293b',
+          borderBottom: '1px solid #24315C',
           paddingBottom: '1.25rem'
         }}
       >
         <div>
-          <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#f8fafc' }}>
+          <h1 style={{ fontSize: '1.75rem', fontWeight: 700, color: '#F5F7FF', letterSpacing: '-0.02em' }}>
             Interactive Incident Replay
           </h1>
-          <p style={{ fontSize: '0.875rem', color: '#94a3b8', marginTop: '0.2rem' }}>
+          <p style={{ fontSize: '0.875rem', color: '#A7B0C8', marginTop: '0.2rem' }}>
             Time-synchronized playback engine reconstructing the step-by-step breach sequence
           </p>
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          <Badge variant={isPlaying ? 'cyan' : 'default'} pulse={isPlaying}>
+          <Badge variant={isPlaying ? 'investigating' : 'neutral'}>
             {isPlaying ? 'PLAYBACK ACTIVE' : 'PAUSED'}
           </Badge>
-          <span style={{ fontSize: '0.8rem', color: '#64748b' }}>
+          <span style={{ fontSize: '0.8rem', color: '#A7B0C8' }}>
             Normalized Event Stream ({replayEvents.length} Steps)
           </span>
         </div>
@@ -121,13 +121,14 @@ export const ReplayPage: React.FC = () => {
       {/* Sequence Timeline Strip */}
       <div
         style={{
-          background: '#0d1424',
-          border: '1px solid #1e293b',
-          borderRadius: '8px',
-          padding: '1.25rem'
+          background: '#101936',
+          border: '1px solid #24315C',
+          borderRadius: '12px',
+          padding: '1.25rem',
+          boxShadow: '0 8px 30px rgba(0, 0, 0, 0.35)'
         }}
       >
-        <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#f8fafc', marginBottom: '0.75rem' }}>
+        <div style={{ fontSize: '0.9rem', fontWeight: 600, color: '#F5F7FF', marginBottom: '0.85rem' }}>
           Chronological Attack Progression Sequence
         </div>
 
@@ -151,34 +152,34 @@ export const ReplayPage: React.FC = () => {
                   setCurrentIndex(idx);
                 }}
                 style={{
-                  minWidth: '190px',
-                  background: isCurrent ? 'rgba(0, 242, 254, 0.12)' : '#090f1d',
-                  border: `1px solid ${isCurrent ? '#00f2fe' : isPast ? '#2d3b55' : '#1e293b'}`,
-                  borderRadius: '6px',
-                  padding: '0.75rem',
+                  minWidth: '200px',
+                  background: isCurrent ? 'rgba(22, 119, 255, 0.14)' : isPast ? '#151F46' : '#0A1024',
+                  border: `1px solid ${isCurrent ? '#00B7FF' : '#24315C'}`,
+                  boxShadow: isCurrent ? '0 4px 16px rgba(0, 183, 255, 0.18)' : 'none',
+                  borderRadius: '8px',
+                  padding: '0.85rem',
                   cursor: 'pointer',
                   flexShrink: 0,
-                  transition: 'all 0.15s ease',
-                  boxShadow: isCurrent ? '0 0 15px rgba(0, 242, 254, 0.25)' : 'none'
+                  transition: 'all 0.15s ease'
                 }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.35rem' }}>
                   <span
                     style={{
                       fontFamily: 'JetBrains Mono, monospace',
                       fontSize: '0.75rem',
-                      fontWeight: 700,
-                      color: isCurrent ? '#00f2fe' : '#64748b'
+                      fontWeight: 600,
+                      color: isCurrent ? '#00B7FF' : '#A7B0C8'
                     }}
                   >
                     Step {idx + 1}
                   </span>
                   <Badge variant={evt.severity} size="sm">{evt.severity}</Badge>
                 </div>
-                <div style={{ fontSize: '0.78rem', fontWeight: 600, color: '#f8fafc', marginTop: '0.25rem' }}>
+                <div style={{ fontSize: '0.8rem', fontWeight: 600, color: '#F5F7FF', marginTop: '0.25rem' }}>
                   {evt.event_type.replace('_', ' ').toUpperCase()}
                 </div>
-                <div style={{ fontSize: '0.7rem', color: '#94a3b8', marginTop: '0.25rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                <div style={{ fontSize: '0.72rem', color: '#A7B0C8', marginTop: '0.25rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {evt.description}
                 </div>
               </div>

@@ -64,15 +64,15 @@ export const TimelinePage: React.FC = () => {
           alignItems: 'center',
           justifyContent: 'space-between',
           gap: '1rem',
-          borderBottom: '1px solid #1e293b',
+          borderBottom: '1px solid #24315C',
           paddingBottom: '1.25rem'
         }}
       >
         <div>
-          <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#f8fafc' }}>
+          <h1 style={{ fontSize: '1.75rem', fontWeight: 700, color: '#F5F7FF', letterSpacing: '-0.02em' }}>
             Chronological Incident Timeline
           </h1>
-          <p style={{ fontSize: '0.875rem', color: '#94a3b8', marginTop: '0.2rem' }}>
+          <p style={{ fontSize: '0.875rem', color: '#A7B0C8', marginTop: '0.2rem' }}>
             Millisecond-precision correlated sequence of forensic actions across hosts and identities
           </p>
         </div>
@@ -86,7 +86,7 @@ export const TimelinePage: React.FC = () => {
           >
             Sort: {sortOrder === 'asc' ? 'Earliest First (02:14 →)' : 'Latest First (02:54 →)'}
           </Button>
-          <span style={{ fontSize: '0.8rem', color: '#64748b' }}>
+          <span style={{ fontSize: '0.8rem', color: '#A7B0C8' }}>
             {filteredEvents.length} Events Displayed
           </span>
         </div>
@@ -99,14 +99,14 @@ export const TimelinePage: React.FC = () => {
           flexWrap: 'wrap',
           gap: '1rem',
           alignItems: 'center',
-          background: '#0d1424',
-          padding: '1rem',
-          borderRadius: '8px',
-          border: '1px solid #1e293b'
+          background: '#101936',
+          padding: '0.9rem 1.15rem',
+          borderRadius: '10px',
+          border: '1px solid #24315C'
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flex: 1, minWidth: '220px' }}>
-          <Search size={18} color="#64748b" />
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', flex: 1, minWidth: '220px' }}>
+          <Search size={18} color="#A7B0C8" />
           <input
             type="text"
             placeholder="Search events by actor, description, host, or ID..."
@@ -117,7 +117,7 @@ export const TimelinePage: React.FC = () => {
               background: 'transparent',
               border: 'none',
               outline: 'none',
-              color: '#f8fafc',
+              color: '#F5F7FF',
               fontSize: '0.875rem'
             }}
           />
@@ -129,11 +129,11 @@ export const TimelinePage: React.FC = () => {
             value={severityFilter}
             onChange={(e) => setSeverityFilter(e.target.value)}
             style={{
-              background: '#090f1d',
-              border: '1px solid #2d3b55',
-              color: '#cbd5e1',
+              background: '#151F46',
+              border: '1px solid #24315C',
+              color: '#F5F7FF',
               padding: '0.45rem 0.75rem',
-              borderRadius: '6px',
+              borderRadius: '8px',
               fontSize: '0.8rem',
               outline: 'none',
               cursor: 'pointer'
@@ -151,11 +151,11 @@ export const TimelinePage: React.FC = () => {
             value={typeFilter}
             onChange={(e) => setTypeFilter(e.target.value)}
             style={{
-              background: '#090f1d',
-              border: '1px solid #2d3b55',
-              color: '#cbd5e1',
+              background: '#151F46',
+              border: '1px solid #24315C',
+              color: '#F5F7FF',
               padding: '0.45rem 0.75rem',
-              borderRadius: '6px',
+              borderRadius: '8px',
               fontSize: '0.8rem',
               outline: 'none',
               cursor: 'pointer'
@@ -175,7 +175,7 @@ export const TimelinePage: React.FC = () => {
       </div>
 
       {/* Main 2-Column Layout: Timeline Stream & Event Detail Inspector */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.6fr) minmax(320px, 1fr)', gap: '1.5rem', alignItems: 'start' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.6fr) minmax(340px, 1fr)', gap: '1.5rem', alignItems: 'start' }}>
         {/* Left Column: Timeline Items */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
           {filteredEvents.map((evt) => (
@@ -194,22 +194,22 @@ export const TimelinePage: React.FC = () => {
           style={{
             position: 'sticky',
             top: '80px',
-            background: '#0d1424',
-            border: '1px solid #1e293b',
-            borderRadius: '8px',
+            background: '#101936',
+            border: '1px solid #24315C',
+            borderRadius: '12px',
             padding: '1.25rem',
             display: 'flex',
             flexDirection: 'column',
             gap: '1rem',
-            boxShadow: '0 0 25px rgba(0,0,0,0.4)'
+            boxShadow: '0 8px 30px rgba(0, 0, 0, 0.35)'
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid #1e293b', paddingBottom: '0.75rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid #24315C', paddingBottom: '0.75rem' }}>
             <div>
-              <span style={{ fontSize: '0.7rem', color: '#64748b', fontWeight: 700, textTransform: 'uppercase' }}>
+              <span style={{ fontSize: '0.7rem', color: '#A7B0C8', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                 Event Inspector
               </span>
-              <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: '#f8fafc', marginTop: '0.15rem' }}>
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#F5F7FF', marginTop: '0.15rem' }}>
                 {activeInspectedEvent?.event_id}
               </h3>
             </div>
@@ -221,45 +221,45 @@ export const TimelinePage: React.FC = () => {
           {activeInspectedEvent ? (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               <div>
-                <div style={{ fontSize: '0.72rem', color: '#64748b', textTransform: 'uppercase', fontWeight: 600 }}>Description</div>
-                <div style={{ fontSize: '0.875rem', color: '#f1f5f9', fontWeight: 500, marginTop: '0.2rem', lineHeight: 1.4 }}>
+                <div style={{ fontSize: '0.72rem', color: '#A7B0C8', textTransform: 'uppercase', fontWeight: 600 }}>Description</div>
+                <div style={{ fontSize: '0.9rem', color: '#F5F7FF', fontWeight: 500, marginTop: '0.2rem', lineHeight: 1.45 }}>
                   {activeInspectedEvent.description}
                 </div>
               </div>
 
               {/* Forensic Details Grid */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', fontSize: '0.8rem' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', background: '#090f1d', padding: '0.45rem 0.65rem', borderRadius: '4px', border: '1px solid #1e293b' }}>
-                  <span style={{ color: '#94a3b8' }}>Normalized Timestamp:</span>
-                  <span style={{ color: '#00f2fe', fontFamily: 'JetBrains Mono, monospace' }}>{activeInspectedEvent.timestamp}</span>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem', fontSize: '0.8rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', background: '#151F46', padding: '0.55rem 0.75rem', borderRadius: '6px', border: '1px solid #24315C' }}>
+                  <span style={{ color: '#A7B0C8' }}>Normalized Timestamp:</span>
+                  <span style={{ color: '#00B7FF', fontFamily: 'JetBrains Mono, monospace' }}>{activeInspectedEvent.timestamp}</span>
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', background: '#090f1d', padding: '0.45rem 0.65rem', borderRadius: '4px', border: '1px solid #1e293b' }}>
-                  <span style={{ color: '#94a3b8' }}>Actor / Security Subject:</span>
-                  <span style={{ color: '#f8fafc', fontWeight: 600 }}>{activeInspectedEvent.actor}</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', background: '#151F46', padding: '0.55rem 0.75rem', borderRadius: '6px', border: '1px solid #24315C' }}>
+                  <span style={{ color: '#A7B0C8' }}>Actor / Security Subject:</span>
+                  <span style={{ color: '#F5F7FF', fontWeight: 600 }}>{activeInspectedEvent.actor}</span>
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', background: '#090f1d', padding: '0.45rem 0.65rem', borderRadius: '4px', border: '1px solid #1e293b' }}>
-                  <span style={{ color: '#94a3b8' }}>Host Device:</span>
-                  <span style={{ color: '#f8fafc', fontFamily: 'JetBrains Mono, monospace' }}>{activeInspectedEvent.source_device}</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', background: '#151F46', padding: '0.55rem 0.75rem', borderRadius: '6px', border: '1px solid #24315C' }}>
+                  <span style={{ color: '#A7B0C8' }}>Host Device:</span>
+                  <span style={{ color: '#F5F7FF', fontFamily: 'JetBrains Mono, monospace' }}>{activeInspectedEvent.source_device}</span>
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', background: '#090f1d', padding: '0.45rem 0.65rem', borderRadius: '4px', border: '1px solid #1e293b' }}>
-                  <span style={{ color: '#94a3b8' }}>Source IP:</span>
-                  <span style={{ color: '#38bdf8', fontFamily: 'JetBrains Mono, monospace' }}>{activeInspectedEvent.source_ip}</span>
+                <div style={{ display: 'flex', justifyContent: 'space-between', background: '#151F46', padding: '0.55rem 0.75rem', borderRadius: '6px', border: '1px solid #24315C' }}>
+                  <span style={{ color: '#A7B0C8' }}>Source IP:</span>
+                  <span style={{ color: '#4DEBFF', fontFamily: 'JetBrains Mono, monospace' }}>{activeInspectedEvent.source_ip}</span>
                 </div>
                 {activeInspectedEvent.destination_ip && (
-                  <div style={{ display: 'flex', justifyContent: 'space-between', background: '#090f1d', padding: '0.45rem 0.65rem', borderRadius: '4px', border: '1px solid #1e293b' }}>
-                    <span style={{ color: '#94a3b8' }}>Target / Dst IP:</span>
-                    <span style={{ color: '#ef4444', fontFamily: 'JetBrains Mono, monospace' }}>{activeInspectedEvent.destination_ip}</span>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', background: '#151F46', padding: '0.55rem 0.75rem', borderRadius: '6px', border: '1px solid #24315C' }}>
+                    <span style={{ color: '#A7B0C8' }}>Target / Dst IP:</span>
+                    <span style={{ color: '#FF3CAC', fontFamily: 'JetBrains Mono, monospace' }}>{activeInspectedEvent.destination_ip}</span>
                   </div>
                 )}
               </div>
 
               {/* MITRE Mapping */}
               {activeInspectedEvent.mitre_technique && (
-                <div style={{ background: 'rgba(245, 158, 11, 0.08)', border: '1px solid rgba(245, 158, 11, 0.3)', borderRadius: '6px', padding: '0.65rem 0.85rem' }}>
-                  <div style={{ fontSize: '0.68rem', color: '#f59e0b', fontWeight: 700, textTransform: 'uppercase' }}>
+                <div style={{ background: 'rgba(214, 44, 255, 0.08)', border: '1px solid rgba(214, 44, 255, 0.25)', borderRadius: '8px', padding: '0.75rem 0.9rem' }}>
+                  <div style={{ fontSize: '0.68rem', color: '#D62CFF', fontWeight: 600, textTransform: 'uppercase' }}>
                     MITRE ATT&CK Mapping
                   </div>
-                  <div style={{ fontSize: '0.8rem', color: '#fcd34d', fontWeight: 600, marginTop: '0.2rem', fontFamily: 'JetBrains Mono, monospace' }}>
+                  <div style={{ fontSize: '0.85rem', color: '#FF3CAC', fontWeight: 600, marginTop: '0.2rem', fontFamily: 'JetBrains Mono, monospace' }}>
                     {activeInspectedEvent.mitre_technique}
                   </div>
                 </div>
@@ -268,20 +268,20 @@ export const TimelinePage: React.FC = () => {
               {/* Raw Evidence Line */}
               {activeInspectedEvent.evidence_line && (
                 <div>
-                  <div style={{ fontSize: '0.7rem', color: '#64748b', fontWeight: 700, textTransform: 'uppercase', marginBottom: '0.35rem' }}>
+                  <div style={{ fontSize: '0.7rem', color: '#A7B0C8', fontWeight: 600, textTransform: 'uppercase', marginBottom: '0.35rem' }}>
                     Source Log Evidence Record
                   </div>
                   <pre
                     style={{
-                      background: '#050811',
-                      border: '1px solid #1e293b',
-                      borderRadius: '6px',
-                      padding: '0.65rem',
-                      fontSize: '0.72rem',
-                      color: '#cbd5e1',
+                      background: '#050816',
+                      border: '1px solid #24315C',
+                      borderRadius: '8px',
+                      padding: '0.75rem',
+                      fontSize: '0.74rem',
+                      color: '#F5F7FF',
                       whiteSpace: 'pre-wrap',
                       wordBreak: 'break-all',
-                      lineHeight: 1.4
+                      lineHeight: 1.45
                     }}
                   >
                     {activeInspectedEvent.evidence_line}
@@ -300,7 +300,7 @@ export const TimelinePage: React.FC = () => {
               </Button>
             </div>
           ) : (
-            <div style={{ color: '#64748b', fontSize: '0.85rem', textAlign: 'center', padding: '2rem 0' }}>
+            <div style={{ color: '#A7B0C8', fontSize: '0.85rem', textAlign: 'center', padding: '2rem 0' }}>
               Select an event to inspect forensic details.
             </div>
           )}

@@ -1,8 +1,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Shield, Activity, Radio, FolderGit2, LogOut } from 'lucide-react';
+import { Shield, FolderGit2, LogOut, CheckCircle2 } from 'lucide-react';
 import { useInvestigation } from '../../context/InvestigationContext';
-import { Badge } from '../common/Badge';
 
 export const Navbar: React.FC = () => {
   const { cases, activeCase, setActiveCaseId, logout } = useInvestigation();
@@ -12,9 +11,11 @@ export const Navbar: React.FC = () => {
     <header
       className="no-print"
       style={{
-        height: '64px',
-        backgroundColor: '#090e1a',
-        borderBottom: '1px solid #1e293b',
+        height: '60px',
+        backgroundColor: 'rgba(10, 16, 36, 0.85)',
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)',
+        borderBottom: '1px solid #24315C',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
@@ -25,63 +26,42 @@ export const Navbar: React.FC = () => {
       }}
     >
       {/* Brand */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
         <Link
           to="/landing"
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '0.625rem',
+            gap: '0.65rem',
             textDecoration: 'none',
-            color: '#f8fafc'
+            color: '#F5F7FF'
           }}
         >
           <div
             style={{
-              width: '36px',
-              height: '36px',
+              width: '32px',
+              height: '32px',
               borderRadius: '8px',
-              background: 'linear-gradient(135deg, rgba(0, 242, 254, 0.2) 0%, rgba(14, 165, 233, 0.2) 100%)',
-              border: '1px solid #00f2fe',
+              background: 'linear-gradient(135deg, #1677FF 0%, #7B2CFF 100%)',
+              border: '1px solid rgba(77, 235, 255, 0.35)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              boxShadow: '0 0 12px rgba(0, 242, 254, 0.3)'
+              color: '#F5F7FF',
+              boxShadow: '0 0 14px rgba(22, 119, 255, 0.4)'
             }}
           >
-            <Shield size={20} color="#00f2fe" />
+            <Shield size={18} />
           </div>
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <span
-                style={{
-                  fontSize: '1.1rem',
-                  fontWeight: 800,
-                  letterSpacing: '0.05em',
-                  background: 'linear-gradient(90deg, #ffffff 0%, #00f2fe 100%)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent'
-                }}
-              >
-                CYBER TWIN
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+              <span style={{ fontSize: '1rem', fontWeight: 800, letterSpacing: '-0.01em', color: '#F5F7FF' }}>
+                CYBER <span style={{ color: '#00B7FF' }}>TWIN</span>
               </span>
-              <span
-                style={{
-                  fontSize: '0.65rem',
-                  padding: '0.1rem 0.35rem',
-                  borderRadius: '4px',
-                  background: 'rgba(0, 242, 254, 0.15)',
-                  border: '1px solid rgba(0, 242, 254, 0.4)',
-                  color: '#00f2fe',
-                  fontWeight: 700
-                }}
-              >
-                v1.0 MVP
+              <span style={{ fontSize: '0.65rem', color: '#4DEBFF', padding: '0.1rem 0.4rem', background: '#151F46', border: '1px solid #24315C', borderRadius: '4px', fontWeight: 600 }}>
+                PLATFORM
               </span>
             </div>
-            <p style={{ fontSize: '0.68rem', color: '#64748b', margin: 0 }}>
-              Digital Forensics & Incident Reconstruction
-            </p>
           </div>
         </Link>
       </div>
@@ -93,15 +73,16 @@ export const Navbar: React.FC = () => {
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '0.5rem',
-            background: '#0d1424',
+            gap: '0.4rem',
+            background: '#101936',
             padding: '0.35rem 0.75rem',
-            borderRadius: '6px',
-            border: '1px solid #2d3b55'
+            borderRadius: '8px',
+            border: '1px solid #24315C',
+            boxShadow: '0 2px 8px rgba(5, 8, 22, 0.4)'
           }}
         >
-          <FolderGit2 size={16} color="#00f2fe" />
-          <span style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: 600 }}>Active Case:</span>
+          <FolderGit2 size={14} color="#00B7FF" />
+          <span style={{ fontSize: '0.72rem', color: '#A7B0C8', fontWeight: 500 }}>Case:</span>
           <select
             value={activeCase?.case_id || ''}
             onChange={(e) => {
@@ -111,28 +92,26 @@ export const Navbar: React.FC = () => {
             style={{
               background: 'transparent',
               border: 'none',
-              color: '#00f2fe',
-              fontWeight: 700,
-              fontSize: '0.8rem',
+              color: '#00B7FF',
+              fontWeight: 600,
+              fontSize: '0.78rem',
               fontFamily: 'JetBrains Mono, monospace',
               cursor: 'pointer',
               outline: 'none'
             }}
           >
             {cases.map((c) => (
-              <option key={c.case_id} value={c.case_id} style={{ background: '#0d1424', color: '#f8fafc' }}>
-                {c.case_id} — {c.title.substring(0, 30)}...
+              <option key={c.case_id} value={c.case_id} style={{ background: '#101936', color: '#F5F7FF' }}>
+                {c.case_id} — {c.title.substring(0, 32)}...
               </option>
             ))}
           </select>
         </div>
 
         {/* Live Indicator */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <Badge variant="cyan" pulse size="sm">
-            <Radio size={12} />
-            PIPELINE ONLINE
-          </Badge>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.72rem', color: '#10B981', fontWeight: 600 }}>
+          <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#10B981', boxShadow: '0 0 8px #10B981' }} />
+          <span>Engine Live</span>
         </div>
 
         {/* Investigator Tag */}
@@ -140,57 +119,57 @@ export const Navbar: React.FC = () => {
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '0.5rem',
-            borderLeft: '1px solid #1e293b',
+            gap: '0.6rem',
+            borderLeft: '1px solid #24315C',
             paddingLeft: '1rem'
           }}
         >
           <div
             style={{
-              width: '28px',
-              height: '28px',
+              width: '26px',
+              height: '26px',
               borderRadius: '50%',
-              background: '#1e293b',
-              border: '1px solid #38bdf8',
+              background: 'linear-gradient(135deg, #1677FF 0%, #7B2CFF 100%)',
+              border: '1px solid rgba(77, 235, 255, 0.4)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: '0.75rem',
+              fontSize: '0.7rem',
               fontWeight: 700,
-              color: '#38bdf8'
+              color: '#F5F7FF',
+              boxShadow: '0 0 10px rgba(123, 44, 255, 0.35)'
             }}
           >
             P3
           </div>
-          <div style={{ lineHeight: 1.2 }}>
-            <div style={{ fontSize: '0.75rem', fontWeight: 600, color: '#f1f5f9' }}>Person 3</div>
-            <div style={{ fontSize: '0.65rem', color: '#64748b' }}>Frontend Lead</div>
+          <div style={{ lineHeight: 1.15 }}>
+            <div style={{ fontSize: '0.75rem', fontWeight: 600, color: '#F5F7FF' }}>Person 3</div>
+            <div style={{ fontSize: '0.65rem', color: '#A7B0C8' }}>Investigator</div>
           </div>
         </div>
 
-        {/* Quick Sign Out Action */}
+        {/* Sign Out Action */}
         <button
           onClick={() => {
             logout();
             navigate('/');
           }}
           style={{
-            background: 'rgba(239, 68, 68, 0.08)',
-            border: '1px solid rgba(239, 68, 68, 0.3)',
-            color: '#f87171',
+            background: '#151F46',
+            border: '1px solid #24315C',
+            color: '#A7B0C8',
             padding: '0.35rem 0.65rem',
             borderRadius: '6px',
-            fontSize: '0.75rem',
-            fontWeight: 600,
+            fontSize: '0.72rem',
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
             gap: '0.35rem',
             transition: 'all 0.15s ease'
           }}
-          title="Sign Out of Session"
+          title="Sign Out"
         >
-          <LogOut size={14} />
+          <LogOut size={13} color="#A7B0C8" />
           <span>Logout</span>
         </button>
       </div>

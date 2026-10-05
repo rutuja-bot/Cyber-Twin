@@ -23,12 +23,12 @@ export const Card: React.FC<CardProps> = ({
 }) => {
   const getGlowStyle = () => {
     switch (glow) {
-      case 'cyan':
-        return { borderColor: 'rgba(0, 242, 254, 0.4)', boxShadow: '0 0 20px rgba(0, 242, 254, 0.15)' };
       case 'red':
-        return { borderColor: 'rgba(239, 68, 68, 0.4)', boxShadow: '0 0 20px rgba(239, 68, 68, 0.15)' };
+        return { borderColor: 'rgba(239, 68, 68, 0.45)', boxShadow: '0 4px 20px rgba(239, 68, 68, 0.15)' };
+      case 'cyan':
+        return { borderColor: 'rgba(0, 183, 255, 0.45)', boxShadow: '0 4px 20px rgba(0, 183, 255, 0.15)' };
       case 'purple':
-        return { borderColor: 'rgba(168, 85, 247, 0.4)', boxShadow: '0 0 20px rgba(168, 85, 247, 0.15)' };
+        return { borderColor: 'rgba(123, 44, 255, 0.45)', boxShadow: '0 4px 20px rgba(123, 44, 255, 0.15)' };
       default:
         return {};
     }
@@ -38,10 +38,11 @@ export const Card: React.FC<CardProps> = ({
     <div
       className={`cyber-card ${className}`}
       style={{
-        background: '#0d1424',
-        border: '1px solid #1e293b',
-        borderRadius: '8px',
+        background: '#101936',
+        border: '1px solid #24315C',
+        borderRadius: '12px',
         padding: '1.25rem',
+        boxShadow: '0 4px 20px rgba(5, 8, 22, 0.6)',
         ...getGlowStyle(),
         ...style
       }}
@@ -52,21 +53,21 @@ export const Card: React.FC<CardProps> = ({
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            marginBottom: '1rem',
-            paddingBottom: '0.75rem',
-            borderBottom: '1px solid rgba(30, 41, 59, 0.8)'
+            marginBottom: '0.875rem',
+            paddingBottom: '0.625rem',
+            borderBottom: '1px solid #24315C'
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
-            {icon && <span style={{ color: '#00f2fe', display: 'flex' }}>{icon}</span>}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            {icon && <span style={{ color: '#00B7FF', display: 'flex' }}>{icon}</span>}
             <div>
               {title && (
-                <h3 style={{ fontSize: '1rem', fontWeight: 600, color: '#f1f5f9', letterSpacing: '-0.01em' }}>
+                <h3 style={{ fontSize: '0.925rem', fontWeight: 600, color: '#F5F7FF', letterSpacing: '-0.01em' }}>
                   {title}
                 </h3>
               )}
               {subtitle && (
-                <p style={{ fontSize: '0.8rem', color: '#94a3b8', marginTop: '0.1rem' }}>
+                <p style={{ fontSize: '0.75rem', color: '#A7B0C8', marginTop: '0.1rem' }}>
                   {subtitle}
                 </p>
               )}

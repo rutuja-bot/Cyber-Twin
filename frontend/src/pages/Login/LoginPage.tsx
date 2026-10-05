@@ -7,14 +7,10 @@ import {
   Eye,
   EyeOff,
   AlertCircle,
-  KeyRound,
   ArrowRight,
-  Terminal,
-  CheckCircle2,
-  Cpu
+  CheckCircle2
 } from 'lucide-react';
 import { useInvestigation } from '../../context/InvestigationContext';
-import { Badge } from '../../components/common/Badge';
 import { Button } from '../../components/common/Button';
 
 export const LoginPage: React.FC = () => {
@@ -40,7 +36,7 @@ export const LoginPage: React.FC = () => {
         setError(result.error || 'Invalid credentials. Access Denied.');
       }
     } catch (err) {
-      setError('Authentication subsystem unavailable. Please try again.');
+      setError('Authentication service unavailable. Please retry.');
     } finally {
       setLoading(false);
     }
@@ -59,31 +55,22 @@ export const LoginPage: React.FC = () => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '2rem 1.5rem',
+        padding: '1.5rem',
+        backgroundColor: '#050816',
         position: 'relative',
-        backgroundColor: '#080c14',
         overflow: 'hidden'
       }}
     >
-      {/* Background Decorative Cyber Grids */}
-      <div
-        className="bg-grid"
-        style={{
-          position: 'absolute',
-          inset: 0,
-          opacity: 0.8,
-          pointerEvents: 'none'
-        }}
-      />
+      {/* Background ambient lighting */}
       <div
         style={{
           position: 'absolute',
           width: '500px',
           height: '500px',
           borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(0, 242, 254, 0.08) 0%, transparent 70%)',
-          top: '10%',
-          left: '20%',
+          background: 'radial-gradient(circle, rgba(22, 119, 255, 0.15) 0%, transparent 70%)',
+          top: '20%',
+          left: '30%',
           pointerEvents: 'none'
         }}
       />
@@ -93,9 +80,9 @@ export const LoginPage: React.FC = () => {
           width: '450px',
           height: '450px',
           borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(168, 85, 247, 0.08) 0%, transparent 70%)',
-          bottom: '10%',
-          right: '20%',
+          background: 'radial-gradient(circle, rgba(123, 44, 255, 0.12) 0%, transparent 70%)',
+          bottom: '15%',
+          right: '25%',
           pointerEvents: 'none'
         }}
       />
@@ -105,95 +92,84 @@ export const LoginPage: React.FC = () => {
         className="cyber-card"
         style={{
           width: '100%',
-          maxWidth: '460px',
-          background: '#0d1424',
-          border: '1px solid #1e293b',
-          borderRadius: '12px',
-          padding: '2.5rem 2rem',
-          boxShadow: '0 0 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 242, 254, 0.1)',
-          position: 'relative',
-          zIndex: 10
+          maxWidth: '420px',
+          background: 'rgba(16, 25, 54, 0.85)',
+          backdropFilter: 'blur(16px)',
+          WebkitBackdropFilter: 'blur(16px)',
+          border: '1px solid #24315C',
+          borderRadius: '16px',
+          padding: '2.25rem 2rem',
+          boxShadow: '0 20px 50px rgba(5, 8, 22, 0.8), 0 0 35px rgba(22, 119, 255, 0.12)',
+          zIndex: 1
         }}
       >
         {/* Brand & Title */}
-        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+        <div style={{ textAlign: 'center', marginBottom: '1.75rem' }}>
           <div
             style={{
-              width: '52px',
-              height: '52px',
+              width: '48px',
+              height: '48px',
               borderRadius: '12px',
-              background: 'linear-gradient(135deg, rgba(0, 242, 254, 0.2) 0%, rgba(14, 165, 233, 0.2) 100%)',
-              border: '1px solid #00f2fe',
+              background: 'linear-gradient(135deg, #1677FF 0%, #7B2CFF 100%)',
+              border: '1px solid rgba(77, 235, 255, 0.4)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               margin: '0 auto 1rem auto',
-              boxShadow: '0 0 20px rgba(0, 242, 254, 0.35)'
+              color: '#F5F7FF',
+              boxShadow: '0 0 24px rgba(22, 119, 255, 0.45)'
             }}
           >
-            <Shield size={28} color="#00f2fe" />
+            <Shield size={26} />
           </div>
 
           <h1
             style={{
-              fontSize: '1.65rem',
+              fontSize: '1.4rem',
               fontWeight: 800,
-              letterSpacing: '0.05em',
-              background: 'linear-gradient(90deg, #ffffff 0%, #00f2fe 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              marginBottom: '0.35rem'
+              color: '#F5F7FF',
+              marginBottom: '0.35rem',
+              letterSpacing: '-0.02em'
             }}
           >
-            CYBER TWIN
+            Cyber <span style={{ color: '#00B7FF' }}>Twin</span> Platform
           </h1>
 
           <p
             style={{
-              fontSize: '0.825rem',
-              color: '#94a3b8',
-              lineHeight: 1.4,
-              maxWidth: '340px',
-              margin: '0 auto'
+              fontSize: '0.8rem',
+              color: '#A7B0C8',
+              lineHeight: 1.45
             }}
           >
             Interactive Cyber Incident Reconstruction & Digital Forensics System
           </p>
-
-          <div style={{ marginTop: '0.75rem' }}>
-            <Badge variant="cyan" size="sm">
-              <Terminal size={12} /> SECURE INVESTIGATOR ACCESS
-            </Badge>
-          </div>
         </div>
 
         {/* Demo Account Callout Banner */}
         <div
           onClick={handleApplyDemoCredentials}
           style={{
-            background: 'rgba(0, 242, 254, 0.06)',
-            border: '1px solid rgba(0, 242, 254, 0.25)',
-            borderRadius: '8px',
+            background: 'rgba(21, 31, 70, 0.7)',
+            border: '1px solid #24315C',
+            borderRadius: '10px',
             padding: '0.75rem 1rem',
             marginBottom: '1.5rem',
             cursor: 'pointer',
-            transition: 'border-color 0.2s, background 0.2s'
+            transition: 'all 0.15s ease'
           }}
-          title="Click to auto-fill demo credentials"
+          title="Click to fill credentials"
         >
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.25rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-              <CheckCircle2 size={14} color="#00f2fe" />
-              <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#00f2fe', textTransform: 'uppercase' }}>
-                Demo Credentials
-              </span>
-            </div>
-            <span style={{ fontSize: '0.68rem', color: '#38bdf8', textDecoration: 'underline' }}>
-              Click to Apply
+            <span style={{ fontSize: '0.72rem', fontWeight: 700, color: '#00B7FF', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+              Demo Account
+            </span>
+            <span style={{ fontSize: '0.68rem', color: '#717E9E' }}>
+              Click to Auto-fill
             </span>
           </div>
-          <div style={{ fontSize: '0.78rem', color: '#cbd5e1', fontFamily: 'JetBrains Mono, monospace' }}>
-            User: <strong style={{ color: '#f8fafc' }}>investigator</strong> • Pass: <strong style={{ color: '#f8fafc' }}>cyber123</strong>
+          <div style={{ fontSize: '0.78rem', color: '#A7B0C8', fontFamily: 'JetBrains Mono, monospace' }}>
+            User: <span style={{ color: '#F5F7FF', fontWeight: 600 }}>investigator</span> | Pass: <span style={{ color: '#F5F7FF', fontWeight: 600 }}>cyber123</span>
           </div>
         </div>
 
@@ -201,39 +177,37 @@ export const LoginPage: React.FC = () => {
         {error && (
           <div
             style={{
-              background: 'rgba(239, 68, 68, 0.12)',
-              border: '1px solid #ef4444',
+              background: 'rgba(239, 68, 68, 0.15)',
+              border: '1px solid rgba(239, 68, 68, 0.45)',
               borderRadius: '8px',
               padding: '0.75rem 1rem',
-              marginBottom: '1.5rem',
+              marginBottom: '1.25rem',
               display: 'flex',
               alignItems: 'flex-start',
-              gap: '0.65rem'
+              gap: '0.5rem'
             }}
           >
-            <AlertCircle size={18} color="#ef4444" style={{ flexShrink: 0, marginTop: '0.1rem' }} />
-            <div style={{ fontSize: '0.8rem', color: '#fca5a5', lineHeight: 1.4 }}>
+            <AlertCircle size={16} color="#FCA5A5" style={{ flexShrink: 0, marginTop: '0.1rem' }} />
+            <div style={{ fontSize: '0.78rem', color: '#FCA5A5', lineHeight: 1.35 }}>
               {error}
             </div>
           </div>
         )}
 
         {/* Authentication Form */}
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.15rem' }}>
           {/* Username Input */}
           <div>
             <label
               style={{
-                fontSize: '0.78rem',
+                fontSize: '0.75rem',
                 fontWeight: 600,
-                color: '#94a3b8',
+                color: '#A7B0C8',
                 display: 'block',
-                marginBottom: '0.4rem',
-                textTransform: 'uppercase',
-                letterSpacing: '0.04em'
+                marginBottom: '0.35rem'
               }}
             >
-              Investigator ID
+              Investigator Username
             </label>
             <div
               style={{
@@ -246,7 +220,7 @@ export const LoginPage: React.FC = () => {
                 style={{
                   position: 'absolute',
                   left: '0.85rem',
-                  color: '#64748b',
+                  color: '#717E9E',
                   pointerEvents: 'none',
                   display: 'flex'
                 }}
@@ -262,15 +236,15 @@ export const LoginPage: React.FC = () => {
                 placeholder="investigator"
                 style={{
                   width: '100%',
-                  background: '#090f1d',
-                  border: '1px solid #2d3b55',
-                  borderRadius: '6px',
-                  padding: '0.65rem 1rem 0.65rem 2.4rem',
-                  color: '#f8fafc',
-                  fontSize: '0.875rem',
+                  background: '#080E22',
+                  border: '1px solid #24315C',
+                  borderRadius: '8px',
+                  padding: '0.65rem 0.85rem 0.65rem 2.4rem',
+                  color: '#F5F7FF',
+                  fontSize: '0.84rem',
                   fontFamily: 'JetBrains Mono, monospace',
                   outline: 'none',
-                  transition: 'border-color 0.2s'
+                  transition: 'border-color 0.15s ease'
                 }}
               />
             </div>
@@ -280,16 +254,14 @@ export const LoginPage: React.FC = () => {
           <div>
             <label
               style={{
-                fontSize: '0.78rem',
+                fontSize: '0.75rem',
                 fontWeight: 600,
-                color: '#94a3b8',
+                color: '#A7B0C8',
                 display: 'block',
-                marginBottom: '0.4rem',
-                textTransform: 'uppercase',
-                letterSpacing: '0.04em'
+                marginBottom: '0.35rem'
               }}
             >
-              Security Passphrase
+              Password
             </label>
             <div
               style={{
@@ -302,7 +274,7 @@ export const LoginPage: React.FC = () => {
                 style={{
                   position: 'absolute',
                   left: '0.85rem',
-                  color: '#64748b',
+                  color: '#717E9E',
                   pointerEvents: 'none',
                   display: 'flex'
                 }}
@@ -318,15 +290,15 @@ export const LoginPage: React.FC = () => {
                 placeholder="••••••••"
                 style={{
                   width: '100%',
-                  background: '#090f1d',
-                  border: '1px solid #2d3b55',
-                  borderRadius: '6px',
+                  background: '#080E22',
+                  border: '1px solid #24315C',
+                  borderRadius: '8px',
                   padding: '0.65rem 2.6rem 0.65rem 2.4rem',
-                  color: '#f8fafc',
-                  fontSize: '0.875rem',
+                  color: '#F5F7FF',
+                  fontSize: '0.84rem',
                   fontFamily: 'JetBrains Mono, monospace',
                   outline: 'none',
-                  transition: 'border-color 0.2s'
+                  transition: 'border-color 0.15s ease'
                 }}
               />
               <button
@@ -337,9 +309,9 @@ export const LoginPage: React.FC = () => {
                   right: '0.75rem',
                   background: 'transparent',
                   border: 'none',
-                  color: '#94a3b8',
+                  color: '#717E9E',
                   cursor: 'pointer',
-                  padding: '0.25rem',
+                  padding: '0.2rem',
                   display: 'flex',
                   alignItems: 'center'
                 }}
@@ -356,30 +328,15 @@ export const LoginPage: React.FC = () => {
             variant="primary"
             size="lg"
             disabled={loading}
-            icon={loading ? <Cpu className="animate-spin" size={18} /> : <ArrowRight size={18} />}
             style={{
               width: '100%',
               marginTop: '0.5rem',
-              padding: '0.75rem'
+              boxShadow: '0 4px 20px rgba(22, 119, 255, 0.4)'
             }}
           >
-            {loading ? 'Authenticating Investigator...' : 'Authenticate & Enter Workspace'}
+            {loading ? 'Authenticating...' : 'Sign In to Investigation Suite'}
           </Button>
         </form>
-
-        {/* Footer info */}
-        <div
-          style={{
-            marginTop: '2rem',
-            paddingTop: '1.25rem',
-            borderTop: '1px solid rgba(30, 41, 59, 0.6)',
-            textAlign: 'center',
-            fontSize: '0.72rem',
-            color: '#64748b'
-          }}
-        >
-          Session managed locally. Chain of custody & audit trail enabled.
-        </div>
       </div>
     </div>
   );

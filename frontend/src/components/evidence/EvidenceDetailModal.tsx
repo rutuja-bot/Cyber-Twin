@@ -41,23 +41,24 @@ export const EvidenceDetailModal: React.FC<EvidenceDetailModalProps> = ({ eviden
         {/* Verification Status Banner */}
         <div
           style={{
-            background: 'rgba(16, 185, 129, 0.08)',
-            border: '1px solid rgba(16, 185, 129, 0.3)',
-            borderRadius: '6px',
-            padding: '0.85rem 1rem',
+            background: 'rgba(16, 185, 129, 0.12)',
+            border: '1px solid rgba(16, 185, 129, 0.35)',
+            borderRadius: '10px',
+            padding: '1rem 1.25rem',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'space-between'
+            justifyContent: 'space-between',
+            boxShadow: '0 0 15px rgba(16, 185, 129, 0.1)'
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-            <ShieldCheck size={22} color="#10b981" />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+            <ShieldCheck size={24} color="#10B981" />
             <div>
-              <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#6ee7b7' }}>
-                Forensic Integrity Verified (SHA-256 Match)
+              <div style={{ fontSize: '0.88rem', fontWeight: 700, color: '#6EE7B7' }}>
+                Forensic Integrity Certified (SHA-256 Match)
               </div>
-              <div style={{ fontSize: '0.75rem', color: '#94a3b8' }}>
-                Artifact integrity certified upon ingestion. No post-collection tampering detected.
+              <div style={{ fontSize: '0.75rem', color: '#A7B0C8', marginTop: '0.15rem' }}>
+                Cryptographic integrity certified upon ingestion. Chain of custody intact.
               </div>
             </div>
           </div>
@@ -67,10 +68,10 @@ export const EvidenceDetailModal: React.FC<EvidenceDetailModalProps> = ({ eviden
         {/* SHA-256 Hash Box */}
         <div
           style={{
-            background: '#090f1d',
-            border: '1px solid #1e293b',
-            borderRadius: '6px',
-            padding: '0.75rem 1rem'
+            background: '#080E22',
+            border: '1px solid #24315C',
+            borderRadius: '10px',
+            padding: '0.85rem 1.15rem'
           }}
         >
           <div
@@ -78,23 +79,26 @@ export const EvidenceDetailModal: React.FC<EvidenceDetailModalProps> = ({ eviden
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              marginBottom: '0.35rem'
+              marginBottom: '0.45rem'
             }}
           >
-            <span style={{ fontSize: '0.7rem', color: '#64748b', fontWeight: 700, textTransform: 'uppercase' }}>
+            <span style={{ fontSize: '0.72rem', color: '#A7B0C8', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
               SHA-256 Cryptographic Hash
             </span>
             <button
               onClick={handleCopyHash}
               style={{
-                background: 'transparent',
-                border: 'none',
-                color: copied ? '#10b981' : '#00f2fe',
+                background: 'rgba(22, 119, 255, 0.15)',
+                border: '1px solid rgba(0, 183, 255, 0.3)',
+                color: copied ? '#10B981' : '#00B7FF',
                 fontSize: '0.75rem',
+                fontWeight: 600,
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.35rem'
+                gap: '0.35rem',
+                padding: '0.2rem 0.6rem',
+                borderRadius: '6px'
               }}
             >
               {copied ? <Check size={14} /> : <Copy size={14} />}
@@ -104,9 +108,10 @@ export const EvidenceDetailModal: React.FC<EvidenceDetailModalProps> = ({ eviden
           <div
             style={{
               fontFamily: 'JetBrains Mono, monospace',
-              fontSize: '0.8rem',
-              color: '#38bdf8',
-              wordBreak: 'break-all'
+              fontSize: '0.825rem',
+              color: '#4DEBFF',
+              wordBreak: 'break-all',
+              lineHeight: 1.4
             }}
           >
             {evidence.hash}
@@ -117,31 +122,31 @@ export const EvidenceDetailModal: React.FC<EvidenceDetailModalProps> = ({ eviden
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-            gap: '1rem'
+            gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+            gap: '0.85rem'
           }}
         >
-          <div style={{ background: '#0a0f1d', padding: '0.75rem 1rem', borderRadius: '6px', border: '1px solid #1e293b' }}>
-            <span style={{ fontSize: '0.7rem', color: '#64748b', textTransform: 'uppercase', fontWeight: 600 }}>Artifact Type</span>
-            <div style={{ fontSize: '0.875rem', color: '#f8fafc', fontWeight: 600, marginTop: '0.2rem' }}>
+          <div style={{ background: '#151F46', padding: '0.85rem 1rem', borderRadius: '10px', border: '1px solid #24315C' }}>
+            <span style={{ fontSize: '0.7rem', color: '#717E9E', textTransform: 'uppercase', fontWeight: 600 }}>Artifact Type</span>
+            <div style={{ fontSize: '0.9rem', color: '#F5F7FF', fontWeight: 700, marginTop: '0.2rem' }}>
               {evidence.type.toUpperCase()}
             </div>
           </div>
-          <div style={{ background: '#0a0f1d', padding: '0.75rem 1rem', borderRadius: '6px', border: '1px solid #1e293b' }}>
-            <span style={{ fontSize: '0.7rem', color: '#64748b', textTransform: 'uppercase', fontWeight: 600 }}>File Size</span>
-            <div style={{ fontSize: '0.875rem', color: '#f8fafc', fontWeight: 600, marginTop: '0.2rem' }}>
+          <div style={{ background: '#151F46', padding: '0.85rem 1rem', borderRadius: '10px', border: '1px solid #24315C' }}>
+            <span style={{ fontSize: '0.7rem', color: '#717E9E', textTransform: 'uppercase', fontWeight: 600 }}>File Size</span>
+            <div style={{ fontSize: '0.9rem', color: '#F5F7FF', fontWeight: 700, marginTop: '0.2rem' }}>
               {evidence.metadata.file_size_kb ? `${(evidence.metadata.file_size_kb / 1024).toFixed(2)} MB` : '16.00 GB'}
             </div>
           </div>
-          <div style={{ background: '#0a0f1d', padding: '0.75rem 1rem', borderRadius: '6px', border: '1px solid #1e293b' }}>
-            <span style={{ fontSize: '0.7rem', color: '#64748b', textTransform: 'uppercase', fontWeight: 600 }}>Extracted Records</span>
-            <div style={{ fontSize: '0.875rem', color: '#00f2fe', fontWeight: 700, marginTop: '0.2rem', fontFamily: 'JetBrains Mono, monospace' }}>
+          <div style={{ background: '#151F46', padding: '0.85rem 1rem', borderRadius: '10px', border: '1px solid #24315C' }}>
+            <span style={{ fontSize: '0.7rem', color: '#717E9E', textTransform: 'uppercase', fontWeight: 600 }}>Extracted Records</span>
+            <div style={{ fontSize: '0.9rem', color: '#00B7FF', fontWeight: 700, marginTop: '0.2rem', fontFamily: 'JetBrains Mono, monospace' }}>
               {evidence.metadata.extracted_records?.toLocaleString() || '1,240'} events
             </div>
           </div>
-          <div style={{ background: '#0a0f1d', padding: '0.75rem 1rem', borderRadius: '6px', border: '1px solid #1e293b' }}>
-            <span style={{ fontSize: '0.7rem', color: '#64748b', textTransform: 'uppercase', fontWeight: 600 }}>Investigation Relevance</span>
-            <div style={{ marginTop: '0.2rem' }}>
+          <div style={{ background: '#151F46', padding: '0.85rem 1rem', borderRadius: '10px', border: '1px solid #24315C' }}>
+            <span style={{ fontSize: '0.7rem', color: '#717E9E', textTransform: 'uppercase', fontWeight: 600 }}>Investigation Relevance</span>
+            <div style={{ marginTop: '0.25rem' }}>
               <Badge variant={evidence.relevance}>{evidence.relevance}</Badge>
             </div>
           </div>
@@ -150,24 +155,25 @@ export const EvidenceDetailModal: React.FC<EvidenceDetailModalProps> = ({ eviden
         {/* Raw Log Preview */}
         {evidence.metadata.raw_sample && (
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.4rem' }}>
-              <Terminal size={14} color="#00f2fe" />
-              <span style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: 700, textTransform: 'uppercase' }}>
-                Normalized Raw Log Sample
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.45rem' }}>
+              <Terminal size={14} color="#00B7FF" />
+              <span style={{ fontSize: '0.75rem', color: '#A7B0C8', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                Normalized Raw Log Record Sample
               </span>
             </div>
             <pre
               style={{
-                background: '#050811',
-                border: '1px solid #1e293b',
-                borderRadius: '6px',
-                padding: '0.85rem',
-                fontSize: '0.75rem',
-                color: '#cbd5e1',
+                background: '#080E22',
+                border: '1px solid #24315C',
+                borderRadius: '8px',
+                padding: '1rem',
+                fontSize: '0.76rem',
+                color: '#F5F7FF',
                 overflowX: 'auto',
                 whiteSpace: 'pre-wrap',
                 wordBreak: 'break-all',
-                lineHeight: 1.45
+                lineHeight: 1.5,
+                fontFamily: 'JetBrains Mono, monospace'
               }}
             >
               {evidence.metadata.raw_sample}
@@ -177,23 +183,23 @@ export const EvidenceDetailModal: React.FC<EvidenceDetailModalProps> = ({ eviden
 
         {/* Linked Chronological Events */}
         <div>
-          <div style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: 700, textTransform: 'uppercase', marginBottom: '0.5rem' }}>
+          <div style={{ fontSize: '0.75rem', color: '#A7B0C8', fontWeight: 600, textTransform: 'uppercase', marginBottom: '0.65rem' }}>
             Linked Incident Events ({linkedEvents.length})
           </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem' }}>
             {linkedEvents.map((evt) => (
               <div
                 key={evt.event_id}
                 style={{
-                  background: '#090f1d',
-                  border: '1px solid #1e293b',
-                  borderRadius: '6px',
-                  padding: '0.65rem 0.85rem',
+                  background: '#151F46',
+                  border: '1px solid #24315C',
+                  borderRadius: '8px',
+                  padding: '0.75rem 1rem',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between',
                   cursor: 'pointer',
-                  transition: 'background 0.15s ease'
+                  transition: 'all 0.15s ease'
                 }}
                 onClick={() => {
                   setSelectedEvent(evt);
@@ -203,13 +209,13 @@ export const EvidenceDetailModal: React.FC<EvidenceDetailModalProps> = ({ eviden
               >
                 <div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.75rem', color: '#00f2fe', fontWeight: 700 }}>
+                    <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.75rem', color: '#00B7FF', fontWeight: 700 }}>
                       {evt.event_id}
                     </span>
                     <Badge variant={evt.severity} size="sm">{evt.severity}</Badge>
-                    <span style={{ fontSize: '0.75rem', color: '#64748b' }}>{evt.timestamp}</span>
+                    <span style={{ fontSize: '0.75rem', color: '#717E9E' }}>{evt.timestamp}</span>
                   </div>
-                  <div style={{ fontSize: '0.8rem', color: '#e2e8f0', marginTop: '0.2rem' }}>
+                  <div style={{ fontSize: '0.825rem', color: '#F5F7FF', marginTop: '0.25rem' }}>
                     {evt.description}
                   </div>
                 </div>

@@ -79,13 +79,14 @@ export const NetworkGraph: React.FC<NetworkGraphProps> = ({
       style={{
         width: '100%',
         height: '560px',
-        backgroundColor: '#070b14',
-        border: '1px solid #1e293b',
-        borderRadius: '8px',
+        backgroundColor: '#0A1024',
+        border: '1px solid #24315C',
+        borderRadius: '12px',
         position: 'relative',
         overflow: 'hidden',
         cursor: isDragging ? 'grabbing' : 'grab',
-        userSelect: 'none'
+        userSelect: 'none',
+        boxShadow: '0 8px 32px rgba(5, 8, 22, 0.5)'
       }}
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
@@ -99,7 +100,7 @@ export const NetworkGraph: React.FC<NetworkGraphProps> = ({
           position: 'absolute',
           inset: 0,
           pointerEvents: 'none',
-          opacity: 0.7
+          opacity: 0.4
         }}
       />
 
@@ -112,30 +113,32 @@ export const NetworkGraph: React.FC<NetworkGraphProps> = ({
           display: 'flex',
           gap: '0.4rem',
           zIndex: 10,
-          background: 'rgba(13, 20, 36, 0.9)',
-          padding: '0.35rem',
-          borderRadius: '6px',
-          border: '1px solid #2d3b55'
+          background: 'rgba(16, 25, 54, 0.92)',
+          backdropFilter: 'blur(8px)',
+          padding: '0.4rem',
+          borderRadius: '8px',
+          border: '1px solid #24315C',
+          boxShadow: '0 4px 16px rgba(0, 0, 0, 0.3)'
         }}
         onClick={(e) => e.stopPropagation()}
       >
         <button
           onClick={() => setZoom((z) => Math.min(z + 0.15, 2.2))}
-          style={{ background: '#1e293b', border: 'none', color: '#f8fafc', padding: '0.4rem', borderRadius: '4px', cursor: 'pointer' }}
+          style={{ background: '#151F46', border: '1px solid #24315C', color: '#F5F7FF', padding: '0.45rem', borderRadius: '6px', cursor: 'pointer' }}
           title="Zoom In"
         >
           <ZoomIn size={16} />
         </button>
         <button
           onClick={() => setZoom((z) => Math.max(z - 0.15, 0.5))}
-          style={{ background: '#1e293b', border: 'none', color: '#f8fafc', padding: '0.4rem', borderRadius: '4px', cursor: 'pointer' }}
+          style={{ background: '#151F46', border: '1px solid #24315C', color: '#F5F7FF', padding: '0.45rem', borderRadius: '6px', cursor: 'pointer' }}
           title="Zoom Out"
         >
           <ZoomOut size={16} />
         </button>
         <button
           onClick={resetView}
-          style={{ background: '#1e293b', border: 'none', color: '#f8fafc', padding: '0.4rem', borderRadius: '4px', cursor: 'pointer' }}
+          style={{ background: '#151F46', border: '1px solid #24315C', color: '#F5F7FF', padding: '0.45rem', borderRadius: '6px', cursor: 'pointer' }}
           title="Reset View"
         >
           <RotateCcw size={16} />
@@ -152,22 +155,24 @@ export const NetworkGraph: React.FC<NetworkGraphProps> = ({
           alignItems: 'center',
           gap: '1rem',
           zIndex: 10,
-          background: 'rgba(13, 20, 36, 0.85)',
-          padding: '0.5rem 0.85rem',
-          borderRadius: '6px',
-          border: '1px solid #1e293b',
-          fontSize: '0.75rem'
+          background: 'rgba(16, 25, 54, 0.92)',
+          backdropFilter: 'blur(8px)',
+          padding: '0.5rem 0.9rem',
+          borderRadius: '8px',
+          border: '1px solid #24315C',
+          fontSize: '0.75rem',
+          boxShadow: '0 4px 16px rgba(0, 0, 0, 0.3)'
         }}
       >
-        <span style={{ color: '#64748b', fontWeight: 600 }}>Topology:</span>
-        <span style={{ color: '#ef4444', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-          <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#ef4444' }} /> Compromised
+        <span style={{ color: '#A7B0C8', fontWeight: 600 }}>Topology:</span>
+        <span style={{ color: '#FF3CAC', display: 'flex', alignItems: 'center', gap: '0.35rem', fontWeight: 500 }}>
+          <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#FF3CAC', boxShadow: '0 0 8px rgba(255, 60, 172, 0.5)' }} /> Compromised
         </span>
-        <span style={{ color: '#10b981', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-          <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#10b981' }} /> Target Asset
+        <span style={{ color: '#00B7FF', display: 'flex', alignItems: 'center', gap: '0.35rem', fontWeight: 500 }}>
+          <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#00B7FF', boxShadow: '0 0 8px rgba(0, 183, 255, 0.5)' }} /> Target Asset
         </span>
-        <span style={{ color: '#00f2fe', display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-          <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#00f2fe' }} /> Pivot / Flow
+        <span style={{ color: '#7B2CFF', display: 'flex', alignItems: 'center', gap: '0.35rem', fontWeight: 500 }}>
+          <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#7B2CFF', boxShadow: '0 0 8px rgba(123, 44, 255, 0.5)' }} /> Pivot / Host
         </span>
       </div>
 
@@ -188,7 +193,7 @@ export const NetworkGraph: React.FC<NetworkGraphProps> = ({
             markerHeight="6"
             orient="auto-start-reverse"
           >
-            <path d="M 0 0 L 10 5 L 0 10 z" fill="#00f2fe" opacity="0.8" />
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#00B7FF" opacity="0.8" />
           </marker>
           <marker
             id="arrow-red"
@@ -199,7 +204,7 @@ export const NetworkGraph: React.FC<NetworkGraphProps> = ({
             markerHeight="6"
             orient="auto-start-reverse"
           >
-            <path d="M 0 0 L 10 5 L 0 10 z" fill="#ef4444" opacity="0.9" />
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#FF3CAC" opacity="0.9" />
           </marker>
         </defs>
 
@@ -214,7 +219,7 @@ export const NetworkGraph: React.FC<NetworkGraphProps> = ({
               (rel.source_entity_id === selectedEntity.entity_id ||
                 rel.target_entity_id === selectedEntity.entity_id);
 
-            const strokeColor = rel.is_suspicious ? '#ef4444' : '#00f2fe';
+            const strokeColor = rel.is_suspicious ? '#FF3CAC' : '#24315C';
             const midX = (src.x + dst.x) / 2;
             const midY = (src.y + dst.y) / 2;
 
@@ -226,32 +231,32 @@ export const NetworkGraph: React.FC<NetworkGraphProps> = ({
                   y1={src.y}
                   x2={dst.x}
                   y2={dst.y}
-                  stroke={isConnectedToSelected ? '#38bdf8' : strokeColor}
-                  strokeWidth={isConnectedToSelected ? 3 : 1.8}
-                  strokeOpacity={isConnectedToSelected ? 1 : 0.65}
+                  stroke={isConnectedToSelected ? '#00B7FF' : strokeColor}
+                  strokeWidth={isConnectedToSelected ? 2.5 : 1.5}
+                  strokeOpacity={isConnectedToSelected ? 1 : 0.8}
                   strokeDasharray={rel.is_suspicious ? '5,4' : undefined}
                   markerEnd={rel.is_suspicious ? 'url(#arrow-red)' : 'url(#arrow)'}
                 />
                 {/* Edge label pill */}
                 <g transform={`translate(${midX}, ${midY - 8})`}>
                   <rect
-                    x={-45}
+                    x={-46}
                     y={-10}
-                    width={90}
+                    width={92}
                     height={18}
-                    rx={4}
-                    fill="#080c14"
-                    stroke={isConnectedToSelected ? '#38bdf8' : '#1e293b'}
+                    rx={5}
+                    fill="#101936"
+                    stroke={isConnectedToSelected ? '#00B7FF' : '#24315C'}
                     strokeWidth={1}
                   />
                   <text
                     x={0}
                     y={2}
-                    fill={isConnectedToSelected ? '#f8fafc' : '#94a3b8'}
+                    fill={isConnectedToSelected ? '#00B7FF' : '#A7B0C8'}
                     fontSize={8.5}
                     fontFamily="JetBrains Mono, monospace"
                     textAnchor="middle"
-                    fontWeight={600}
+                    fontWeight={500}
                   >
                     {rel.label.length > 14 ? `${rel.label.substring(0, 13)}…` : rel.label}
                   </text>
@@ -265,10 +270,10 @@ export const NetworkGraph: React.FC<NetworkGraphProps> = ({
             const pos = nodePositions[entity.entity_id] || { x: 300, y: 250 };
             const isSelected = selectedEntity?.entity_id === entity.entity_id;
             const nodeColor = entity.is_compromised
-              ? '#ef4444'
+              ? '#FF3CAC'
               : entity.is_external
-              ? '#f59e0b'
-              : '#00f2fe';
+              ? '#7B2CFF'
+              : '#00B7FF';
 
             return (
               <g
@@ -280,25 +285,24 @@ export const NetworkGraph: React.FC<NetworkGraphProps> = ({
                 }}
                 style={{ cursor: 'pointer' }}
               >
-                {/* Outer Glow Circle */}
+                {/* Clean selection ring */}
                 {isSelected && (
                   <circle
-                    r={32}
+                    r={29}
                     fill="none"
-                    stroke="#00f2fe"
+                    stroke="#00B7FF"
                     strokeWidth={2}
                     strokeDasharray="4,3"
-                    opacity={0.8}
+                    opacity={0.9}
                   />
                 )}
 
                 {/* Main Node Body */}
                 <circle
                   r={22}
-                  fill="#0d1424"
-                  stroke={isSelected ? '#00f2fe' : nodeColor}
-                  strokeWidth={isSelected ? 3 : 2}
-                  filter={isSelected ? 'drop-shadow(0 0 10px rgba(0, 242, 254, 0.6))' : undefined}
+                  fill="#101936"
+                  stroke={isSelected ? '#00B7FF' : '#24315C'}
+                  strokeWidth={isSelected ? 2.5 : 1.5}
                 />
 
                 {/* Inner Icon / Badge Dot */}
@@ -313,9 +317,9 @@ export const NetworkGraph: React.FC<NetworkGraphProps> = ({
                 <text
                   x={0}
                   y={36}
-                  fill="#f1f5f9"
+                  fill="#F5F7FF"
                   fontSize={10.5}
-                  fontWeight={isSelected ? 700 : 600}
+                  fontWeight={isSelected ? 700 : 500}
                   fontFamily="Inter, sans-serif"
                   textAnchor="middle"
                 >
@@ -326,7 +330,7 @@ export const NetworkGraph: React.FC<NetworkGraphProps> = ({
                 <text
                   x={0}
                   y={48}
-                  fill="#64748b"
+                  fill="#A7B0C8"
                   fontSize={8}
                   fontFamily="JetBrains Mono, monospace"
                   textAnchor="middle"

@@ -43,23 +43,24 @@ export const Modal: React.FC<ModalProps> = ({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: 'rgba(5, 8, 16, 0.85)',
-        backdropFilter: 'blur(6px)',
+        backgroundColor: 'rgba(5, 8, 22, 0.85)',
+        backdropFilter: 'blur(8px)',
+        WebkitBackdropFilter: 'blur(8px)',
         padding: '1.5rem'
       }}
       onClick={onClose}
     >
       <div
         style={{
-          background: '#0d1424',
-          border: '1px solid rgba(0, 242, 254, 0.3)',
-          borderRadius: '10px',
+          background: '#101936',
+          border: '1px solid #24315C',
+          borderRadius: '14px',
           width: '100%',
           maxWidth,
           maxHeight: '90vh',
           display: 'flex',
           flexDirection: 'column',
-          boxShadow: '0 0 35px rgba(0, 242, 254, 0.15)',
+          boxShadow: '0 24px 60px rgba(0, 0, 0, 0.8), 0 0 30px rgba(22, 119, 255, 0.12)',
           overflow: 'hidden'
         }}
         onClick={(e) => e.stopPropagation()}
@@ -70,15 +71,15 @@ export const Modal: React.FC<ModalProps> = ({
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            padding: '1.25rem 1.5rem',
-            borderBottom: '1px solid #1e293b',
-            background: '#090f1d'
+            padding: '1.1rem 1.4rem',
+            borderBottom: '1px solid #24315C',
+            background: '#151F46'
           }}
         >
           <div>
-            <h3 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#f8fafc' }}>{title}</h3>
+            <h3 style={{ fontSize: '1.05rem', fontWeight: 600, color: '#F5F7FF' }}>{title}</h3>
             {subtitle && (
-              <p style={{ fontSize: '0.825rem', color: '#94a3b8', marginTop: '0.2rem' }}>
+              <p style={{ fontSize: '0.78rem', color: '#A7B0C8', marginTop: '0.15rem' }}>
                 {subtitle}
               </p>
             )}
@@ -86,23 +87,24 @@ export const Modal: React.FC<ModalProps> = ({
           <button
             onClick={onClose}
             style={{
-              background: 'transparent',
-              border: 'none',
-              color: '#94a3b8',
+              background: 'rgba(255, 255, 255, 0.05)',
+              border: '1px solid #24315C',
+              color: '#A7B0C8',
               cursor: 'pointer',
               padding: '0.4rem',
-              borderRadius: '4px',
+              borderRadius: '6px',
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center'
+              justifyContent: 'center',
+              transition: 'all 0.15s ease'
             }}
           >
-            <X size={20} />
+            <X size={18} />
           </button>
         </div>
 
         {/* Content */}
-        <div style={{ padding: '1.5rem', overflowY: 'auto' }}>{children}</div>
+        <div style={{ padding: '1.4rem', overflowY: 'auto' }}>{children}</div>
       </div>
     </div>
   );

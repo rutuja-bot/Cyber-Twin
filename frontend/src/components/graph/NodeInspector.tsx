@@ -38,21 +38,21 @@ export const NodeInspector: React.FC<NodeInspectorProps> = ({
       case 'ip_address':
         return <Globe size={20} color={entity.is_external ? '#ef4444' : '#38bdf8'} />;
       default:
-        return <FileSpreadsheet size={20} color="#00f2fe" />;
+        return <FileSpreadsheet size={20} color="#3b82f6" />;
     }
   };
 
   return (
     <div
       style={{
-        background: '#0a0f1d',
-        border: '1px solid #1e293b',
-        borderRadius: '8px',
+        background: '#101936',
+        border: '1px solid #24315C',
+        borderRadius: '12px',
         padding: '1.25rem',
         display: 'flex',
         flexDirection: 'column',
         gap: '1rem',
-        boxShadow: '0 0 25px rgba(0, 0, 0, 0.5)'
+        boxShadow: '0 8px 30px rgba(0, 0, 0, 0.35)'
       }}
     >
       {/* Header */}
@@ -60,11 +60,11 @@ export const NodeInspector: React.FC<NodeInspectorProps> = ({
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
           <div
             style={{
-              width: '36px',
-              height: '36px',
-              borderRadius: '6px',
-              background: '#0f172a',
-              border: `1px solid ${entity.is_compromised ? '#ef4444' : '#2d3b55'}`,
+              width: '38px',
+              height: '38px',
+              borderRadius: '8px',
+              background: '#0A1024',
+              border: `1px solid ${entity.is_compromised ? '#FF3CAC' : '#24315C'}`,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center'
@@ -73,15 +73,15 @@ export const NodeInspector: React.FC<NodeInspectorProps> = ({
             {getEntityIcon()}
           </div>
           <div>
-            <div style={{ fontSize: '1rem', fontWeight: 700, color: '#f8fafc' }}>{entity.name}</div>
-            <div style={{ fontSize: '0.72rem', color: '#64748b', fontFamily: 'JetBrains Mono, monospace' }}>
+            <div style={{ fontSize: '1rem', fontWeight: 600, color: '#F5F7FF' }}>{entity.name}</div>
+            <div style={{ fontSize: '0.72rem', color: '#A7B0C8', fontFamily: 'JetBrains Mono, monospace' }}>
               {entity.entity_id} • {entity.entity_type.toUpperCase()}
             </div>
           </div>
         </div>
         <button
           onClick={onClose}
-          style={{ background: 'transparent', border: 'none', color: '#94a3b8', cursor: 'pointer' }}
+          style={{ background: 'transparent', border: 'none', color: '#A7B0C8', cursor: 'pointer' }}
         >
           <X size={18} />
         </button>
@@ -90,7 +90,7 @@ export const NodeInspector: React.FC<NodeInspectorProps> = ({
       {/* Compromise Status */}
       <div>
         {entity.is_compromised ? (
-          <Badge variant="critical" pulse>
+          <Badge variant="critical">
             <ShieldAlert size={12} /> COMPROMISED ENTITY IN ATTACK CHAIN
           </Badge>
         ) : (
@@ -100,10 +100,10 @@ export const NodeInspector: React.FC<NodeInspectorProps> = ({
 
       {/* Metadata Attributes */}
       <div>
-        <div style={{ fontSize: '0.7rem', color: '#64748b', fontWeight: 700, textTransform: 'uppercase', marginBottom: '0.4rem' }}>
+        <div style={{ fontSize: '0.7rem', color: '#A7B0C8', fontWeight: 600, textTransform: 'uppercase', marginBottom: '0.45rem', letterSpacing: '0.05em' }}>
           Forensic Attributes
         </div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
           {Object.entries(entity.metadata).map(([key, val]) => (
             <div
               key={key}
@@ -111,16 +111,16 @@ export const NodeInspector: React.FC<NodeInspectorProps> = ({
                 display: 'flex',
                 justifyContent: 'space-between',
                 fontSize: '0.78rem',
-                background: '#0d1424',
-                padding: '0.35rem 0.6rem',
-                borderRadius: '4px',
-                border: '1px solid #1e293b'
+                background: '#151F46',
+                padding: '0.45rem 0.65rem',
+                borderRadius: '6px',
+                border: '1px solid #24315C'
               }}
             >
-              <span style={{ color: '#94a3b8', textTransform: 'capitalize' }}>
+              <span style={{ color: '#A7B0C8', textTransform: 'capitalize' }}>
                 {key.replace(/_/g, ' ')}:
               </span>
-              <span style={{ color: '#f1f5f9', fontWeight: 500, fontFamily: 'JetBrains Mono, monospace' }}>
+              <span style={{ color: '#F5F7FF', fontWeight: 500, fontFamily: 'JetBrains Mono, monospace' }}>
                 {String(val)}
               </span>
             </div>
@@ -130,7 +130,7 @@ export const NodeInspector: React.FC<NodeInspectorProps> = ({
 
       {/* Connected Graph Edges */}
       <div>
-        <div style={{ fontSize: '0.7rem', color: '#64748b', fontWeight: 700, textTransform: 'uppercase', marginBottom: '0.4rem' }}>
+        <div style={{ fontSize: '0.7rem', color: '#A7B0C8', fontWeight: 600, textTransform: 'uppercase', marginBottom: '0.45rem', letterSpacing: '0.05em' }}>
           Connected Graph Edges ({connectedRels.length})
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
@@ -143,10 +143,10 @@ export const NodeInspector: React.FC<NodeInspectorProps> = ({
               <div
                 key={rel.relationship_id}
                 style={{
-                  background: '#0d1424',
-                  border: '1px solid #1e293b',
-                  borderRadius: '6px',
-                  padding: '0.5rem 0.75rem',
+                  background: '#151F46',
+                  border: '1px solid #24315C',
+                  borderRadius: '8px',
+                  padding: '0.55rem 0.8rem',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between',
@@ -154,17 +154,17 @@ export const NodeInspector: React.FC<NodeInspectorProps> = ({
                 }}
               >
                 <div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#00f2fe', fontWeight: 600 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#00B7FF', fontWeight: 600 }}>
                     <span>{rel.label}</span>
                     <ArrowRight size={12} />
                     <span
-                      style={{ color: '#f8fafc', textDecoration: 'underline', cursor: 'pointer' }}
+                      style={{ color: '#F5F7FF', textDecoration: 'underline', cursor: 'pointer' }}
                       onClick={() => otherEntity && onSelectEntity(otherEntity)}
                     >
                       {otherEntity?.name || otherEntityId}
                     </span>
                   </div>
-                  <div style={{ fontSize: '0.68rem', color: '#64748b', marginTop: '0.15rem' }}>
+                  <div style={{ fontSize: '0.68rem', color: '#A7B0C8', marginTop: '0.15rem' }}>
                     Type: {rel.relationship_type}
                   </div>
                 </div>
@@ -173,11 +173,11 @@ export const NodeInspector: React.FC<NodeInspectorProps> = ({
                   <button
                     onClick={() => onViewEvidence(rel.evidence_ids[0])}
                     style={{
-                      background: 'rgba(0, 242, 254, 0.1)',
-                      border: '1px solid rgba(0, 242, 254, 0.3)',
-                      borderRadius: '4px',
-                      padding: '0.2rem 0.4rem',
-                      color: '#00f2fe',
+                      background: 'rgba(22, 119, 255, 0.1)',
+                      border: '1px solid rgba(0, 183, 255, 0.25)',
+                      borderRadius: '6px',
+                      padding: '0.25rem 0.5rem',
+                      color: '#4DEBFF',
                       fontSize: '0.68rem',
                       cursor: 'pointer',
                       fontFamily: 'JetBrains Mono, monospace'

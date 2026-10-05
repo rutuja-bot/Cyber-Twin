@@ -1,29 +1,49 @@
-/* Cyber Twin Forensic Design System */
+/* Cyber Twin Premium Futuristic Cybersecurity & Digital Forensics SaaS Platform */
 :root {
-  --bg-app: #080c14;
-  --bg-card: #0d1424;
-  --bg-card-hover: #131c31;
-  --bg-elevated: #162038;
-  --bg-input: #0a0f1d;
-  
-  --border-subtle: #1e293b;
-  --border-light: #2d3b55;
-  --border-accent: rgba(0, 242, 254, 0.4);
-  --border-glow: 0 0 15px rgba(0, 242, 254, 0.25);
-  
-  --text-primary: #f1f5f9;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
-  
-  --cyber-cyan: #00f2fe;
-  --cyber-blue: #38bdf8;
-  --cyber-purple: #a855f7;
-  --cyber-emerald: #10b981;
-  --cyber-amber: #f59e0b;
-  --cyber-rose: #f43f5e;
-  --cyber-red: #ef4444;
-  
-  --font-mono: 'JetBrains Mono', monospace, Consolas;
+  --bg-app: #050816;
+  --bg-secondary: #0A1024;
+  --bg-sidebar: #070C1E;
+  --bg-navbar: rgba(10, 16, 36, 0.85);
+  --bg-card: #101936;
+  --bg-card-glass: rgba(16, 25, 54, 0.75);
+  --bg-card-subtle: #0c142b;
+  --bg-card-hover: #152044;
+  --bg-elevated: #151F46;
+  --bg-elevated-glass: rgba(21, 31, 70, 0.85);
+  --bg-input: #080E22;
+
+  --border-subtle: #24315C;
+  --border-light: #34467E;
+  --border-luminous: rgba(0, 183, 255, 0.35);
+
+  --text-primary: #F5F7FF;
+  --text-secondary: #A7B0C8;
+  --text-muted: #717E9E;
+
+  --primary-blue: #1677FF;
+  --bright-blue: #00B7FF;
+  --purple: #7B2CFF;
+  --magenta: #D62CFF;
+  --pink-highlight: #FF3CAC;
+  --soft-cyan: #4DEBFF;
+
+  --gradient-primary: linear-gradient(135deg, #1677FF 0%, #7B2CFF 100%);
+  --gradient-accent: linear-gradient(135deg, #1677FF 0%, #7B2CFF 50%, #D62CFF 100%);
+  --gradient-glow: linear-gradient(135deg, rgba(22, 119, 255, 0.2) 0%, rgba(123, 44, 255, 0.2) 100%);
+  --gradient-surface: linear-gradient(180deg, rgba(21, 31, 70, 0.6) 0%, rgba(16, 25, 54, 0.9) 100%);
+
+  --glow-primary: 0 4px 16px rgba(22, 119, 255, 0.35);
+  --glow-accent: 0 4px 20px rgba(123, 44, 255, 0.3);
+  --glow-subtle: 0 0 15px rgba(0, 183, 255, 0.12);
+
+  --color-critical: #EF4444;
+  --color-high: #F97316;
+  --color-medium: #F59E0B;
+  --color-low: #00B7FF;
+  --color-verified: #10B981;
+  --color-neutral: #A7B0C8;
+
+  --font-mono: 'JetBrains Mono', Consolas, monospace;
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
@@ -39,9 +59,11 @@ body {
   font-family: var(--font-sans);
   line-height: 1.5;
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
   background-image: 
-    radial-gradient(circle at 15% 15%, rgba(0, 242, 254, 0.03) 0%, transparent 40%),
-    radial-gradient(circle at 85% 85%, rgba(168, 85, 247, 0.03) 0%, transparent 40%);
+    radial-gradient(circle at 15% 15%, rgba(22, 119, 255, 0.07) 0%, transparent 40%),
+    radial-gradient(circle at 85% 25%, rgba(123, 44, 255, 0.06) 0%, transparent 45%),
+    radial-gradient(circle at 50% 85%, rgba(214, 44, 255, 0.04) 0%, transparent 50%);
   background-attachment: fixed;
 }
 
@@ -49,7 +71,7 @@ code, pre, .font-mono {
   font-family: var(--font-mono);
 }
 
-/* Custom Cyber Scrollbar */
+/* Premium Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -58,30 +80,18 @@ code, pre, .font-mono {
   background: var(--bg-app);
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--border-light);
+  background: #24315C;
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--cyber-cyan);
+  background: var(--primary-blue);
 }
 
-/* Cyber utility classes */
-.cyber-glow-cyan {
-  box-shadow: 0 0 20px rgba(0, 242, 254, 0.25);
-}
-.cyber-glow-red {
-  box-shadow: 0 0 20px rgba(239, 68, 68, 0.25);
-}
-.cyber-border-gradient {
-  border: 1px solid transparent;
-  background: linear-gradient(var(--bg-card), var(--bg-card)) padding-box,
-              linear-gradient(135deg, rgba(0,242,254,0.4), rgba(168,85,247,0.2)) border-box;
-}
-
-/* Layout Utilities */
+/* Layout Containers */
 .app-container {
   display: flex;
   min-height: 100vh;
+  background-color: var(--bg-app);
 }
 
 .main-content {
@@ -93,37 +103,117 @@ code, pre, .font-mono {
 }
 
 .page-wrapper {
-  padding: 1.75rem 2rem;
-  max-width: 1440px;
+  padding: 1.5rem 2rem;
+  max-width: 1480px;
   margin: 0 auto;
   width: 100%;
 }
 
-/* Common Card */
+/* Premium Glass & Luminous Cards */
 .cyber-card {
   background: var(--bg-card);
   border: 1px solid var(--border-subtle);
-  border-radius: 8px;
+  border-radius: 12px;
   padding: 1.25rem;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition: all 0.2s ease;
+  position: relative;
 }
 .cyber-card:hover {
   border-color: var(--border-light);
+  box-shadow: 0 4px 20px rgba(10, 16, 36, 0.6);
 }
 
-/* Subtle Grid Pattern */
+.cyber-card-elevated {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 1.25rem;
+  transition: all 0.2s ease;
+}
+.cyber-card-elevated:hover {
+  border-color: var(--border-luminous);
+  box-shadow: 0 4px 24px rgba(22, 119, 255, 0.12);
+}
+
+.glass-panel {
+  background: var(--bg-card-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+}
+
+.gradient-border {
+  position: relative;
+  border-radius: 12px;
+  background: var(--bg-card);
+}
+.gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: 13px;
+  padding: 1px;
+  background: var(--gradient-primary);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* Subtle Grid Canvas */
 .bg-grid {
   background-size: 32px 32px;
   background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    linear-gradient(to right, rgba(36, 49, 92, 0.25) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(36, 49, 92, 0.25) 1px, transparent 1px);
 }
 
-/* Print Styles for Forensic Report */
+/* Premium SaaS Data Table */
+.forensic-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8125rem;
+  text-align: left;
+}
+.forensic-table th {
+  background: var(--bg-secondary);
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.forensic-table td {
+  padding: 0.8rem 1rem;
+  border-bottom: 1px solid rgba(36, 49, 92, 0.5);
+  color: var(--text-secondary);
+}
+.forensic-table tr:hover td {
+  background-color: rgba(21, 31, 70, 0.5);
+  color: var(--text-primary);
+}
+
+/* Gradient Text Helper */
+.text-gradient {
+  background: var(--gradient-accent);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-blue {
+  background: linear-gradient(135deg, #00B7FF 0%, #1677FF 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Print Styles */
 @media print {
   body {
     background: #fff !important;
-    color: #000 !important;
+    color: #111 !important;
   }
   .no-print {
     display: none !important;
@@ -132,9 +222,9 @@ code, pre, .font-mono {
     display: block !important;
   }
   .cyber-card {
-    border: 1px solid #ccc !important;
+    border: 1px solid #ddd !important;
     background: #fff !important;
-    color: #000 !important;
+    color: #111 !important;
     box-shadow: none !important;
   }
 }

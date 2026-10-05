@@ -67,19 +67,20 @@ export const ReportView: React.FC<ReportViewProps> = ({
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          background: '#0d1424',
-          border: '1px solid #1e293b',
-          borderRadius: '8px',
-          padding: '1rem 1.25rem'
+          background: '#101936',
+          border: '1px solid #24315C',
+          borderRadius: '10px',
+          padding: '1.1rem 1.35rem',
+          boxShadow: '0 4px 16px rgba(0, 0, 0, 0.25)'
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          <FileText size={22} color="#00f2fe" />
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+          <FileText size={24} color="#00B7FF" />
           <div>
-            <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#f8fafc' }}>
+            <div style={{ fontSize: '1rem', fontWeight: 600, color: '#F5F7FF' }}>
               Official Forensic Investigation Dossier
             </div>
-            <div style={{ fontSize: '0.75rem', color: '#94a3b8' }}>
+            <div style={{ fontSize: '0.78rem', color: '#A7B0C8', marginTop: '0.1rem' }}>
               Standard NIST SP 800-86 & ISO/IEC 27037 incident reconstruction template
             </div>
           </div>
@@ -99,39 +100,40 @@ export const ReportView: React.FC<ReportViewProps> = ({
       <div
         className="cyber-card"
         style={{
-          background: '#0a0f1d',
-          border: '1px solid #1e293b',
+          background: '#101936',
+          border: '1px solid #24315C',
           padding: '2.5rem',
-          borderRadius: '8px',
+          borderRadius: '14px',
           display: 'flex',
           flexDirection: 'column',
-          gap: '2rem'
+          gap: '2.25rem',
+          boxShadow: '0 12px 40px rgba(0, 0, 0, 0.4)'
         }}
       >
         {/* Document Header */}
-        <div style={{ borderBottom: '2px solid #1e293b', paddingBottom: '1.5rem' }}>
+        <div style={{ borderBottom: '1px solid #24315C', paddingBottom: '1.5rem' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <div>
               <span
                 style={{
                   fontSize: '0.75rem',
                   fontFamily: 'JetBrains Mono, monospace',
-                  color: '#00f2fe',
-                  fontWeight: 700,
-                  letterSpacing: '0.1em'
+                  color: '#00B7FF',
+                  fontWeight: 600,
+                  letterSpacing: '0.08em'
                 }}
               >
                 CYBER TWIN DIGITAL FORENSICS DIVISION
               </span>
-              <h1 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#f8fafc', marginTop: '0.35rem' }}>
+              <h1 style={{ fontSize: '1.85rem', fontWeight: 700, color: '#F5F7FF', marginTop: '0.35rem', letterSpacing: '-0.02em' }}>
                 Forensic Incident Investigation Report
               </h1>
-              <p style={{ fontSize: '0.85rem', color: '#94a3b8', marginTop: '0.2rem' }}>
+              <p style={{ fontSize: '0.875rem', color: '#A7B0C8', marginTop: '0.2rem' }}>
                 Automated Incident Reconstruction & Correlated Evidence Verification
               </p>
             </div>
             <div style={{ textAlign: 'right' }}>
-              <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '1.1rem', fontWeight: 800, color: '#00f2fe' }}>
+              <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '1.15rem', fontWeight: 700, color: '#00B7FF' }}>
                 {activeCase.case_id}
               </div>
               <div style={{ marginTop: '0.35rem' }}>
@@ -143,24 +145,24 @@ export const ReportView: React.FC<ReportViewProps> = ({
 
         {/* Section 1: Executive Incident Summary */}
         <div>
-          <h2 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#38bdf8', marginBottom: '0.75rem' }}>
+          <h2 style={{ fontSize: '1.2rem', fontWeight: 600, color: '#00B7FF', marginBottom: '0.75rem', letterSpacing: '-0.01em' }}>
             1. Executive Incident Summary
           </h2>
-          <p style={{ fontSize: '0.9rem', color: '#cbd5e1', lineHeight: 1.6 }}>
+          <p style={{ fontSize: '0.9rem', color: '#F5F7FF', lineHeight: 1.65, opacity: 0.9 }}>
             {activeCase.description} The incident commenced with anomalous off-hours internal subnet credential
-            brute force attempts targeting account <code style={{ color: '#00f2fe' }}>dev_user41</code>, succeeding
-            at 02:17 UTC into an interactive RDP session on workstation <code style={{ color: '#00f2fe' }}>WS-FIN-04</code>.
+            brute force attempts targeting account <code style={{ color: '#00B7FF' }}>dev_user41</code>, succeeding
+            at 02:17 UTC into an interactive RDP session on workstation <code style={{ color: '#00B7FF' }}>WS-FIN-04</code>.
             Subsequently, obfuscated PowerShell memory dumping was utilized to escalate privileges to NT AUTHORITY\SYSTEM,
-            followed by lateral SMB read of restricted financial database <code style={{ color: '#00f2fe' }}>customer_vault_q3.db</code>.
-            The data was staged into archive <code style={{ color: '#00f2fe' }}>svchost_upd.zip</code> and exfiltrated to
-            external malicious C2 <code style={{ color: '#ef4444' }}>198.51.100.42:8443</code>. Anti-forensic log wiping
+            followed by lateral SMB read of restricted financial database <code style={{ color: '#00B7FF' }}>customer_vault_q3.db</code>.
+            The data was staged into archive <code style={{ color: '#00B7FF' }}>svchost_upd.zip</code> and exfiltrated to
+            external malicious C2 <code style={{ color: '#FF3CAC' }}>198.51.100.42:8443</code>. Anti-forensic log wiping
             was attempted prior to session termination.
           </p>
         </div>
 
         {/* Section 2: Key Correlated Findings */}
         <div>
-          <h2 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#38bdf8', marginBottom: '1rem' }}>
+          <h2 style={{ fontSize: '1.2rem', fontWeight: 600, color: '#00B7FF', marginBottom: '1rem', letterSpacing: '-0.01em' }}>
             2. Correlated Forensic Findings & MITRE ATT&CK Mapping
           </h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
@@ -168,46 +170,48 @@ export const ReportView: React.FC<ReportViewProps> = ({
               <div
                 key={f.finding_id}
                 style={{
-                  background: '#0d1424',
-                  border: '1px solid #1e293b',
-                  borderRadius: '6px',
-                  padding: '1.25rem'
+                  background: '#151F46',
+                  border: '1px solid #24315C',
+                  borderRadius: '10px',
+                  padding: '1.35rem',
+                  boxShadow: '0 4px 16px rgba(0, 0, 0, 0.2)'
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                    <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.8rem', color: '#00f2fe', fontWeight: 700 }}>
+                    <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.8rem', color: '#00B7FF', fontWeight: 600 }}>
                       FINDING #{index + 1}:
                     </span>
-                    <span style={{ fontSize: '1rem', fontWeight: 700, color: '#f8fafc' }}>
+                    <span style={{ fontSize: '1.05rem', fontWeight: 600, color: '#F5F7FF' }}>
                       {f.title}
                     </span>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                     <Badge variant={f.severity} size="sm">{f.severity}</Badge>
-                    <span style={{ fontSize: '0.75rem', fontFamily: 'JetBrains Mono, monospace', color: '#10b981', fontWeight: 600 }}>
+                    <span style={{ fontSize: '0.75rem', fontFamily: 'JetBrains Mono, monospace', color: '#4DEBFF', fontWeight: 600 }}>
                       Confidence: {(f.confidence * 100).toFixed(0)}%
                     </span>
                   </div>
                 </div>
 
-                <p style={{ fontSize: '0.85rem', color: '#94a3b8', lineHeight: 1.5, marginBottom: '0.75rem' }}>
+                <p style={{ fontSize: '0.875rem', color: '#A7B0C8', lineHeight: 1.55, marginBottom: '0.85rem' }}>
                   {f.description}
                 </p>
 
                 {/* MITRE Badges */}
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '0.75rem' }}>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '0.85rem' }}>
                   {f.mitre_tactics.map((tac) => (
                     <span
                       key={tac}
                       style={{
                         fontSize: '0.7rem',
-                        background: 'rgba(168, 85, 247, 0.12)',
-                        border: '1px solid rgba(168, 85, 247, 0.3)',
-                        color: '#d8b4fe',
-                        padding: '0.15rem 0.45rem',
-                        borderRadius: '4px',
-                        fontFamily: 'JetBrains Mono, monospace'
+                        background: 'rgba(123, 44, 255, 0.12)',
+                        border: '1px solid rgba(123, 44, 255, 0.3)',
+                        color: '#D62CFF',
+                        padding: '0.2rem 0.5rem',
+                        borderRadius: '6px',
+                        fontFamily: 'JetBrains Mono, monospace',
+                        fontWeight: 600
                       }}
                     >
                       Tactic: {tac}
@@ -218,12 +222,13 @@ export const ReportView: React.FC<ReportViewProps> = ({
                       key={tech}
                       style={{
                         fontSize: '0.7rem',
-                        background: 'rgba(245, 158, 11, 0.12)',
-                        border: '1px solid rgba(245, 158, 11, 0.3)',
-                        color: '#fcd34d',
-                        padding: '0.15rem 0.45rem',
-                        borderRadius: '4px',
-                        fontFamily: 'JetBrains Mono, monospace'
+                        background: 'rgba(214, 44, 255, 0.12)',
+                        border: '1px solid rgba(214, 44, 255, 0.3)',
+                        color: '#FF3CAC',
+                        padding: '0.2rem 0.5rem',
+                        borderRadius: '6px',
+                        fontFamily: 'JetBrains Mono, monospace',
+                        fontWeight: 600
                       }}
                     >
                       {tech}
@@ -234,17 +239,18 @@ export const ReportView: React.FC<ReportViewProps> = ({
                 {/* Recommendation */}
                 <div
                   style={{
-                    background: 'rgba(0, 242, 254, 0.05)',
-                    borderLeft: '3px solid #00f2fe',
-                    padding: '0.5rem 0.75rem',
+                    background: 'rgba(22, 119, 255, 0.08)',
+                    borderLeft: '3px solid #00B7FF',
+                    padding: '0.6rem 0.85rem',
                     fontSize: '0.8rem',
-                    color: '#e2e8f0',
+                    color: '#F5F7FF',
                     display: 'flex',
                     alignItems: 'baseline',
-                    gap: '0.5rem'
+                    gap: '0.5rem',
+                    borderRadius: '0 6px 6px 0'
                   }}
                 >
-                  <strong style={{ color: '#00f2fe' }}>Remediation:</strong> {f.recommendation}
+                  <strong style={{ color: '#00B7FF' }}>Remediation:</strong> {f.recommendation}
                 </div>
               </div>
             ))}
@@ -253,37 +259,37 @@ export const ReportView: React.FC<ReportViewProps> = ({
 
         {/* Section 3: Evidence Chain of Custody */}
         <div>
-          <h2 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#38bdf8', marginBottom: '0.75rem' }}>
+          <h2 style={{ fontSize: '1.2rem', fontWeight: 600, color: '#00B7FF', marginBottom: '0.85rem', letterSpacing: '-0.01em' }}>
             3. Supporting Evidence Integrity & Chain of Custody
           </h2>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.8rem', textAlign: 'left' }}>
             <thead>
-              <tr style={{ borderBottom: '2px solid #1e293b', color: '#94a3b8' }}>
-                <th style={{ padding: '0.6rem 0.5rem' }}>Evidence ID</th>
-                <th style={{ padding: '0.6rem 0.5rem' }}>Filename & Source</th>
-                <th style={{ padding: '0.6rem 0.5rem' }}>Type</th>
-                <th style={{ padding: '0.6rem 0.5rem' }}>SHA-256 Hash</th>
-                <th style={{ padding: '0.6rem 0.5rem' }}>Verification</th>
+              <tr style={{ borderBottom: '2px solid #24315C', color: '#A7B0C8' }}>
+                <th style={{ padding: '0.75rem 0.6rem' }}>Evidence ID</th>
+                <th style={{ padding: '0.75rem 0.6rem' }}>Filename & Source</th>
+                <th style={{ padding: '0.75rem 0.6rem' }}>Type</th>
+                <th style={{ padding: '0.75rem 0.6rem' }}>SHA-256 Hash</th>
+                <th style={{ padding: '0.75rem 0.6rem' }}>Verification</th>
               </tr>
             </thead>
             <tbody>
               {evidenceList.map((e) => (
-                <tr key={e.evidence_id} style={{ borderBottom: '1px solid #1e293b' }}>
-                  <td style={{ padding: '0.6rem 0.5rem', fontFamily: 'JetBrains Mono, monospace', color: '#00f2fe', fontWeight: 700 }}>
+                <tr key={e.evidence_id} style={{ borderBottom: '1px solid #24315C' }}>
+                  <td style={{ padding: '0.75rem 0.6rem', fontFamily: 'JetBrains Mono, monospace', color: '#00B7FF', fontWeight: 600 }}>
                     {e.evidence_id}
                   </td>
-                  <td style={{ padding: '0.6rem 0.5rem', color: '#f1f5f9' }}>
+                  <td style={{ padding: '0.75rem 0.6rem', color: '#F5F7FF' }}>
                     <div><strong>{e.filename}</strong></div>
-                    <div style={{ fontSize: '0.7rem', color: '#64748b' }}>{e.source}</div>
+                    <div style={{ fontSize: '0.7rem', color: '#A7B0C8' }}>{e.source}</div>
                   </td>
-                  <td style={{ padding: '0.6rem 0.5rem' }}>
+                  <td style={{ padding: '0.75rem 0.6rem' }}>
                     <Badge variant="default" size="sm">{e.type}</Badge>
                   </td>
-                  <td style={{ padding: '0.6rem 0.5rem', fontFamily: 'JetBrains Mono, monospace', fontSize: '0.72rem', color: '#38bdf8' }}>
+                  <td style={{ padding: '0.75rem 0.6rem', fontFamily: 'JetBrains Mono, monospace', fontSize: '0.72rem', color: '#A7B0C8' }}>
                     {e.hash.substring(0, 16)}...{e.hash.substring(e.hash.length - 8)}
                   </td>
-                  <td style={{ padding: '0.6rem 0.5rem' }}>
-                    <span style={{ color: '#10b981', display: 'flex', alignItems: 'center', gap: '0.25rem', fontWeight: 600 }}>
+                  <td style={{ padding: '0.75rem 0.6rem' }}>
+                    <span style={{ color: '#4DEBFF', display: 'flex', alignItems: 'center', gap: '0.3rem', fontWeight: 600 }}>
                       <CheckCircle size={14} /> Certified
                     </span>
                   </td>

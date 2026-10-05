@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import {
   Home,
   Briefcase,
@@ -11,7 +11,6 @@ import {
   FileSpreadsheet,
   LogOut
 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 import { useInvestigation } from '../../context/InvestigationContext';
 
 interface NavItem {
@@ -22,27 +21,27 @@ interface NavItem {
 }
 
 export const Sidebar: React.FC = () => {
-  const { summary, evidenceList, eventList, findingsList, logout } = useInvestigation();
+  const { evidenceList, eventList, findingsList, logout } = useInvestigation();
   const navigate = useNavigate();
 
   const navItems: NavItem[] = [
-    { name: 'Landing Overview', path: '/landing', icon: <Home size={18} /> },
-    { name: 'Case Management', path: '/cases', icon: <Briefcase size={18} /> },
-    { name: 'Investigation Hub', path: '/investigation', icon: <LayoutDashboard size={18} /> },
-    { name: 'Evidence Vault', path: '/evidence', icon: <FileCheck2 size={18} />, badge: evidenceList.length },
-    { name: 'Chronological Timeline', path: '/timeline', icon: <GitCommit size={18} />, badge: eventList.length },
-    { name: 'Relationship Graph', path: '/graph', icon: <Network size={18} /> },
-    { name: 'Incident Replay', path: '/replay', icon: <PlayCircle size={18} /> },
-    { name: 'Forensic Report', path: '/report', icon: <FileSpreadsheet size={18} />, badge: findingsList.length }
+    { name: 'Overview', path: '/landing', icon: <Home size={16} /> },
+    { name: 'Cases', path: '/cases', icon: <Briefcase size={16} /> },
+    { name: 'Dashboard', path: '/investigation', icon: <LayoutDashboard size={16} /> },
+    { name: 'Evidence', path: '/evidence', icon: <FileCheck2 size={16} />, badge: evidenceList.length },
+    { name: 'Timeline', path: '/timeline', icon: <GitCommit size={16} />, badge: eventList.length },
+    { name: 'Graph', path: '/graph', icon: <Network size={16} /> },
+    { name: 'Replay', path: '/replay', icon: <PlayCircle size={16} /> },
+    { name: 'Findings & Report', path: '/report', icon: <FileSpreadsheet size={16} />, badge: findingsList.length }
   ];
 
   return (
     <aside
       className="no-print"
       style={{
-        width: '250px',
-        backgroundColor: '#070b14',
-        borderRight: '1px solid #1e293b',
+        width: '240px',
+        backgroundColor: '#070C1E',
+        borderRight: '1px solid #24315C',
         display: 'flex',
         flexDirection: 'column',
         flexShrink: 0
@@ -51,16 +50,16 @@ export const Sidebar: React.FC = () => {
       <div style={{ padding: '1rem 0.75rem', flex: 1 }}>
         <div
           style={{
-            fontSize: '0.68rem',
+            fontSize: '0.65rem',
             fontWeight: 700,
             textTransform: 'uppercase',
-            color: '#64748b',
+            color: '#717E9E',
             letterSpacing: '0.08em',
-            padding: '0.5rem 0.75rem',
+            padding: '0.35rem 0.75rem',
             marginBottom: '0.5rem'
           }}
         >
-          Investigation Workspace
+          Investigation Suite
         </div>
         <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
           {navItems.map((item) => (
@@ -71,31 +70,35 @@ export const Sidebar: React.FC = () => {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                padding: '0.625rem 0.85rem',
-                borderRadius: '6px',
-                fontSize: '0.85rem',
-                fontWeight: isActive ? 600 : 500,
-                color: isActive ? '#00f2fe' : '#94a3b8',
-                backgroundColor: isActive ? 'rgba(0, 242, 254, 0.08)' : 'transparent',
-                borderLeft: isActive ? '3px solid #00f2fe' : '3px solid transparent',
+                padding: '0.55rem 0.85rem',
+                borderRadius: '8px',
+                fontSize: '0.825rem',
+                fontWeight: isActive ? 600 : 400,
+                color: isActive ? '#F5F7FF' : '#A7B0C8',
+                background: isActive
+                  ? 'linear-gradient(90deg, rgba(22, 119, 255, 0.16) 0%, rgba(123, 44, 255, 0.08) 100%)'
+                  : 'transparent',
+                borderLeft: isActive ? '3px solid #00B7FF' : '3px solid transparent',
                 textDecoration: 'none',
-                transition: 'all 0.15s ease'
+                transition: 'all 0.15s ease',
+                boxShadow: isActive ? '0 0 15px rgba(0, 183, 255, 0.08)' : 'none'
               })}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                <span style={{ display: 'flex', opacity: 0.9 }}>{item.icon}</span>
+                <span style={{ display: 'flex', color: '#00B7FF' }}>{item.icon}</span>
                 <span>{item.name}</span>
               </div>
               {item.badge !== undefined && (
                 <span
                   style={{
-                    fontSize: '0.7rem',
+                    fontSize: '0.68rem',
                     fontFamily: 'JetBrains Mono, monospace',
-                    background: '#1e293b',
-                    color: '#cbd5e1',
-                    padding: '0.1rem 0.4rem',
-                    borderRadius: '9999px',
-                    fontWeight: 600
+                    background: '#151F46',
+                    color: '#4DEBFF',
+                    padding: '0.1rem 0.45rem',
+                    borderRadius: '4px',
+                    fontWeight: 600,
+                    border: '1px solid #24315C'
                   }}
                 >
                   {item.badge}
@@ -103,6 +106,7 @@ export const Sidebar: React.FC = () => {
               )}
             </NavLink>
           ))}
+
           <button
             onClick={() => {
               logout();
@@ -112,45 +116,51 @@ export const Sidebar: React.FC = () => {
               display: 'flex',
               alignItems: 'center',
               gap: '0.75rem',
-              padding: '0.625rem 0.85rem',
-              borderRadius: '6px',
-              fontSize: '0.85rem',
-              fontWeight: 600,
-              color: '#f87171',
-              backgroundColor: 'rgba(239, 68, 68, 0.08)',
-              border: '1px solid rgba(239, 68, 68, 0.25)',
+              padding: '0.55rem 0.85rem',
+              borderRadius: '8px',
+              fontSize: '0.825rem',
+              fontWeight: 500,
+              color: '#A7B0C8',
+              backgroundColor: 'transparent',
+              border: 'none',
               cursor: 'pointer',
-              marginTop: '0.75rem',
+              marginTop: '1.25rem',
               width: '100%',
               textAlign: 'left',
               transition: 'all 0.15s ease'
             }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.12)';
+              e.currentTarget.style.color = '#EF4444';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = 'transparent';
+              e.currentTarget.style.color = '#A7B0C8';
+            }}
           >
-            <span style={{ display: 'flex', opacity: 0.9 }}><LogOut size={18} /></span>
-            <span>Sign Out Session</span>
+            <span style={{ display: 'flex' }}><LogOut size={16} /></span>
+            <span>Sign Out</span>
           </button>
         </nav>
       </div>
 
-      {/* Cyber Twin Architecture Info Footer */}
+      {/* Compact Info Footer */}
       <div
         style={{
-          padding: '1rem',
+          padding: '0.85rem',
           margin: '0.75rem',
-          background: 'rgba(13, 20, 36, 0.8)',
-          border: '1px solid #1e293b',
-          borderRadius: '8px'
+          background: 'linear-gradient(135deg, rgba(21, 31, 70, 0.6) 0%, rgba(16, 25, 54, 0.6) 100%)',
+          border: '1px solid #24315C',
+          borderRadius: '8px',
+          fontSize: '0.7rem',
+          color: '#A7B0C8'
         }}
       >
-        <div style={{ fontSize: '0.72rem', color: '#94a3b8', fontWeight: 600 }}>
-          Investigation Model
+        <div style={{ color: '#4DEBFF', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+          <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#00B7FF', boxShadow: '0 0 6px #00B7FF' }} />
+          Forensic Integrity Active
         </div>
-        <div style={{ fontSize: '0.8rem', color: '#38bdf8', fontWeight: 700, marginTop: '0.2rem' }}>
-          Correlated Twin
-        </div>
-        <div style={{ fontSize: '0.68rem', color: '#64748b', marginTop: '0.35rem', lineHeight: 1.4 }}>
-          Ingest → Parse → Normalize → Graph → Replay
-        </div>
+        <div style={{ color: '#717E9E', marginTop: '0.2rem', fontFamily: 'JetBrains Mono, monospace' }}>SHA-256 Validated</div>
       </div>
     </aside>
   );

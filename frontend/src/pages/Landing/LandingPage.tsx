@@ -1,250 +1,149 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  Shield,
-  PlayCircle,
-  Network,
-  GitCommit,
-  FileCheck2,
-  Lock,
-  ArrowRight,
-  Terminal,
-  Activity,
-  Layers,
-  FileSpreadsheet
-} from 'lucide-react';
+import { ArrowRight, Briefcase, ShieldCheck, Database, GitCommit, Layers } from 'lucide-react';
 import { Button } from '../../components/common/Button';
-import { Badge } from '../../components/common/Badge';
 
 export const LandingPage: React.FC = () => {
   const navigate = useNavigate();
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '3.5rem', paddingBottom: '3rem' }}>
-      {/* Hero Section */}
-      <section
-        style={{
-          padding: '4rem 1rem 2rem 1rem',
-          textAlign: 'center',
-          position: 'relative',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center'
-        }}
-      >
-        <div style={{ marginBottom: '1.25rem' }}>
-          <Badge variant="cyan" pulse size="md">
-            Interactive Digital Forensic Digital Twin
-          </Badge>
+    <div style={{ maxWidth: '880px', margin: '3rem auto', display: 'flex', flexDirection: 'column', gap: '2.75rem' }}>
+      {/* Product Hero */}
+      <section style={{ textAlign: 'left', display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+        <div
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            fontSize: '0.78rem',
+            color: '#4DEBFF',
+            fontWeight: 600,
+            background: 'rgba(22, 119, 255, 0.12)',
+            border: '1px solid rgba(0, 183, 255, 0.35)',
+            padding: '0.35rem 0.85rem',
+            borderRadius: '20px',
+            width: 'fit-content',
+            boxShadow: '0 0 15px rgba(0, 183, 255, 0.15)'
+          }}
+        >
+          <ShieldCheck size={16} color="#00B7FF" />
+          <span>Interactive Cyber Incident Reconstruction & Digital Forensics</span>
         </div>
 
         <h1
           style={{
-            fontSize: '3.2rem',
-            fontWeight: 900,
-            letterSpacing: '-0.03em',
-            lineHeight: 1.15,
-            maxWidth: '920px',
-            background: 'linear-gradient(180deg, #ffffff 30%, #94a3b8 100%)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent'
+            fontSize: '2.75rem',
+            fontWeight: 800,
+            color: '#F5F7FF',
+            letterSpacing: '-0.025em',
+            lineHeight: 1.15
           }}
         >
-          Reconstruct, Correlate & Replay Cyber Incidents in Real Time
+          Cyber <span className="text-gradient">Twin</span>
         </h1>
 
-        <p
-          style={{
-            fontSize: '1.15rem',
-            color: '#94a3b8',
-            maxWidth: '740px',
-            marginTop: '1.25rem',
-            lineHeight: 1.6
-          }}
-        >
-          Solve fragmented cybersecurity evidence. Cyber Twin correlates disparate authentication,
-          Sysmon, packet capture, and disk artifacts into a unified digital twin model with step-by-step
-          chronological playback and cryptographic chain-of-custody verification.
+        <p style={{ fontSize: '1.1rem', color: '#A7B0C8', lineHeight: 1.6, maxWidth: '720px' }}>
+          Interactive incident reconstruction platform correlating fragmented system logs, entity relationships, and chronological timelines into a high-fidelity digital forensic workspace.
         </p>
 
-        {/* CTA Buttons */}
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', marginTop: '2.25rem', justifyContent: 'center' }}>
+        {/* Action Buttons */}
+        <div style={{ display: 'flex', gap: '1rem', marginTop: '0.5rem', flexWrap: 'wrap' }}>
           <Button
             size="lg"
             variant="primary"
             icon={<ArrowRight size={18} />}
             onClick={() => navigate('/investigation')}
+            style={{ boxShadow: '0 4px 20px rgba(22, 119, 255, 0.4)' }}
           >
-            Start Investigation
-          </Button>
-
-          <Button
-            size="lg"
-            variant="outline"
-            icon={<PlayCircle size={18} />}
-            onClick={() => navigate('/replay')}
-          >
-            View Demo Replay
+            Launch Investigation Console
           </Button>
 
           <Button
             size="lg"
             variant="secondary"
-            icon={<Layers size={18} />}
+            icon={<Briefcase size={18} />}
             onClick={() => navigate('/cases')}
           >
-            Browse Case Vault
+            Open Case Vault
           </Button>
-        </div>
-
-        {/* Live Architecture Flow Strip */}
-        <div
-          style={{
-            marginTop: '3.5rem',
-            background: '#0d1424',
-            border: '1px solid #1e293b',
-            borderRadius: '10px',
-            padding: '1.25rem 2rem',
-            display: 'flex',
-            flexWrap: 'wrap',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '1.5rem',
-            maxWidth: '1000px',
-            width: '100%',
-            boxShadow: '0 0 30px rgba(0, 0, 0, 0.4)'
-          }}
-        >
-          {['Evidence Ingestion', 'Parsing & Normalization', 'Evidence Mapping', 'Event Correlation', 'Reconstructed Cyber Twin', 'Interactive Replay'].map((step, idx, arr) => (
-            <React.Fragment key={step}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                <span
-                  style={{
-                    width: '20px',
-                    height: '20px',
-                    borderRadius: '50%',
-                    background: idx === arr.length - 2 ? '#00f2fe' : 'rgba(30, 41, 59, 0.8)',
-                    color: idx === arr.length - 2 ? '#080c14' : '#cbd5e1',
-                    fontSize: '0.7rem',
-                    fontWeight: 800,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontFamily: 'JetBrains Mono, monospace'
-                  }}
-                >
-                  {idx + 1}
-                </span>
-                <span style={{ fontSize: '0.8rem', fontWeight: 600, color: idx === arr.length - 2 ? '#00f2fe' : '#94a3b8' }}>
-                  {step}
-                </span>
-              </div>
-              {idx < arr.length - 1 && <span style={{ color: '#334155' }}>→</span>}
-            </React.Fragment>
-          ))}
         </div>
       </section>
 
-      {/* Core Investigation Views Grid */}
-      <section>
-        <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-          <h2 style={{ fontSize: '1.8rem', fontWeight: 800, color: '#f8fafc' }}>
-            Four Coordinated Forensic Investigation Perspectives
-          </h2>
-          <p style={{ fontSize: '0.95rem', color: '#94a3b8', marginTop: '0.35rem' }}>
-            Seamlessly navigate from high-level attack topology down to bit-level raw log evidence
-          </p>
+      {/* 3-Step Practical Workflow */}
+      <section
+        style={{
+          background: '#101936',
+          border: '1px solid #24315C',
+          borderRadius: '14px',
+          padding: '1.75rem',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '1.25rem',
+          boxShadow: '0 10px 30px rgba(5, 8, 22, 0.5)'
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div style={{ fontSize: '0.825rem', fontWeight: 700, color: '#F5F7FF', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+            Forensic Investigation Methodology
+          </div>
+          <span style={{ fontSize: '0.72rem', color: '#00B7FF', fontFamily: 'JetBrains Mono, monospace' }}>
+            NIST SP 800-86 Compliant
+          </span>
         </div>
 
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-            gap: '1.5rem'
-          }}
-        >
-          {/* Card 1 */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1.25rem' }}>
           <div
-            className="cyber-card"
-            style={{ cursor: 'pointer' }}
-            onClick={() => navigate('/graph')}
+            style={{
+              background: '#151F46',
+              padding: '1.25rem',
+              borderRadius: '10px',
+              border: '1px solid #24315C',
+              transition: 'all 0.2s ease'
+            }}
           >
-            <div style={{ width: '42px', height: '42px', borderRadius: '8px', background: 'rgba(0, 242, 254, 0.1)', border: '1px solid #00f2fe', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem', color: '#00f2fe' }}>
-              <Network size={22} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '0.5rem' }}>
+              <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#00B7FF', fontFamily: 'JetBrains Mono, monospace' }}>01</span>
+              <span style={{ fontSize: '0.95rem', fontWeight: 700, color: '#F5F7FF' }}>Collect & Verify</span>
             </div>
-            <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#f8fafc' }}>
-              Relationship Graph
-            </h3>
-            <p style={{ fontSize: '0.85rem', color: '#94a3b8', marginTop: '0.4rem', lineHeight: 1.5 }}>
-              Topological node-link representation revealing compromised accounts, lateral movement vectors,
-              and external command-and-control infrastructure.
+            <p style={{ fontSize: '0.8rem', color: '#A7B0C8', lineHeight: 1.5 }}>
+              Ingest security event logs, Sysmon, network PCAP, and memory artifacts with certified SHA-256 cryptographic chain of custody.
             </p>
-            <div style={{ marginTop: '1rem', fontSize: '0.8rem', color: '#00f2fe', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-              Explore Graph →
-            </div>
           </div>
 
-          {/* Card 2 */}
           <div
-            className="cyber-card"
-            style={{ cursor: 'pointer' }}
-            onClick={() => navigate('/timeline')}
+            style={{
+              background: '#151F46',
+              padding: '1.25rem',
+              borderRadius: '10px',
+              border: '1px solid #24315C',
+              transition: 'all 0.2s ease'
+            }}
           >
-            <div style={{ width: '42px', height: '42px', borderRadius: '8px', background: 'rgba(56, 189, 248, 0.1)', border: '1px solid #38bdf8', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem', color: '#38bdf8' }}>
-              <GitCommit size={22} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '0.5rem' }}>
+              <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#7B2CFF', fontFamily: 'JetBrains Mono, monospace' }}>02</span>
+              <span style={{ fontSize: '0.95rem', fontWeight: 700, color: '#F5F7FF' }}>Correlate & Graph</span>
             </div>
-            <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#f8fafc' }}>
-              Chronological Timeline
-            </h3>
-            <p style={{ fontSize: '0.85rem', color: '#94a3b8', marginTop: '0.4rem', lineHeight: 1.5 }}>
-              Precision millisecond-accurate timeline synchronizing disparate system events into a single
-              unified attack lifecycle aligned with MITRE ATT&CK.
+            <p style={{ fontSize: '0.8rem', color: '#A7B0C8', lineHeight: 1.5 }}>
+              Normalize timestamps into unified UTC, cross-correlate events across hosts and users, and build topological graph models.
             </p>
-            <div style={{ marginTop: '1rem', fontSize: '0.8rem', color: '#38bdf8', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-              Inspect Timeline →
-            </div>
           </div>
 
-          {/* Card 3 */}
           <div
-            className="cyber-card"
-            style={{ cursor: 'pointer' }}
-            onClick={() => navigate('/replay')}
+            style={{
+              background: '#151F46',
+              padding: '1.25rem',
+              borderRadius: '10px',
+              border: '1px solid #24315C',
+              transition: 'all 0.2s ease'
+            }}
           >
-            <div style={{ width: '42px', height: '42px', borderRadius: '8px', background: 'rgba(168, 85, 247, 0.1)', border: '1px solid #a855f7', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem', color: '#a855f7' }}>
-              <PlayCircle size={22} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '0.5rem' }}>
+              <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#D62CFF', fontFamily: 'JetBrains Mono, monospace' }}>03</span>
+              <span style={{ fontSize: '0.95rem', fontWeight: 700, color: '#F5F7FF' }}>Replay & Report</span>
             </div>
-            <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#f8fafc' }}>
-              Interactive Replay
-            </h3>
-            <p style={{ fontSize: '0.85rem', color: '#94a3b8', marginTop: '0.4rem', lineHeight: 1.5 }}>
-              Step-by-step forensic VCR controls allowing investigators to scrub back and forth through
-              the incident to observe attack progression across network assets.
+            <p style={{ fontSize: '0.8rem', color: '#A7B0C8', lineHeight: 1.5 }}>
+              Step through time-synchronized attack sequences, replay breach progressions, verify raw evidence records, and generate dossier reports.
             </p>
-            <div style={{ marginTop: '1rem', fontSize: '0.8rem', color: '#a855f7', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-              Launch Replay →
-            </div>
-          </div>
-
-          {/* Card 4 */}
-          <div
-            className="cyber-card"
-            style={{ cursor: 'pointer' }}
-            onClick={() => navigate('/evidence')}
-          >
-            <div style={{ width: '42px', height: '42px', borderRadius: '8px', background: 'rgba(16, 185, 129, 0.1)', border: '1px solid #10b981', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem', color: '#10b981' }}>
-              <FileCheck2 size={22} />
-            </div>
-            <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#f8fafc' }}>
-              Evidence Chain of Custody
-            </h3>
-            <p style={{ fontSize: '0.85rem', color: '#94a3b8', marginTop: '0.4rem', lineHeight: 1.5 }}>
-              SHA-256 cryptographic verification ensuring evidence integrity with bidirectional links
-              between reconstructed events and raw forensic artifacts.
-            </p>
-            <div style={{ marginTop: '1rem', fontSize: '0.8rem', color: '#10b981', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
-              Verify Artifacts →
-            </div>
           </div>
         </div>
       </section>

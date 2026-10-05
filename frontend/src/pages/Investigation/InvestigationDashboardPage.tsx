@@ -3,20 +3,16 @@ import { useNavigate } from 'react-router-dom';
 import {
   FileCheck2,
   GitCommit,
-  AlertTriangle,
   Network,
   PlayCircle,
   FileSpreadsheet,
   ArrowRight,
+  Laptop,
+  User,
   ShieldAlert,
-  Flame,
-  CheckCircle2,
-  Terminal,
-  Activity,
-  Layers
+  Hash
 } from 'lucide-react';
 import { useInvestigation } from '../../context/InvestigationContext';
-import { MetricCard } from '../../components/dashboard/MetricCard';
 import { Card } from '../../components/common/Card';
 import { Button } from '../../components/common/Button';
 import { Badge } from '../../components/common/Badge';
@@ -30,151 +26,112 @@ export const InvestigationDashboardPage: React.FC = () => {
     graphData,
     findingsList,
     setSelectedEvent,
-    setSelectedEvidence
+    setSelectedEvidence,
+    setSelectedEntity
   } = useInvestigation();
   const navigate = useNavigate();
 
   if (!activeCase) return null;
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
-      {/* 6 Key Forensic Metric Cards */}
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+      {/* Above-the-fold Investigator Summary Bar */}
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-          gap: '1.25rem'
+          gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
+          gap: '0.85rem',
+          background: '#101936',
+          border: '1px solid #24315C',
+          borderRadius: '12px',
+          padding: '1rem 1.25rem',
+          boxShadow: '0 4px 20px rgba(5, 8, 22, 0.4)'
         }}
       >
-        <MetricCard
-          label="Evidence Artifacts"
-          value={evidenceList.length}
-          subtext="Cryptographically certified files"
-          icon={<FileCheck2 size={18} />}
-          accentColor="#10b981"
-        />
+        <div>
+          <div style={{ fontSize: '0.7rem', color: '#A7B0C8', textTransform: 'uppercase', fontWeight: 600 }}>
+            Incident Severity
+          </div>
+          <div style={{ marginTop: '0.35rem' }}>
+            <Badge variant={activeCase.severity}>{activeCase.severity}</Badge>
+          </div>
+        </div>
 
-        <MetricCard
-          label="Events Analyzed"
-          value={eventList.length}
-          subtext="Normalized UTC chronological events"
-          icon={<GitCommit size={18} />}
-          accentColor="#38bdf8"
-        />
+        <div>
+          <div style={{ fontSize: '0.7rem', color: '#A7B0C8', textTransform: 'uppercase', fontWeight: 600 }}>
+            Investigation Status
+          </div>
+          <div style={{ marginTop: '0.35rem' }}>
+            <Badge variant={activeCase.status}>{activeCase.status}</Badge>
+          </div>
+        </div>
 
-        <MetricCard
-          label="Suspicious Events"
-          value={summary?.suspicious_events || 8}
-          subtext="Flagged in attack progression"
-          icon={<AlertTriangle size={18} />}
-          accentColor="#ef4444"
-          badge="ACTION REQUIRED"
-        />
+        <div>
+          <div style={{ fontSize: '0.7rem', color: '#A7B0C8', textTransform: 'uppercase', fontWeight: 600 }}>
+            Affected Host
+          </div>
+          <div style={{ fontSize: '0.9rem', fontWeight: 700, color: '#00B7FF', fontFamily: 'JetBrains Mono, monospace', marginTop: '0.25rem' }}>
+            WS-FIN-04
+          </div>
+        </div>
 
-        <MetricCard
-          label="Entities Discovered"
-          value={graphData.entities.length}
-          subtext="Users, hosts, IPs, processes"
-          icon={<Network size={18} />}
-          accentColor="#00f2fe"
-        />
+        <div>
+          <div style={{ fontSize: '0.7rem', color: '#A7B0C8', textTransform: 'uppercase', fontWeight: 600 }}>
+            Target User Account
+          </div>
+          <div style={{ fontSize: '0.9rem', fontWeight: 700, color: '#F5F7FF', fontFamily: 'JetBrains Mono, monospace', marginTop: '0.25rem' }}>
+            dev_user41
+          </div>
+        </div>
 
-        <MetricCard
-          label="Reconstructed Attack Paths"
-          value={summary?.attack_paths_count || 2}
-          subtext="Lateral movement & exfiltration"
-          icon={<Flame size={18} />}
-          accentColor="#f59e0b"
-        />
+        <div>
+          <div style={{ fontSize: '0.7rem', color: '#A7B0C8', textTransform: 'uppercase', fontWeight: 600 }}>
+            Correlated Events
+          </div>
+          <div style={{ fontSize: '0.9rem', fontWeight: 800, color: '#F5F7FF', fontFamily: 'JetBrains Mono, monospace', marginTop: '0.25rem' }}>
+            {eventList.length} <span style={{ fontSize: '0.75rem', color: '#EF4444', fontWeight: 600 }}>({summary?.suspicious_events || 8} flagged)</span>
+          </div>
+        </div>
 
-        <MetricCard
-          label="Forensic Findings"
-          value={findingsList.length}
-          subtext="Corroborated MITRE discoveries"
-          icon={<FileSpreadsheet size={18} />}
-          accentColor="#a855f7"
-        />
+        <div>
+          <div style={{ fontSize: '0.7rem', color: '#A7B0C8', textTransform: 'uppercase', fontWeight: 600 }}>
+            Evidence Artifacts
+          </div>
+          <div style={{ fontSize: '0.9rem', fontWeight: 800, color: '#10B981', fontFamily: 'JetBrains Mono, monospace', marginTop: '0.25rem' }}>
+            {evidenceList.length} files
+          </div>
+        </div>
       </div>
 
-      {/* Cyber Kill Chain Progress Banner */}
-      <Card
-        title="Reconstructed Attack Lifecycle (Kill Chain Progress)"
-        subtitle="Forensically confirmed tactical phases based on correlated log evidence"
-        icon={<Activity size={18} />}
-      >
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
-            gap: '0.75rem',
-            marginTop: '0.5rem'
-          }}
-        >
-          {[
-            { phase: 'Initial Access', done: true, desc: 'Subnet Brute Force' },
-            { phase: 'Execution', done: true, desc: 'PowerShell PID 6412' },
-            { phase: 'Privilege Escalation', done: true, desc: 'SYSTEM Token Impersonation' },
-            { phase: 'Defense Evasion', done: true, desc: 'Event Log Clear Attempt' },
-            { phase: 'Lateral Collection', done: true, desc: 'SMB Vault Read (10.0.4.15)' },
-            { phase: 'Exfiltration', done: true, desc: 'Port 8443 TLS Stream' }
-          ].map((kc, idx) => (
-            <div
-              key={kc.phase}
-              style={{
-                background: '#090f1d',
-                border: `1px solid ${kc.done ? 'rgba(239, 68, 68, 0.4)' : '#1e293b'}`,
-                borderRadius: '6px',
-                padding: '0.75rem',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '0.25rem'
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <span style={{ fontSize: '0.68rem', color: '#64748b', fontWeight: 700, fontFamily: 'JetBrains Mono, monospace' }}>
-                  PHASE 0{idx + 1}
-                </span>
-                <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: kc.done ? '#ef4444' : '#334155' }} />
-              </div>
-              <div style={{ fontSize: '0.825rem', fontWeight: 700, color: '#f8fafc' }}>
-                {kc.phase}
-              </div>
-              <div style={{ fontSize: '0.72rem', color: kc.done ? '#fca5a5' : '#64748b' }}>
-                {kc.desc}
-              </div>
-            </div>
-          ))}
-        </div>
-      </Card>
-
-      {/* Main Workspace 2-Column Grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(420px, 1fr))', gap: '1.5rem' }}>
-        {/* Left Column: Timeline Preview & Evidence Preview */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-          {/* Timeline Preview */}
+      {/* Main Investigation Split */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.4fr) minmax(360px, 1fr)', gap: '1.25rem', alignItems: 'start' }}>
+        {/* Left Column: Timeline & Attack Path */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+          {/* Timeline Section */}
           <Card
             title="Chronological Incident Timeline"
-            subtitle="Latest correlated forensic events"
-            icon={<GitCommit size={18} />}
+            subtitle="Normalized UTC security events"
+            icon={<GitCommit size={16} />}
             action={
-              <Button size="sm" variant="ghost" onClick={() => navigate('/timeline')}>
-                View Full Timeline →
+              <Button size="sm" variant="outline" onClick={() => navigate('/timeline')}>
+                Full Timeline
               </Button>
             }
           >
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
-              {eventList.slice(0, 4).map((evt) => (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem' }}>
+              {eventList.slice(0, 5).map((evt) => (
                 <div
                   key={evt.event_id}
                   style={{
-                    background: '#090f1d',
-                    border: '1px solid #1e293b',
-                    borderRadius: '6px',
+                    background: '#151F46',
+                    border: '1px solid #24315C',
+                    borderRadius: '8px',
                     padding: '0.75rem 1rem',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    cursor: 'pointer'
+                    cursor: 'pointer',
+                    transition: 'all 0.15s ease'
                   }}
                   onClick={() => {
                     setSelectedEvent(evt);
@@ -183,157 +140,175 @@ export const InvestigationDashboardPage: React.FC = () => {
                 >
                   <div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                      <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.75rem', color: '#00f2fe', fontWeight: 700 }}>
+                      <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.75rem', color: '#00B7FF', fontWeight: 700 }}>
                         {evt.event_id}
                       </span>
                       <Badge variant={evt.severity} size="sm">{evt.severity}</Badge>
-                      <span style={{ fontSize: '0.75rem', color: '#64748b' }}>{evt.timestamp.split('T')[1].replace('Z', ' UTC')}</span>
+                      <span style={{ fontSize: '0.72rem', color: '#717E9E', fontFamily: 'JetBrains Mono, monospace' }}>
+                        {evt.timestamp.split('T')[1].replace('Z', '')}
+                      </span>
                     </div>
-                    <div style={{ fontSize: '0.825rem', color: '#f1f5f9', fontWeight: 500, marginTop: '0.2rem' }}>
+                    <div style={{ fontSize: '0.825rem', color: '#F5F7FF', marginTop: '0.25rem', fontWeight: 500 }}>
                       {evt.description}
                     </div>
                   </div>
-                  <ArrowRight size={14} color="#64748b" />
+                  <ArrowRight size={15} color="#00B7FF" />
                 </div>
               ))}
             </div>
           </Card>
 
-          {/* Evidence Preview */}
+          {/* Attack Path & Entities Summary */}
           <Card
-            title="Evidence Vault & Chain of Custody"
-            subtitle="Extracted forensic artifacts verified with SHA-256"
-            icon={<FileCheck2 size={18} />}
+            title="Attack Path & Relationships"
+            subtitle="Identities, endpoints, and exfiltration sinks"
+            icon={<Network size={16} />}
             action={
-              <Button size="sm" variant="ghost" onClick={() => navigate('/evidence')}>
-                View All Evidence →
+              <Button size="sm" variant="outline" onClick={() => navigate('/graph')}>
+                Open Graph
               </Button>
             }
           >
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
-              {evidenceList.slice(0, 3).map((e) => (
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '0.65rem' }}>
+              {graphData.entities.slice(0, 6).map((ent) => (
                 <div
-                  key={e.evidence_id}
+                  key={ent.entity_id}
                   style={{
-                    background: '#090f1d',
-                    border: '1px solid #1e293b',
-                    borderRadius: '6px',
-                    padding: '0.75rem 1rem',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    cursor: 'pointer'
+                    background: '#151F46',
+                    border: `1px solid ${ent.is_compromised ? 'rgba(239, 68, 68, 0.5)' : '#24315C'}`,
+                    borderRadius: '8px',
+                    padding: '0.75rem',
+                    cursor: 'pointer',
+                    transition: 'all 0.15s ease'
                   }}
                   onClick={() => {
-                    setSelectedEvidence(e);
-                    navigate('/evidence');
+                    setSelectedEntity(ent);
+                    navigate('/graph');
                   }}
                 >
-                  <div>
-                    <div style={{ fontWeight: 600, color: '#f8fafc', fontSize: '0.85rem' }}>
-                      {e.filename}
-                    </div>
-                    <div style={{ fontSize: '0.72rem', color: '#64748b', marginTop: '0.15rem' }}>
-                      Source: {e.source}
-                    </div>
-                    <div style={{ fontSize: '0.7rem', color: '#38bdf8', fontFamily: 'JetBrains Mono, monospace', marginTop: '0.2rem' }}>
-                      SHA-256: {e.hash.substring(0, 20)}...
-                    </div>
+                  <div style={{ fontSize: '0.65rem', color: '#717E9E', textTransform: 'uppercase', fontWeight: 600 }}>
+                    {ent.entity_type}
                   </div>
-                  <Badge variant="verified" size="sm">Certified</Badge>
+                  <div style={{ fontSize: '0.825rem', fontWeight: 600, color: ent.is_compromised ? '#FCA5A5' : '#F5F7FF', marginTop: '0.2rem' }}>
+                    {ent.name}
+                  </div>
+                  {ent.is_compromised && (
+                    <span style={{ fontSize: '0.65rem', color: '#EF4444', fontWeight: 700 }}>Compromised</span>
+                  )}
                 </div>
               ))}
             </div>
           </Card>
         </div>
 
-        {/* Right Column: Relationship Preview & Quick Replay Launcher */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-          {/* Quick Replay Launcher Banner */}
+        {/* Right Column: Evidence & Findings */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+          {/* Replay Quick Action */}
           <div
             style={{
-              background: 'linear-gradient(135deg, rgba(0, 242, 254, 0.1) 0%, rgba(168, 85, 247, 0.1) 100%)',
-              border: '1px solid rgba(0, 242, 254, 0.4)',
-              borderRadius: '8px',
-              padding: '1.5rem',
+              background: 'linear-gradient(135deg, rgba(22, 119, 255, 0.15) 0%, rgba(123, 44, 255, 0.15) 100%)',
+              border: '1px solid rgba(0, 183, 255, 0.35)',
+              borderRadius: '12px',
+              padding: '1rem 1.25rem',
               display: 'flex',
-              flexDirection: 'column',
-              gap: '1rem',
-              boxShadow: '0 0 25px rgba(0, 242, 254, 0.15)'
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              boxShadow: '0 4px 20px rgba(22, 119, 255, 0.2)'
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-              <div
-                style={{
-                  width: '40px',
-                  height: '40px',
-                  borderRadius: '50%',
-                  background: '#00f2fe',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: '#080c14'
-                }}
-              >
-                <PlayCircle size={24} />
+            <div>
+              <div style={{ fontSize: '0.9rem', fontWeight: 700, color: '#F5F7FF' }}>
+                Incident Replay
               </div>
-              <div>
-                <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#f8fafc' }}>
-                  Incident Reconstruction Player
-                </h3>
-                <p style={{ fontSize: '0.825rem', color: '#cbd5e1' }}>
-                  Replay the 11-step breach attack progression across infrastructure assets.
-                </p>
+              <div style={{ fontSize: '0.75rem', color: '#A7B0C8', marginTop: '0.15rem' }}>
+                Time-synchronized playback of 11 correlated breach steps
               </div>
             </div>
-
-            <div style={{ display: 'flex', gap: '0.75rem' }}>
-              <Button
-                variant="primary"
-                icon={<PlayCircle size={16} />}
-                onClick={() => navigate('/replay')}
-              >
-                Launch Incident Replay
-              </Button>
-              <Button
-                variant="outline"
-                icon={<Network size={16} />}
-                onClick={() => navigate('/graph')}
-              >
-                Open Entity Graph
-              </Button>
-            </div>
+            <Button
+              variant="primary"
+              size="sm"
+              icon={<PlayCircle size={15} />}
+              onClick={() => navigate('/replay')}
+              style={{ boxShadow: '0 4px 14px rgba(22, 119, 255, 0.4)' }}
+            >
+              Start Replay
+            </Button>
           </div>
 
-          {/* Key Findings List */}
+          {/* Evidence Preview */}
           <Card
-            title="Corroborated Investigation Findings"
-            subtitle="Actionable forensic conclusions"
-            icon={<ShieldAlert size={18} />}
+            title="Collected Evidence"
+            subtitle="Verified forensic records"
+            icon={<FileCheck2 size={16} />}
             action={
-              <Button size="sm" variant="ghost" onClick={() => navigate('/report')}>
-                Generate Report →
+              <Button size="sm" variant="outline" onClick={() => navigate('/evidence')}>
+                All Evidence
               </Button>
             }
           >
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem' }}>
+              {evidenceList.slice(0, 3).map((e) => (
+                <div
+                  key={e.evidence_id}
+                  style={{
+                    background: '#151F46',
+                    border: '1px solid #24315C',
+                    borderRadius: '8px',
+                    padding: '0.75rem 1rem',
+                    cursor: 'pointer',
+                    transition: 'all 0.15s ease'
+                  }}
+                  onClick={() => {
+                    setSelectedEvidence(e);
+                    navigate('/evidence');
+                  }}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div style={{ fontWeight: 600, color: '#F5F7FF', fontSize: '0.825rem' }}>
+                      {e.filename}
+                    </div>
+                    <Badge variant={e.relevance} size="sm">{e.type}</Badge>
+                  </div>
+                  <div style={{ fontSize: '0.72rem', color: '#717E9E', marginTop: '0.2rem' }}>
+                    {e.source}
+                  </div>
+                  <div style={{ fontSize: '0.7rem', color: '#4DEBFF', fontFamily: 'JetBrains Mono, monospace', marginTop: '0.25rem' }}>
+                    SHA-256: {e.hash.substring(0, 20)}...
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Card>
+
+          {/* Key Findings */}
+          <Card
+            title="Forensic Findings"
+            subtitle="Corroborated incident conclusions"
+            icon={<ShieldAlert size={16} />}
+            action={
+              <Button size="sm" variant="outline" onClick={() => navigate('/report')}>
+                Full Report
+              </Button>
+            }
+          >
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
               {findingsList.map((f) => (
                 <div
                   key={f.finding_id}
                   style={{
-                    background: '#090f1d',
-                    border: '1px solid #1e293b',
-                    borderRadius: '6px',
-                    padding: '0.85rem 1rem'
+                    background: '#151F46',
+                    border: '1px solid #24315C',
+                    borderRadius: '8px',
+                    padding: '0.85rem'
                   }}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.35rem' }}>
-                    <span style={{ fontSize: '0.9rem', fontWeight: 700, color: '#f8fafc' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '0.35rem' }}>
+                    <span style={{ fontSize: '0.84rem', fontWeight: 600, color: '#F5F7FF' }}>
                       {f.title}
                     </span>
                     <Badge variant={f.severity} size="sm">{f.severity}</Badge>
                   </div>
-                  <p style={{ fontSize: '0.8rem', color: '#94a3b8', lineHeight: 1.4 }}>
+                  <p style={{ fontSize: '0.76rem', color: '#A7B0C8', lineHeight: 1.4 }}>
                     {f.description}
                   </p>
                 </div>
