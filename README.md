@@ -139,6 +139,12 @@ All required data fixtures, synthetic evidence logs, and configuration defaults 
 
 ---
 
+## License
+
+Cyber-Twin is licensed under the [MIT License](LICENSE).
+
+---
+
 ## 6. Running the Prototype
 
 ### Prerequisites
