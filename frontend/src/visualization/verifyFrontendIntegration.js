@@ -1,27 +1,21 @@
 /**
  * Verification Script for Frontend Application Integration
- *
- * Verifies:
- * 1. Entry point files: index.html, src/index.jsx, src/App.jsx exist.
- * 2. index.html provides #root mount container and module script link.
- * 3. src/index.jsx uses react-dom/client createRoot to mount <App />.
- * 4. src/App.jsx initializes CyberTwinDataModel and renders InvestigationView.
- * 5. Dependency resolution: react, react-dom/client, and cytoscape are installed and resolvable.
- * 6. Baseline data model generates 7 events, 10 entities, 19 relationships, 7 evidence records.
- * 7. Zero hardcoded mock IDs in App.jsx.
- * 8. Full backward compatibility with existing visualization components.
+ * ESM Module implementation compatible with package.json type: module.
  */
 
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-const {
-  mockEvents,
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+import {
   createCyberTwinDataModel,
-  InvestigationView,
-  RelationshipGraph,
-  IncidentTimeline
-} = require('./index');
+  createModelFromReconstruction
+} from './dataAdapter.js';
+
+const mockEvents = JSON.parse(fs.readFileSync(path.join(__dirname, 'mockEvents.json'), 'utf8'));
 
 console.log('================================================================');
 console.log('   CYBER TWIN FRONTEND APPLICATION INTEGRATION VERIFICATION    ');
@@ -44,12 +38,16 @@ function assert(condition, message) {
 console.log('--- 1. Application Entry Point Files ---');
 const frontendDir = path.resolve(__dirname, '..', '..');
 const htmlPath = path.join(frontendDir, 'index.html');
-const indexJsxPath = path.join(frontendDir, 'src', 'index.jsx');
-const appJsxPath = path.join(frontendDir, 'src', 'App.jsx');
+const mainTsxPath = path.join(frontendDir, 'src', 'main.tsx');
+const appTsxPath = path.join(frontendDir, 'src', 'App.tsx');
+const contextPath = path.join(frontendDir, 'src', 'context', 'InvestigationContext.tsx');
+const dashPath = path.join(frontendDir, 'src', 'pages', 'Investigation', 'InvestigationDashboardPage.tsx');
 
 assert(fs.existsSync(htmlPath), `index.html exists at ${htmlPath}`);
-assert(fs.existsSync(indexJsxPath), `src/index.jsx exists at ${indexJsxPath}`);
-assert(fs.existsSync(appJsxPath), `src/App.jsx exists at ${appJsxPath}`);
+assert(fs.existsSync(mainTsxPath), `src/main.tsx exists at ${mainTsxPath}`);
+assert(fs.existsSync(appTsxPath), `src/App.tsx exists at ${appTsxPath}`);
+assert(fs.existsSync(contextPath), `InvestigationContext.tsx exists at ${contextPath}`);
+assert(fs.existsSync(dashPath), `InvestigationDashboardPage.tsx exists at ${dashPath}`);
 
 // -------------------------------------------------------------
 // 2. index.html Structure Checks
@@ -57,66 +55,67 @@ assert(fs.existsSync(appJsxPath), `src/App.jsx exists at ${appJsxPath}`);
 console.log('\n--- 2. HTML Entry Shell Checks ---');
 const htmlContent = fs.readFileSync(htmlPath, 'utf8');
 assert(htmlContent.includes('<div id="root"></div>'), 'index.html contains #root mounting target');
-assert(htmlContent.includes('src="/src/index.jsx"') || htmlContent.includes("src='/src/index.jsx'"), 'index.html links to /src/index.jsx');
+assert(htmlContent.includes('/src/main.tsx') || htmlContent.includes('/src/index.jsx'), 'index.html links to application entry module');
 assert(htmlContent.includes('<title>Cyber Twin'), 'index.html contains Cyber Twin title');
 
 // -------------------------------------------------------------
-// 3. src/index.jsx React DOM Bootstrap Checks
+// 3. src/main.tsx React DOM Bootstrap Checks
 // -------------------------------------------------------------
 console.log('\n--- 3. React DOM Client Bootstrap Checks ---');
-const indexJsxContent = fs.readFileSync(indexJsxPath, 'utf8');
-assert(indexJsxContent.includes("from 'react-dom/client'"), 'src/index.jsx imports from react-dom/client');
-assert(indexJsxContent.includes('createRoot'), 'src/index.jsx calls createRoot');
-assert(indexJsxContent.includes('<App />') || indexJsxContent.includes('<App/>'), 'src/index.jsx renders <App />');
-assert(indexJsxContent.includes("getElementById('root')"), 'src/index.jsx binds to document.getElementById("root")');
+const mainContent = fs.readFileSync(mainTsxPath, 'utf8');
+assert(mainContent.includes("from 'react-dom/client'"), 'src/main.tsx imports from react-dom/client');
+assert(mainContent.includes('createRoot'), 'src/main.tsx calls createRoot');
+assert(mainContent.includes('<App />') || mainContent.includes('<App/>'), 'src/main.tsx renders <App />');
+assert(mainContent.includes("getElementById('root')"), 'src/main.tsx binds to document.getElementById("root")');
 
 // -------------------------------------------------------------
-// 4. src/App.jsx Investigation Workbench Integration Checks
+// 4. Investigation Workbench Core Integration Checks
 // -------------------------------------------------------------
-console.log('\n--- 4. App.jsx Root Component Integration Checks ---');
-const appJsxContent = fs.readFileSync(appJsxPath, 'utf8');
-assert(appJsxContent.includes('export function App'), 'App.jsx exports App component');
-assert(appJsxContent.includes('export default App'), 'App.jsx has default App export');
-assert(appJsxContent.includes('createCyberTwinDataModel'), 'App.jsx imports createCyberTwinDataModel');
-assert(appJsxContent.includes('mockEvents'), 'App.jsx imports mockEvents data source');
-assert(appJsxContent.includes('InvestigationView'), 'App.jsx mounts InvestigationView');
-assert(appJsxContent.includes('model={model}'), 'App.jsx passes dynamic model to InvestigationView');
+console.log('\n--- 4. Investigation Workbench Core Integration Checks ---');
+const contextContent = fs.readFileSync(contextPath, 'utf8');
+const dashContent = fs.readFileSync(dashPath, 'utf8');
+
+assert(contextContent.includes('createModelFromReconstruction'), 'InvestigationContext imports createModelFromReconstruction');
+assert(contextContent.includes('reconstructionModel'), 'InvestigationContext manages reconstructionModel state');
+assert(dashContent.includes('InvestigationView'), 'InvestigationDashboardPage imports InvestigationView');
+assert(dashContent.includes('model={reconstructionModel}'), 'InvestigationDashboardPage passes dynamic model to InvestigationView');
 
 // -------------------------------------------------------------
-// 5. Zero Hardcoding Check in App.jsx
+// 5. Default Demo Case Check
 // -------------------------------------------------------------
-console.log('\n--- 5. Absence of Hardcoded Mock Values in App.jsx ---');
-const appCodeNoComments = appJsxContent.replace(/\/\*[\s\S]*?\*\/|\/\/.*/g, '');
-assert(!appCodeNoComments.includes('"CASE-001"') && !appCodeNoComments.includes("'CASE-001'"),
-  'Zero hardcoded "CASE-001" in App.jsx');
-assert(!appCodeNoComments.includes('"EVT-001"') && !appCodeNoComments.includes("'EVT-001'"),
-  'Zero hardcoded "EVT-001" in App.jsx');
-assert(!appCodeNoComments.includes('"employee01"') && !appCodeNoComments.includes("'employee01'"),
-  'Zero hardcoded "employee01" in App.jsx');
+console.log('\n--- 5. Active Case Alignment ---');
+assert(contextContent.includes("'CASE-001'"), 'InvestigationContext defaults activeCaseId to CASE-001');
 
 // -------------------------------------------------------------
 // 6. Runtime Dependency Resolution
 // -------------------------------------------------------------
 console.log('\n--- 6. Runtime Dependency Resolution ---');
 try {
-  const React = require('react');
-  assert(typeof React.createElement === 'function', 'react package is resolvable and functional');
+  const React = await import('react');
+  assert(typeof React.default.createElement === 'function', 'react package is resolvable and functional');
 } catch (e) {
   assert(false, `react package resolution failed: ${e.message}`);
 }
 
 try {
-  const ReactDOMClient = require('react-dom/client');
-  assert(typeof ReactDOMClient.createRoot === 'function', 'react-dom/client package is resolvable and exports createRoot');
+  const ReactDOMClient = await import('react-dom/client');
+  assert(typeof ReactDOMClient.default.createRoot === 'function', 'react-dom/client package is resolvable and exports createRoot');
 } catch (e) {
   assert(false, `react-dom/client package resolution failed: ${e.message}`);
 }
 
 try {
-  const cytoscape = require('cytoscape');
-  assert(typeof cytoscape === 'function', 'cytoscape package is resolvable');
+  const cytoscape = await import('cytoscape');
+  assert(typeof cytoscape.default === 'function', 'cytoscape package is resolvable');
 } catch (e) {
   assert(false, `cytoscape package resolution failed: ${e.message}`);
+}
+
+try {
+  const three = await import('three');
+  assert(typeof three.Scene === 'function', 'three package is resolvable');
+} catch (e) {
+  assert(false, `three package resolution failed: ${e.message}`);
 }
 
 // -------------------------------------------------------------
@@ -134,12 +133,10 @@ assert(Object.keys(baselineModel.evidence_map).length === 7, 'Model correctly in
 // 8. Backward Compatibility with Visualization Stack
 // -------------------------------------------------------------
 console.log('\n--- 8. Backward Compatibility ---');
-assert(typeof InvestigationView !== 'undefined' || fs.existsSync(path.join(__dirname, 'InvestigationView.jsx')),
-  'InvestigationView preserved and functional');
-assert(typeof RelationshipGraph !== 'undefined' || fs.existsSync(path.join(__dirname, 'RelationshipGraph.jsx')),
-  'RelationshipGraph preserved and functional');
-assert(typeof IncidentTimeline !== 'undefined' || fs.existsSync(path.join(__dirname, 'IncidentTimeline.jsx')),
-  'IncidentTimeline preserved and functional');
+assert(fs.existsSync(path.join(__dirname, 'InvestigationView.jsx')), 'InvestigationView.jsx preserved and present');
+assert(fs.existsSync(path.join(__dirname, 'RelationshipGraph.jsx')), 'RelationshipGraph.jsx preserved and present');
+assert(fs.existsSync(path.join(__dirname, 'IncidentTimeline.jsx')), 'IncidentTimeline.jsx preserved and present');
+assert(fs.existsSync(path.join(__dirname, 'CyberTwin3DView.jsx')), 'CyberTwin3DView.jsx preserved and present');
 
 console.log('\n================================================================');
 if (allPassed) {

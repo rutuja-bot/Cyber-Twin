@@ -5,17 +5,18 @@ import {
   GitCommit,
   Network,
   PlayCircle,
-  FileSpreadsheet,
   ArrowRight,
-  Laptop,
-  User,
   ShieldAlert,
-  Hash
+  Layers,
+  Cpu
 } from 'lucide-react';
 import { useInvestigation } from '../../context/InvestigationContext';
 import { Card } from '../../components/common/Card';
 import { Button } from '../../components/common/Button';
 import { Badge } from '../../components/common/Badge';
+import { InvestigationView } from '../../visualization/InvestigationView';
+
+const LiveInvestigationView = InvestigationView as any;
 
 export const InvestigationDashboardPage: React.FC = () => {
   const {
@@ -25,6 +26,8 @@ export const InvestigationDashboardPage: React.FC = () => {
     eventList,
     graphData,
     findingsList,
+    reconstructionModel,
+    loading,
     setSelectedEvent,
     setSelectedEvidence,
     setSelectedEntity
@@ -33,8 +36,11 @@ export const InvestigationDashboardPage: React.FC = () => {
 
   if (!activeCase) return null;
 
+  const affectedHost = eventList.find(e => e.source_device && e.source_device !== 'N/A')?.source_device || 'WORKSTATION-01';
+  const targetUser = eventList.find(e => e.actor && e.actor !== 'system')?.actor || 'employee01';
+
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
       {/* Above-the-fold Investigator Summary Bar */}
       <div
         style={{
@@ -71,7 +77,7 @@ export const InvestigationDashboardPage: React.FC = () => {
             Affected Host
           </div>
           <div style={{ fontSize: '0.9rem', fontWeight: 700, color: '#00B7FF', fontFamily: 'JetBrains Mono, monospace', marginTop: '0.25rem' }}>
-            WS-FIN-04
+            {affectedHost}
           </div>
         </div>
 
@@ -80,7 +86,7 @@ export const InvestigationDashboardPage: React.FC = () => {
             Target User Account
           </div>
           <div style={{ fontSize: '0.9rem', fontWeight: 700, color: '#F5F7FF', fontFamily: 'JetBrains Mono, monospace', marginTop: '0.25rem' }}>
-            dev_user41
+            {targetUser}
           </div>
         </div>
 
@@ -89,7 +95,7 @@ export const InvestigationDashboardPage: React.FC = () => {
             Correlated Events
           </div>
           <div style={{ fontSize: '0.9rem', fontWeight: 800, color: '#F5F7FF', fontFamily: 'JetBrains Mono, monospace', marginTop: '0.25rem' }}>
-            {eventList.length} <span style={{ fontSize: '0.75rem', color: '#EF4444', fontWeight: 600 }}>({summary?.suspicious_events || 8} flagged)</span>
+            {eventList.length} <span style={{ fontSize: '0.75rem', color: '#EF4444', fontWeight: 600 }}>({summary?.suspicious_events || eventList.length} flagged)</span>
           </div>
         </div>
 
@@ -103,7 +109,69 @@ export const InvestigationDashboardPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Main Investigation Split */}
+      {/* Cyber Twin Core Workbench Section */}
+      <div
+        style={{
+          background: '#0D1424',
+          border: '1px solid #1E2D4A',
+          borderRadius: '12px',
+          overflow: 'hidden',
+          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.45)'
+        }}
+      >
+        <div
+          style={{
+            padding: '0.85rem 1.25rem',
+            background: '#131D36',
+            borderBottom: '1px solid #24315C',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between'
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+            <Cpu size={18} color="#00B7FF" />
+            <span style={{ fontWeight: 700, fontSize: '0.95rem', color: '#F5F7FF' }}>
+              Interactive Cyber Twin Workbench & Replay Core
+            </span>
+            <Badge variant="investigating" size="sm">LIVE RECONSTRUCTION</Badge>
+          </div>
+          <div style={{ display: 'flex', gap: '0.5rem' }}>
+            <Button size="sm" variant="outline" onClick={() => navigate('/graph')}>
+              2D Graph
+            </Button>
+            <Button size="sm" variant="primary" icon={<PlayCircle size={14} />} onClick={() => navigate('/replay')}>
+              Full Replay
+            </Button>
+          </div>
+        </div>
+
+        {reconstructionModel ? (
+          <LiveInvestigationView
+            model={reconstructionModel}
+            height="720px"
+            width="100%"
+          />
+        ) : (
+          <div
+            style={{
+              height: '400px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#A7B0C8',
+              flexDirection: 'column',
+              gap: '1rem'
+            }}
+          >
+            <div style={{ fontFamily: 'JetBrains Mono, monospace', color: '#00B7FF' }}>
+              Initializing Cyber Twin Reconstruction...
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Main Investigation Split for Detailed Records */}
       <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.4fr) minmax(360px, 1fr)', gap: '1.25rem', alignItems: 'start' }}>
         {/* Left Column: Timeline & Attack Path */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
@@ -145,7 +213,7 @@ export const InvestigationDashboardPage: React.FC = () => {
                       </span>
                       <Badge variant={evt.severity} size="sm">{evt.severity}</Badge>
                       <span style={{ fontSize: '0.72rem', color: '#717E9E', fontFamily: 'JetBrains Mono, monospace' }}>
-                        {evt.timestamp.split('T')[1].replace('Z', '')}
+                        {evt.timestamp.includes('T') ? evt.timestamp.split('T')[1].replace('Z', '') : evt.timestamp}
                       </span>
                     </div>
                     <div style={{ fontSize: '0.825rem', color: '#F5F7FF', marginTop: '0.25rem', fontWeight: 500 }}>
@@ -160,8 +228,8 @@ export const InvestigationDashboardPage: React.FC = () => {
 
           {/* Attack Path & Entities Summary */}
           <Card
-            title="Attack Path & Relationships"
-            subtitle="Identities, endpoints, and exfiltration sinks"
+            title="Correlated Entities"
+            subtitle="Identities, endpoints, files, and network nodes"
             icon={<Network size={16} />}
             action={
               <Button size="sm" variant="outline" onClick={() => navigate('/graph')}>
@@ -203,42 +271,10 @@ export const InvestigationDashboardPage: React.FC = () => {
 
         {/* Right Column: Evidence & Findings */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
-          {/* Replay Quick Action */}
-          <div
-            style={{
-              background: 'linear-gradient(135deg, rgba(22, 119, 255, 0.15) 0%, rgba(123, 44, 255, 0.15) 100%)',
-              border: '1px solid rgba(0, 183, 255, 0.35)',
-              borderRadius: '12px',
-              padding: '1rem 1.25rem',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              boxShadow: '0 4px 20px rgba(22, 119, 255, 0.2)'
-            }}
-          >
-            <div>
-              <div style={{ fontSize: '0.9rem', fontWeight: 700, color: '#F5F7FF' }}>
-                Incident Replay
-              </div>
-              <div style={{ fontSize: '0.75rem', color: '#A7B0C8', marginTop: '0.15rem' }}>
-                Time-synchronized playback of 11 correlated breach steps
-              </div>
-            </div>
-            <Button
-              variant="primary"
-              size="sm"
-              icon={<PlayCircle size={15} />}
-              onClick={() => navigate('/replay')}
-              style={{ boxShadow: '0 4px 14px rgba(22, 119, 255, 0.4)' }}
-            >
-              Start Replay
-            </Button>
-          </div>
-
           {/* Evidence Preview */}
           <Card
             title="Collected Evidence"
-            subtitle="Verified forensic records"
+            subtitle="Verified forensic records with SHA-256"
             icon={<FileCheck2 size={16} />}
             action={
               <Button size="sm" variant="outline" onClick={() => navigate('/evidence')}>
@@ -247,7 +283,7 @@ export const InvestigationDashboardPage: React.FC = () => {
             }
           >
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem' }}>
-              {evidenceList.slice(0, 3).map((e) => (
+              {evidenceList.slice(0, 4).map((e) => (
                 <div
                   key={e.evidence_id}
                   style={{
@@ -273,7 +309,7 @@ export const InvestigationDashboardPage: React.FC = () => {
                     {e.source}
                   </div>
                   <div style={{ fontSize: '0.7rem', color: '#4DEBFF', fontFamily: 'JetBrains Mono, monospace', marginTop: '0.25rem' }}>
-                    SHA-256: {e.hash.substring(0, 20)}...
+                    SHA-256: {e.hash ? e.hash.substring(0, 20) : 'e3b0c44298fc1c14...'}...
                   </div>
                 </div>
               ))}

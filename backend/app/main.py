@@ -2,7 +2,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.database.connection import Base, SessionLocal, engine
+from app.database.connection import Base, SessionLocal, engine, run_schema_migrations
 from app.database.seed_data import seed_demo_data
 import app.models  # Ensure all models are registered with Base metadata
 from app.routes import cases_router, evidence_router, events_router, findings_router, reconstruction_router
@@ -12,6 +12,8 @@ from app.routes import cases_router, evidence_router, events_router, findings_ro
 async def lifespan(app: FastAPI):
     # Initialize database tables
     Base.metadata.create_all(bind=engine)
+    # Ensure column migrations for newly added columns
+    run_schema_migrations(engine)
     # Populate initial simulated cyber incident dataset if empty
     db = SessionLocal()
     try:
@@ -52,6 +54,15 @@ app.include_router(evidence_router)
 app.include_router(events_router)
 app.include_router(findings_router)
 app.include_router(reconstruction_router)
+
+# Mount static evidence media files directory
+from pathlib import Path
+from fastapi.staticfiles import StaticFiles
+
+evidence_media_dir = Path("data/evidence")
+evidence_media_dir.mkdir(parents=True, exist_ok=True)
+app.mount("/evidence", StaticFiles(directory="data/evidence"), name="evidence_media")
+
 
 
 if __name__ == "__main__":

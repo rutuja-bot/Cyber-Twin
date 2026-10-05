@@ -1,0 +1,27 @@
+================================================================================
+CYBER INCIDENT INTAKE & FORENSIC EVIDENCE CUSTODY RECORD
+Case Identifier: CASE-001
+Title: Compromised Employee Account & Data Exfiltration
+Investigating Authority: Lead Digital Forensics Team
+================================================================================
+
+1. INCIDENT OVERVIEW
+At 2026-10-04 10:15:00 UTC, security operations detected unauthorized domain logon
+events from IP 192.168.1.20 targeting user account employee01. Within 3 minutes,
+obfuscated PowerShell activity was observed on WORKSTATION-01 followed by lateral
+SMB connection to enterprise file server SRV-CORP-FILE.
+
+2. EVIDENCE SEIZURE INVENTORY
+- EVD-001: Authentication Log (auth.log) - Verified SHA-256
+- EVD-002: Endpoint Process Log (endpoint.log) - Verified SHA-256
+- EVD-003: Server Access Log (server.log) - Verified SHA-256
+- EVD-004: File Audit Log (file_access.log) - Verified SHA-256
+- EVD-005: Perimeter Firewall Log (firewall.log) - Verified SHA-256
+- EVD-006: Scene Photograph (workstation_photo.jpg) - Desk 14 Physical Terminal
+- EVD-007: CCTV Surveillance Footage (cctv_server_room.mp4) - Hallway Camera 04
+- EVD-008: Physical Evidence (tampered_usb_drive.jpg) - Hardware Staging Media
+- EVD-009: Intake Report Document (forensic_intake_report.txt)
+
+3. INTEGRITY & CHAIN OF CUSTODY
+All physical and digital artifacts have been cryptographically stamped with SHA-256
+integrity hashes. Evidence markers have been placed in the 3D investigation environment.

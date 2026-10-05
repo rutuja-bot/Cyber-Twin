@@ -22,7 +22,7 @@ import { EvidenceDetailModal } from '../../components/evidence/EvidenceDetailMod
 import { NormalizedEvent, Evidence } from '../../types';
 
 export const TimelinePage: React.FC = () => {
-  const { eventList, evidenceList, selectedEvent, setSelectedEvent } = useInvestigation();
+  const { eventList, evidenceList, selectedEvent, setSelectedEvent, setSelectedEvidence } = useInvestigation();
 
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   const [severityFilter, setSeverityFilter] = useState<string>('all');
@@ -30,9 +30,18 @@ export const TimelinePage: React.FC = () => {
   const [typeFilter, setTypeFilter] = useState<string>('all');
   const [modalEvidence, setModalEvidence] = useState<Evidence | null>(null);
 
-  const handleViewEvidence = (evidenceId: string) => {
+  // Explicit handler separation: Event Inspection vs Evidence Modal
+  const handleEventInspect = (event: NormalizedEvent) => {
+    setSelectedEvent(event);
+    setModalEvidence(null); // Ensure Evidence Modal is closed and Event Inspector is active
+  };
+
+  const handleEvidenceClick = (evidenceId: string) => {
     const ev = evidenceList.find((e) => e.evidence_id === evidenceId) || evidenceList[0];
-    setModalEvidence(ev);
+    if (ev) {
+      setModalEvidence(ev);
+      setSelectedEvidence?.(ev);
+    }
   };
 
   const filteredEvents = eventList
@@ -183,8 +192,8 @@ export const TimelinePage: React.FC = () => {
               key={evt.event_id}
               event={evt}
               isSelected={activeInspectedEvent?.event_id === evt.event_id}
-              onSelect={(e) => setSelectedEvent(e)}
-              onViewEvidence={handleViewEvidence}
+              onSelect={handleEventInspect}
+              onViewEvidence={handleEvidenceClick}
             />
           ))}
         </div>
@@ -230,6 +239,18 @@ export const TimelinePage: React.FC = () => {
               {/* Forensic Details Grid */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem', fontSize: '0.8rem' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', background: '#151F46', padding: '0.55rem 0.75rem', borderRadius: '6px', border: '1px solid #24315C' }}>
+                  <span style={{ color: '#A7B0C8' }}>Event ID:</span>
+                  <span style={{ color: '#00B7FF', fontFamily: 'JetBrains Mono, monospace', fontWeight: 600 }}>{activeInspectedEvent.event_id}</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', background: '#151F46', padding: '0.55rem 0.75rem', borderRadius: '6px', border: '1px solid #24315C' }}>
+                  <span style={{ color: '#A7B0C8' }}>Source Evidence ID:</span>
+                  <span style={{ color: '#4DEBFF', fontFamily: 'JetBrains Mono, monospace', fontWeight: 600 }}>{activeInspectedEvent.evidence_id}</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', background: '#151F46', padding: '0.55rem 0.75rem', borderRadius: '6px', border: '1px solid #24315C' }}>
+                  <span style={{ color: '#A7B0C8' }}>Event Type:</span>
+                  <span style={{ color: '#F5F7FF', fontFamily: 'JetBrains Mono, monospace' }}>{activeInspectedEvent.event_type}</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', background: '#151F46', padding: '0.55rem 0.75rem', borderRadius: '6px', border: '1px solid #24315C' }}>
                   <span style={{ color: '#A7B0C8' }}>Normalized Timestamp:</span>
                   <span style={{ color: '#00B7FF', fontFamily: 'JetBrains Mono, monospace' }}>{activeInspectedEvent.timestamp}</span>
                 </div>
@@ -241,10 +262,12 @@ export const TimelinePage: React.FC = () => {
                   <span style={{ color: '#A7B0C8' }}>Host Device:</span>
                   <span style={{ color: '#F5F7FF', fontFamily: 'JetBrains Mono, monospace' }}>{activeInspectedEvent.source_device}</span>
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', background: '#151F46', padding: '0.55rem 0.75rem', borderRadius: '6px', border: '1px solid #24315C' }}>
-                  <span style={{ color: '#A7B0C8' }}>Source IP:</span>
-                  <span style={{ color: '#4DEBFF', fontFamily: 'JetBrains Mono, monospace' }}>{activeInspectedEvent.source_ip}</span>
-                </div>
+                {activeInspectedEvent.source_ip && (
+                  <div style={{ display: 'flex', justifyContent: 'space-between', background: '#151F46', padding: '0.55rem 0.75rem', borderRadius: '6px', border: '1px solid #24315C' }}>
+                    <span style={{ color: '#A7B0C8' }}>Source IP:</span>
+                    <span style={{ color: '#4DEBFF', fontFamily: 'JetBrains Mono, monospace' }}>{activeInspectedEvent.source_ip}</span>
+                  </div>
+                )}
                 {activeInspectedEvent.destination_ip && (
                   <div style={{ display: 'flex', justifyContent: 'space-between', background: '#151F46', padding: '0.55rem 0.75rem', borderRadius: '6px', border: '1px solid #24315C' }}>
                     <span style={{ color: '#A7B0C8' }}>Target / Dst IP:</span>
@@ -254,13 +277,22 @@ export const TimelinePage: React.FC = () => {
               </div>
 
               {/* MITRE Mapping */}
-              {activeInspectedEvent.mitre_technique && (
+              {(activeInspectedEvent.mitre_technique || activeInspectedEvent.mitre_technique_id) && (
                 <div style={{ background: 'rgba(214, 44, 255, 0.08)', border: '1px solid rgba(214, 44, 255, 0.25)', borderRadius: '8px', padding: '0.75rem 0.9rem' }}>
-                  <div style={{ fontSize: '0.68rem', color: '#D62CFF', fontWeight: 600, textTransform: 'uppercase' }}>
-                    MITRE ATT&CK Mapping
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '0.68rem', color: '#D62CFF', fontWeight: 600, textTransform: 'uppercase' }}>
+                      MITRE ATT&CK Mapping
+                    </span>
+                    {activeInspectedEvent.stage && (
+                      <span style={{ fontSize: '0.68rem', color: '#4DEBFF', fontWeight: 600 }}>
+                        {activeInspectedEvent.stage}
+                      </span>
+                    )}
                   </div>
                   <div style={{ fontSize: '0.85rem', color: '#FF3CAC', fontWeight: 600, marginTop: '0.2rem', fontFamily: 'JetBrains Mono, monospace' }}>
-                    {activeInspectedEvent.mitre_technique}
+                    {activeInspectedEvent.mitre_technique_id
+                      ? `${activeInspectedEvent.mitre_technique_id} • ${activeInspectedEvent.mitre_technique_name || activeInspectedEvent.mitre_technique}`
+                      : activeInspectedEvent.mitre_technique}
                   </div>
                 </div>
               )}
@@ -294,7 +326,7 @@ export const TimelinePage: React.FC = () => {
                 variant="primary"
                 size="sm"
                 icon={<ExternalLink size={14} />}
-                onClick={() => handleViewEvidence(activeInspectedEvent.evidence_id)}
+                onClick={() => handleEvidenceClick(activeInspectedEvent.evidence_id)}
               >
                 Inspect Evidence File ({activeInspectedEvent.evidence_id})
               </Button>

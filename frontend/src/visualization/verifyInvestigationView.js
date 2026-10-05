@@ -14,21 +14,32 @@
  * 10. Full regression compatibility with existing components
  */
 
-const fs = require('fs');
-const path = require('path');
-const cytoscape = require('cytoscape');
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import cytoscape from 'cytoscape';
 
-const {
-  mockEvents,
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const mockEvents = JSON.parse(
+  fs.readFileSync(path.join(__dirname, 'mockEvents.json'), 'utf8')
+);
+
+import {
   createCyberTwinDataModel,
-  buildCytoscapeElements,
-  getCytoscapeStylesheet,
   isValidBackendEvent,
-  sortEventsChronologically,
-  RelationshipGraph,
-  IncidentTimeline,
-  InvestigationView
-} = require('./index');
+  sortEventsChronologically
+} from './dataAdapter.js';
+
+import {
+  buildCytoscapeElements,
+  getCytoscapeStylesheet
+} from './graphElements.js';
+
+import { RelationshipGraph } from './RelationshipGraph.jsx';
+import { IncidentTimeline } from './IncidentTimeline.jsx';
+import { InvestigationView } from './InvestigationView.jsx';
 
 console.log('================================================================');
 console.log('   CYBER TWIN INVESTIGATION WORKBENCH VERIFICATION SUITE       ');

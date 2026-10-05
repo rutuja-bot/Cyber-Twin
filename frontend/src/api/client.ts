@@ -4,8 +4,8 @@
  * Gracefully falls back to mock services when backend is offline or VITE_USE_MOCK_DATA is true.
  */
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/v1';
-const FORCE_MOCK = import.meta.env.VITE_USE_MOCK_DATA !== 'false';
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+const FORCE_MOCK = import.meta.env.VITE_USE_MOCK_DATA === 'true';
 
 export async function apiRequest<T>(
   endpoint: string,

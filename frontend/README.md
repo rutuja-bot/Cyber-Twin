@@ -109,27 +109,29 @@ npm run build
 ## Environment Variables
 Configured in `frontend/.env`:
 ```env
-# URL of the Person 1 FastAPI backend server
-VITE_API_BASE_URL=http://localhost:8000/api/v1
+# URL of the integrated Cyber Twin FastAPI backend server
+VITE_API_BASE_URL=http://localhost:8000
 
-# Toggle mock data fallback (set to 'false' when backend endpoints are ready)
-VITE_USE_MOCK_DATA=true
+# Toggle mock data fallback ('false' connects directly to live backend)
+VITE_USE_MOCK_DATA=false
 ```
 
 ---
 
-## Mock Data & Backend Integration
+## Live Case & Backend Integration
 
-### Realistic Forensic Demo Incident (`CASE-2026-0882`)
-The mock dataset replicates an actual multi-stage breach:
-1. **Initial Access**: Internal subnet brute force targeting `dev_user41`.
-2. **Execution & Privilege Escalation**: Obfuscated PowerShell (PID 6412) dumping memory and obtaining SYSTEM token privileges.
-3. **Lateral Collection**: SMB read of restricted financial database `customer_vault_q3.db` on server `FS-CORP-01`.
-4. **Staging & Exfiltration**: Packaging into `svchost_upd.zip` and TLS streaming 42.8 MB to external C2 `198.51.100.42:8443`.
-5. **Anti-Forensics**: Attempted clearance of Windows Security Event Log (`wevtutil cl Security`).
+### Authoritative Forensic Demo Incident (`CASE-001`)
+The integrated prototype loads directly from the live FastAPI forensic reconstruction endpoint (`/cases/CASE-001/reconstruction`), capturing an end-to-end multi-stage cyber incident:
+1. **Initial Access (`EVT-001`)**: Valid credential abuse for `employee01` authenticating from `192.168.1.20` to `WORKSTATION-01` (`auth.log`, `EVD-001`).
+2. **Execution (`EVT-002`)**: Obfuscated PowerShell execution (`powershell.exe -enc SQBFAFgA...`) spawning on `WORKSTATION-01` (`endpoint.log`, `EVD-002`).
+3. **Lateral Movement (`EVT-003`)**: Lateral SMB session established across internal subnet to enterprise file server `SRV-CORP-FILE` (`server.log`, `EVD-003`).
+4. **Collection (`EVT-004`)**: Staging and unauthorized read access to confidential customer records `\\SRV-CORP-FILE\confidential\customer_data.csv` (`file_access.log`, `EVD-004`).
+5. **Command and Control (`EVT-005`)**: Outbound C2 network flow established from `192.168.1.20:49150` to external suspect IP `198.51.100.24:443` (`firewall.log`, `EVD-005`).
+6. **Exfiltration (`EVT-006`)**: High-volume data exfiltration (8.45 MB) transmitted directly to external adversary infrastructure `198.51.100.24:443` (`firewall.log`, `EVD-005`).
 
-### Seamless FastAPI Integration
-All UI components consume data exclusively through `src/api/*`. When Person 1 completes the FastAPI backend:
-1. Update `VITE_API_BASE_URL` to point to the live backend server.
-2. Set `VITE_USE_MOCK_DATA=false`.
-3. If the backend is temporarily offline or an endpoint returns a non-200 status, `client.ts` automatically falls back to certified mock forensic records without crashing the UI.
+### Seamless Core Integration
+All UI components consume data through `src/api/*` targeting the live FastAPI backend:
+1. Active backend routes: `/cases`, `/cases/CASE-001`, `/cases/CASE-001/evidence`, `/cases/CASE-001/timeline`, `/cases/CASE-001/findings`, `/cases/CASE-001/reconstruction`, `/cases/CASE-001/reconstruction/graph`.
+2. Interactive Topology Graph: Rendered via Cytoscape.js with full node inspection, edge inspection, and bidirectional timeline synchronization.
+3. 3D Cyber Environment: Spatial infrastructure model powered by Three.js visualizing nodes, server racks, packet flows, and attack paths.
+4. Resilient Fallback: If the backend is unreachable, the client gracefully falls back to certified local forensic records without crashing.

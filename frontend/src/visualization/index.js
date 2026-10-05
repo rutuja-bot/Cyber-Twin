@@ -3,9 +3,7 @@
  * ESM Module structure supporting full integration with Backend reconstruction data.
  */
 
-import { createRequire } from 'module';
-const require = createRequire(import.meta.url);
-const mockEvents = require('./mockEvents.json');
+import mockEvents from './mockEvents.json';
 
 import {
   isValidBackendEvent,

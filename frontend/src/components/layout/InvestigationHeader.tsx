@@ -81,7 +81,11 @@ export const InvestigationHeader: React.FC = () => {
           <Clock size={14} color="#00B7FF" />
           <div style={{ fontSize: '0.75rem' }}>
             <span style={{ color: '#717E9E' }}>Window: </span>
-            <span style={{ color: '#F5F7FF', fontFamily: 'JetBrains Mono, monospace' }}>02:14:00 — 02:55:00 UTC</span>
+            <span style={{ color: '#F5F7FF', fontFamily: 'JetBrains Mono, monospace' }}>
+              {activeCase?.date_range
+                ? `${activeCase.date_range.start.includes('T') ? activeCase.date_range.start.split('T')[1]?.substring(0, 8) : activeCase.date_range.start} — ${activeCase.date_range.end.includes('T') ? activeCase.date_range.end.split('T')[1]?.substring(0, 8) : activeCase.date_range.end} UTC`
+                : '10:15:00 — 10:55:00 UTC'}
+            </span>
           </div>
         </div>
 

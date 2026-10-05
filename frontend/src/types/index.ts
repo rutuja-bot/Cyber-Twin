@@ -5,7 +5,24 @@
 
 export type CaseStatus = 'open' | 'investigating' | 'closed';
 export type SeverityLevel = 'critical' | 'high' | 'medium' | 'low' | 'info';
-export type EvidenceType = 'auth_log' | 'pcap' | 'sysmon' | 'disk_artifact' | 'memory_dump' | 'firewall_log';
+export type EvidenceType =
+  | 'auth_log'
+  | 'endpoint_log'
+  | 'server_log'
+  | 'file_access_log'
+  | 'firewall_log'
+  | 'pcap'
+  | 'sysmon'
+  | 'disk_artifact'
+  | 'memory_dump'
+  | 'photo'
+  | 'image'
+  | 'video'
+  | 'cctv'
+  | 'physical'
+  | 'document'
+  | 'report'
+  | string;
 export type ProcessingStatus = 'parsed' | 'verified' | 'indexing' | 'pending';
 export type EntityType = 'user' | 'workstation' | 'server' | 'ip_address' | 'file_object' | 'process';
 
@@ -39,6 +56,10 @@ export interface Evidence {
   processing_status: ProcessingStatus;
   relevance: SeverityLevel;
   linked_event_ids: string[];
+  location?: string;
+  description?: string;
+  collector?: string;
+  media_path?: string;
   metadata: {
     file_size_kb?: number;
     sensor_id?: string;
@@ -46,6 +67,10 @@ export interface Evidence {
     raw_sample?: string;
     sha256_verified?: boolean;
     extracted_records?: number;
+    opencv_analysis?: any;
+    video_analysis?: any;
+    document_analysis?: any;
+    physical_evidence_record?: any;
     [key: string]: any;
   };
 }
@@ -54,7 +79,24 @@ export interface NormalizedEvent {
   event_id: string;
   case_id: string;
   timestamp: string; // ISO 8601 UTC
-  event_type: 'login' | 'failed_login' | 'successful_auth' | 'file_access' | 'process_execution' | 'network_connection' | 'privilege_escalation' | 'suspicious_command' | 'data_exfiltration' | 'logout';
+  event_type:
+    | 'login'
+    | 'failed_login'
+    | 'successful_auth'
+    | 'file_access'
+    | 'process_execution'
+    | 'network_connection'
+    | 'privilege_escalation'
+    | 'suspicious_command'
+    | 'data_exfiltration'
+    | 'logout'
+    | 'suspicious_login'
+    | 'suspicious_process_spawn'
+    | 'internal_server_connection'
+    | 'sensitive_file_access'
+    | 'suspicious_network_connection'
+    | 'outbound_data_transfer'
+    | string;
   actor: string;
   source_device: string;
   source_ip: string;
@@ -69,6 +111,9 @@ export interface NormalizedEvent {
   is_suspicious: boolean;
   description: string;
   mitre_technique?: string;
+  mitre_technique_id?: string;
+  mitre_technique_name?: string;
+  stage?: string;
 }
 
 export interface Entity {
@@ -95,7 +140,18 @@ export interface Relationship {
   case_id: string;
   source_entity_id: string;
   target_entity_id: string;
-  relationship_type: 'AUTHENTICATED_TO' | 'CONNECTED_TO' | 'DOWNLOADED' | 'EXECUTED' | 'ACCESSED_FILE' | 'SPAWNED_PROCESS' | 'EXFILTRATED_TO';
+  relationship_type:
+    | 'AUTHENTICATED_TO'
+    | 'CONNECTED_TO'
+    | 'DOWNLOADED'
+    | 'EXECUTED'
+    | 'ACCESSED_FILE'
+    | 'SPAWNED_PROCESS'
+    | 'EXFILTRATED_TO'
+    | 'RESOLVED_IP'
+    | 'USES'
+    | 'ACCESSED'
+    | string;
   label: string;
   evidence_ids: string[];
   timestamp?: string;

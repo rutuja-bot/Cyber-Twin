@@ -14,6 +14,8 @@ import { getEventsByCase } from '../api/timeline';
 import { getGraphData, GraphData } from '../api/graph';
 import { getReplayEvents } from '../api/replay';
 import { getFindingsByCase } from '../api/findings';
+import { getCaseReconstruction } from '../api/reconstruction';
+import { createModelFromReconstruction, createCyberTwinDataModel, mockEvents } from '../visualization';
 
 interface InvestigationContextType {
   cases: Case[];
@@ -24,6 +26,7 @@ interface InvestigationContextType {
   graphData: GraphData;
   replayEvents: ReplayEvent[];
   findingsList: Finding[];
+  reconstructionModel: any | null;
   loading: boolean;
   selectedEvent: NormalizedEvent | null;
   selectedEvidence: Evidence | null;
@@ -42,7 +45,7 @@ const InvestigationContext = createContext<InvestigationContextType | undefined>
 
 export const InvestigationProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [cases, setCases] = useState<Case[]>([]);
-  const [activeCaseId, setActiveCaseId] = useState<string>('CASE-2026-0882');
+  const [activeCaseId, setActiveCaseId] = useState<string>('CASE-001');
   const [activeCase, setActiveCase] = useState<Case | null>(null);
   const [summary, setSummary] = useState<InvestigationSummary | null>(null);
   const [evidenceList, setEvidenceList] = useState<Evidence[]>([]);
@@ -50,6 +53,7 @@ export const InvestigationProvider: React.FC<{ children: React.ReactNode }> = ({
   const [graphData, setGraphData] = useState<GraphData>({ entities: [], relationships: [] });
   const [replayEvents, setReplayEvents] = useState<ReplayEvent[]>([]);
   const [findingsList, setFindingsList] = useState<Finding[]>([]);
+  const [reconstructionModel, setReconstructionModel] = useState<any | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
   // Cross-view selection state
@@ -89,7 +93,8 @@ export const InvestigationProvider: React.FC<{ children: React.ReactNode }> = ({
           eventsRes,
           graphRes,
           replayRes,
-          findingsRes
+          findingsRes,
+          reconRes
         ] = await Promise.all([
           getCases(),
           getCaseSummary(activeCaseId),
@@ -97,23 +102,62 @@ export const InvestigationProvider: React.FC<{ children: React.ReactNode }> = ({
           getEventsByCase(activeCaseId),
           getGraphData(activeCaseId),
           getReplayEvents(activeCaseId),
-          getFindingsByCase(activeCaseId)
+          getFindingsByCase(activeCaseId),
+          getCaseReconstruction(activeCaseId)
         ]);
 
         if (isMounted) {
           const current = casesRes.find((c) => c.case_id === activeCaseId) || casesRes[0] || null;
           setActiveCase(current);
           setSummary(summaryRes);
-          setEvidenceList(evidenceRes);
+
+          // Enrich evidence with live reconstruction event linkages if available
+          const enrichedEvidence = evidenceRes.map((ev) => {
+            if (reconRes?.events && Array.isArray(reconRes.events)) {
+              const linked = reconRes.events
+                .filter((e: any) => e.evidence_id === ev.evidence_id || e.evidence_ids?.includes(ev.evidence_id))
+                .map((e: any) => e.event_id);
+              if (linked.length > 0) {
+                return {
+                  ...ev,
+                  linked_event_ids: linked,
+                  metadata: {
+                    ...ev.metadata,
+                    extracted_records: linked.length
+                  }
+                };
+              }
+            }
+            return ev;
+          });
+
+          setEvidenceList(enrichedEvidence);
           setEventList(eventsRes);
           setGraphData(graphRes);
           setReplayEvents(replayRes);
           setFindingsList(findingsRes);
+
+          // Build canonical Cyber Twin Model from backend reconstruction
+          try {
+            if (reconRes && (reconRes.case_id || reconRes.events || reconRes.graph)) {
+              const model = createModelFromReconstruction(reconRes);
+              setReconstructionModel(model);
+            } else {
+              setReconstructionModel(createCyberTwinDataModel(mockEvents));
+            }
+          } catch (modelErr) {
+            console.warn('Error creating model from reconstruction, using fallback model:', modelErr);
+            setReconstructionModel(createCyberTwinDataModel(mockEvents));
+          }
+
           setLoading(false);
         }
       } catch (err) {
         console.error('Failed to load investigation data for case', activeCaseId, err);
-        if (isMounted) setLoading(false);
+        if (isMounted) {
+          setReconstructionModel(createCyberTwinDataModel(mockEvents));
+          setLoading(false);
+        }
       }
     }
 
@@ -127,20 +171,56 @@ export const InvestigationProvider: React.FC<{ children: React.ReactNode }> = ({
   const refreshData = async () => {
     if (!activeCaseId) return;
     setLoading(true);
-    const [summaryRes, evidenceRes, eventsRes, graphRes, replayRes, findingsRes] = await Promise.all([
+    const [
+      summaryRes,
+      evidenceRes,
+      eventsRes,
+      graphRes,
+      replayRes,
+      findingsRes,
+      reconRes
+    ] = await Promise.all([
       getCaseSummary(activeCaseId),
       getEvidenceByCase(activeCaseId),
       getEventsByCase(activeCaseId),
       getGraphData(activeCaseId),
       getReplayEvents(activeCaseId),
-      getFindingsByCase(activeCaseId)
+      getFindingsByCase(activeCaseId),
+      getCaseReconstruction(activeCaseId)
     ]);
     setSummary(summaryRes);
-    setEvidenceList(evidenceRes);
+
+    const enrichedEvidence = evidenceRes.map((ev) => {
+      if (reconRes?.events && Array.isArray(reconRes.events)) {
+        const linked = reconRes.events
+          .filter((e: any) => e.evidence_id === ev.evidence_id || e.evidence_ids?.includes(ev.evidence_id))
+          .map((e: any) => e.event_id);
+        if (linked.length > 0) {
+          return {
+            ...ev,
+            linked_event_ids: linked,
+            metadata: {
+              ...ev.metadata,
+              extracted_records: linked.length
+            }
+          };
+        }
+      }
+      return ev;
+    });
+
+    setEvidenceList(enrichedEvidence);
     setEventList(eventsRes);
     setGraphData(graphRes);
     setReplayEvents(replayRes);
     setFindingsList(findingsRes);
+    try {
+      if (reconRes && (reconRes.case_id || reconRes.events || reconRes.graph)) {
+        setReconstructionModel(createModelFromReconstruction(reconRes));
+      }
+    } catch (e) {
+      // Keep existing model
+    }
     setLoading(false);
   };
 
@@ -181,6 +261,7 @@ export const InvestigationProvider: React.FC<{ children: React.ReactNode }> = ({
         graphData,
         replayEvents,
         findingsList,
+        reconstructionModel,
         loading,
         selectedEvent,
         selectedEvidence,

@@ -7,22 +7,29 @@ import {
   Flame,
   CheckCircle2,
   ExternalLink,
-  Info
+  Info,
+  Box
 } from 'lucide-react';
 import { useInvestigation } from '../../context/InvestigationContext';
 import { ReplayControls } from '../../components/replay/ReplayControls';
+import { CyberTwin3DView } from '../../visualization/CyberTwin3DView';
 import { CyberTwinStage } from '../../components/replay/CyberTwinStage';
+import { Investigation3DScene } from '../../components/replay/Investigation3DScene';
 import { EvidenceDetailModal } from '../../components/evidence/EvidenceDetailModal';
 import { Badge } from '../../components/common/Badge';
+import { Button } from '../../components/common/Button';
 import { Evidence } from '../../types';
 
+const LiveCyberTwin3DView = CyberTwin3DView as any;
+
 export const ReplayPage: React.FC = () => {
-  const { replayEvents, evidenceList } = useInvestigation();
+  const { replayEvents, evidenceList, reconstructionModel, activeCase } = useInvestigation();
 
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [speed, setSpeed] = useState<number>(1);
   const [modalEvidence, setModalEvidence] = useState<Evidence | null>(null);
+  const [viewMode, setViewMode] = useState<'topology' | 'scene'>('topology');
 
   // Playback timer loop
   useEffect(() => {
@@ -69,10 +76,10 @@ export const ReplayPage: React.FC = () => {
       >
         <div>
           <h1 style={{ fontSize: '1.75rem', fontWeight: 700, color: '#F5F7FF', letterSpacing: '-0.02em' }}>
-            Interactive Incident Replay
+            Interactive Incident Replay & 3D Cyber Twin
           </h1>
           <p style={{ fontSize: '0.875rem', color: '#A7B0C8', marginTop: '0.2rem' }}>
-            Time-synchronized playback engine reconstructing the step-by-step breach sequence
+            Time-synchronized playback engine reconstructing the step-by-step breach sequence across 3D infrastructure
           </p>
         </div>
 
@@ -86,11 +93,108 @@ export const ReplayPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Cyber Twin Spatial Stage */}
-      <CyberTwinStage
-        currentEvent={currentEvent}
-        onViewEvidence={handleViewEvidence}
-      />
+      {/* 3D Cyber Twin Spatial Stage */}
+      <div
+        style={{
+          background: '#0D1424',
+          border: '1px solid #1E2D4A',
+          borderRadius: '12px',
+          overflow: 'hidden',
+          boxShadow: '0 8px 30px rgba(0, 0, 0, 0.45)',
+          display: 'flex',
+          flexDirection: 'column'
+        }}
+      >
+        <div
+          style={{
+            padding: '0.75rem 1.25rem',
+            background: '#131D36',
+            borderBottom: '1px solid #24315C',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: '0.75rem'
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+            <Box size={18} color="#00B7FF" />
+            <div style={{ display: 'flex', background: '#080E22', padding: '2px', borderRadius: '6px', border: '1px solid #24315C' }}>
+              <button
+                onClick={() => setViewMode('topology')}
+                style={{
+                  background: viewMode === 'topology' ? '#151F46' : 'transparent',
+                  color: viewMode === 'topology' ? '#00B7FF' : '#717E9E',
+                  border: 'none',
+                  padding: '4px 10px',
+                  borderRadius: '4px',
+                  fontSize: '0.78rem',
+                  fontWeight: 600,
+                  cursor: 'pointer'
+                }}
+              >
+                3D Cyber Topology
+              </button>
+              <button
+                onClick={() => setViewMode('scene')}
+                style={{
+                  background: viewMode === 'scene' ? '#151F46' : 'transparent',
+                  color: viewMode === 'scene' ? '#00B7FF' : '#717E9E',
+                  border: 'none',
+                  padding: '4px 10px',
+                  borderRadius: '4px',
+                  fontSize: '0.78rem',
+                  fontWeight: 600,
+                  cursor: 'pointer'
+                }}
+              >
+                3D Physical Crime Scene (.GLB)
+              </button>
+            </div>
+
+            {currentEvent && (
+              <Badge variant="investigating" size="sm">
+                Active Step {currentIndex + 1}: {currentEvent.event_type}
+              </Badge>
+            )}
+          </div>
+
+          {currentEvent?.evidence_id && (
+            <Button
+              size="sm"
+              variant="outline"
+              icon={<FileCheck2 size={13} />}
+              onClick={() => handleViewEvidence(currentEvent.evidence_id)}
+            >
+              Verify Evidence [{currentEvent.evidence_id}]
+            </Button>
+          )}
+        </div>
+
+        <div style={{ height: '520px', width: '100%', position: 'relative' }}>
+          {viewMode === 'scene' ? (
+            <Investigation3DScene
+              caseId={activeCase?.case_id || 'CASE-001'}
+              selectedEvidenceId={currentEvent?.evidence_id}
+              onSelectEvidence={handleViewEvidence}
+              height="520px"
+              width="100%"
+            />
+          ) : reconstructionModel ? (
+            <LiveCyberTwin3DView
+              model={reconstructionModel}
+              selectedEventId={currentEvent?.event_id || null}
+              height="520px"
+              width="100%"
+            />
+          ) : (
+            <CyberTwinStage
+              currentEvent={currentEvent}
+              onViewEvidence={handleViewEvidence}
+            />
+          )}
+        </div>
+      </div>
 
       {/* Replay Controls & Scrubber */}
       <ReplayControls
@@ -146,7 +250,7 @@ export const ReplayPage: React.FC = () => {
 
             return (
               <div
-                key={evt.event_id}
+                key={evt.event_id || idx}
                 onClick={() => {
                   setIsPlaying(false);
                   setCurrentIndex(idx);
@@ -177,7 +281,7 @@ export const ReplayPage: React.FC = () => {
                   <Badge variant={evt.severity} size="sm">{evt.severity}</Badge>
                 </div>
                 <div style={{ fontSize: '0.8rem', fontWeight: 600, color: '#F5F7FF', marginTop: '0.25rem' }}>
-                  {evt.event_type.replace('_', ' ').toUpperCase()}
+                  {evt.event_type.replace(/_/g, ' ').toUpperCase()}
                 </div>
                 <div style={{ fontSize: '0.72rem', color: '#A7B0C8', marginTop: '0.25rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {evt.description}

@@ -34,17 +34,23 @@ export const TimelineItem: React.FC<TimelineItemProps> = ({
         return <AlertTriangle size={18} color="#ef4444" />;
       case 'successful_auth':
       case 'login':
+      case 'suspicious_login':
         return <LogIn size={18} color="#10b981" />;
       case 'privilege_escalation':
         return <KeyRound size={18} color="#ef4444" />;
       case 'process_execution':
+      case 'suspicious_process_spawn':
         return <Cpu size={18} color="#f59e0b" />;
       case 'file_access':
+      case 'sensitive_file_access':
       case 'suspicious_command':
         return <FileCode size={18} color="#38bdf8" />;
       case 'network_connection':
+      case 'internal_server_connection':
+      case 'suspicious_network_connection':
         return <Globe size={18} color="#a855f7" />;
       case 'data_exfiltration':
+      case 'outbound_data_transfer':
         return <UploadCloud size={18} color="#ef4444" />;
       case 'logout':
         return <LogOut size={18} color="#64748b" />;
@@ -102,22 +108,41 @@ export const TimelineItem: React.FC<TimelineItemProps> = ({
             </span>
           </div>
 
-          {event.mitre_technique && (
-            <span
-              style={{
-                fontSize: '0.7rem',
-                fontFamily: 'JetBrains Mono, monospace',
-                color: '#D62CFF',
-                background: 'rgba(214, 44, 255, 0.1)',
-                padding: '0.2rem 0.5rem',
-                borderRadius: '6px',
-                border: '1px solid rgba(214, 44, 255, 0.25)',
-                fontWeight: 600
-              }}
-            >
-              {event.mitre_technique}
-            </span>
-          )}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexWrap: 'wrap' }}>
+            {event.stage && (
+              <span
+                style={{
+                  fontSize: '0.7rem',
+                  color: '#4DEBFF',
+                  background: 'rgba(77, 235, 255, 0.1)',
+                  padding: '0.2rem 0.5rem',
+                  borderRadius: '6px',
+                  border: '1px solid rgba(77, 235, 255, 0.25)',
+                  fontWeight: 600
+                }}
+              >
+                {event.stage}
+              </span>
+            )}
+            {(event.mitre_technique || event.mitre_technique_id) && (
+              <span
+                style={{
+                  fontSize: '0.7rem',
+                  fontFamily: 'JetBrains Mono, monospace',
+                  color: '#D62CFF',
+                  background: 'rgba(214, 44, 255, 0.1)',
+                  padding: '0.2rem 0.5rem',
+                  borderRadius: '6px',
+                  border: '1px solid rgba(214, 44, 255, 0.25)',
+                  fontWeight: 600
+                }}
+              >
+                {event.mitre_technique_id
+                  ? `${event.mitre_technique_id} • ${event.mitre_technique_name || event.mitre_technique}`
+                  : event.mitre_technique}
+              </span>
+            )}
+          </div>
         </div>
 
         <div style={{ fontSize: '0.9rem', fontWeight: 600, color: '#F5F7FF', marginTop: '0.35rem' }}>
@@ -145,8 +170,10 @@ export const TimelineItem: React.FC<TimelineItemProps> = ({
         {/* Supporting Evidence link button */}
         <div style={{ marginTop: '0.75rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <button
+            type="button"
             onClick={(e) => {
               e.stopPropagation();
+              e.preventDefault();
               onViewEvidence(event.evidence_id);
             }}
             style={{
@@ -166,9 +193,28 @@ export const TimelineItem: React.FC<TimelineItemProps> = ({
             Evidence: {event.evidence_id} <ExternalLink size={12} />
           </button>
 
-          <span style={{ fontSize: '0.75rem', color: isSelected ? '#00B7FF' : '#A7B0C8', display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              e.preventDefault();
+              onSelect(event);
+            }}
+            style={{
+              background: isSelected ? 'rgba(0, 183, 255, 0.2)' : 'transparent',
+              border: isSelected ? '1px solid #00B7FF' : '1px solid transparent',
+              borderRadius: '4px',
+              padding: '0.2rem 0.4rem',
+              fontSize: '0.75rem',
+              color: isSelected ? '#00B7FF' : '#A7B0C8',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.2rem',
+              cursor: 'pointer'
+            }}
+          >
             {isSelected ? 'Inspecting' : 'Click to inspect'} <ChevronRight size={14} />
-          </span>
+          </button>
         </div>
       </div>
     </div>

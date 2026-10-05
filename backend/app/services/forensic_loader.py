@@ -14,6 +14,7 @@ from app.schemas.event import EventCreate
 from app.services.hashing import calculate_sha256
 
 # Standard evidence mappings matching the forensic engine's milestone 1 artifacts
+# Standard evidence mappings matching the forensic engine and PPT artifacts
 DEFAULT_FORENSIC_EVIDENCE = [
     {
         "evidence_id": "EVD-001",
@@ -21,6 +22,12 @@ DEFAULT_FORENSIC_EVIDENCE = [
         "source": "auth.log",
         "timestamp": "2026-10-04T10:15:00",
         "content": "2026-10-04 10:15:00 auth.log sshd[12410]: Accepted password for employee01 from 192.168.1.20 port 44321 ssh2",
+        "filename": "auth.log",
+        "location": "Workstation Cubicle 14 (Login Terminal)",
+        "description": "Linux/SSH authentication log capturing credential acceptance for employee01.",
+        "collector": "Identity & Access Management Logger",
+        "processing_status": "verified",
+        "media_path": "/evidence/auth.log",
     },
     {
         "evidence_id": "EVD-002",
@@ -28,6 +35,12 @@ DEFAULT_FORENSIC_EVIDENCE = [
         "source": "endpoint.log",
         "timestamp": "2026-10-04T10:18:30",
         "content": '2026-10-04 10:18:30 [ENDPOINT] Host=WORKSTATION-01 User=employee01 Process=powershell.exe CommandLine="powershell.exe -enc SQBFAFgA" Action=suspicious_process_spawn PID=4912',
+        "filename": "endpoint.log",
+        "location": "Workstation Cubicle 14 (WORKSTATION-01)",
+        "description": "EDR process telemetry logging obfuscated Base64 PowerShell spawn PID 4912.",
+        "collector": "CrowdStrike / Sysmon Agent",
+        "processing_status": "verified",
+        "media_path": "/evidence/endpoint.log",
     },
     {
         "evidence_id": "EVD-003",
@@ -35,6 +48,12 @@ DEFAULT_FORENSIC_EVIDENCE = [
         "source": "server.log",
         "timestamp": "2026-10-04T10:21:05",
         "content": "2026-10-04 10:21:05 [SERVER] Host=SRV-CORP-FILE ClientIP=192.168.1.20 User=employee01 Service=SMB Action=session_connect Status=SUCCESS",
+        "filename": "server.log",
+        "location": "Server Room Entrance (Hallway)",
+        "description": "Windows Server audit event 4624 establishing lateral SMB session from 192.168.1.20.",
+        "collector": "Windows Event Forwarding (WEF)",
+        "processing_status": "verified",
+        "media_path": "/evidence/server.log",
     },
     {
         "evidence_id": "EVD-004",
@@ -42,6 +61,12 @@ DEFAULT_FORENSIC_EVIDENCE = [
         "source": "file_access.log",
         "timestamp": "2026-10-04T10:22:45",
         "content": '2026-10-04 10:22:45 [FILE_AUDIT] Host=SRV-CORP-FILE User=employee01 File="\\\\SRV-CORP-FILE\\confidential\\customer_data.csv" Access=READ Status=SUCCESS',
+        "filename": "file_access.log",
+        "location": "Server Rack SRV-CORP-FILE (Datacenter)",
+        "description": "File system access audit log confirming unauthorized read access to customer_data.csv.",
+        "collector": "NTFS Audit Monitor",
+        "processing_status": "verified",
+        "media_path": "/evidence/file_access.log",
     },
     {
         "evidence_id": "EVD-005",
@@ -49,6 +74,64 @@ DEFAULT_FORENSIC_EVIDENCE = [
         "source": "firewall.log",
         "timestamp": "2026-10-04T10:25:00",
         "content": "2026-10-04 10:25:00 [FIREWALL] PROTO=TCP SRC=192.168.1.20:49152 DST=198.51.100.24:443 ACTION=ALLOW BYTES_SENT=8452100 BYTES_RCVD=15200",
+        "filename": "firewall.log",
+        "location": "Perimeter Firewall Gateway",
+        "description": "Palo Alto firewall flow record confirming 8.45 MB outbound exfiltration to 198.51.100.24.",
+        "collector": "Perimeter Network Sensor",
+        "processing_status": "verified",
+        "media_path": "/evidence/firewall.log",
+    },
+    {
+        "evidence_id": "EVD-006",
+        "type": "photo_evidence",
+        "source": "workstation_photo.jpg",
+        "timestamp": "2026-10-04T10:16:00",
+        "content": "workstation_photo_jpg_simulated_bytes",
+        "filename": "workstation_photo.jpg",
+        "location": "Workstation Cubicle 14 (Desk Surface)",
+        "description": "Scene photograph of employee01 physical desk showing monitor terminal and active USB indicator.",
+        "collector": "Field Forensics Unit Lead",
+        "processing_status": "processed_by_opencv",
+        "media_path": "/evidence/workstation_photo.jpg",
+    },
+    {
+        "evidence_id": "EVD-007",
+        "type": "cctv_footage",
+        "source": "cctv_server_room.mp4",
+        "timestamp": "2026-10-04T10:20:45",
+        "content": "cctv_server_room_mp4_simulated_bytes",
+        "filename": "cctv_server_room.mp4",
+        "location": "Server Room Entrance Door (Hallway)",
+        "description": "Simulated CCTV surveillance recording verifying badge swipe attempt matching lateral SMB movement.",
+        "collector": "Physical Access Control CAM-04",
+        "processing_status": "processed_by_opencv",
+        "media_path": "/evidence/cctv_server_room.mp4",
+    },
+    {
+        "evidence_id": "EVD-008",
+        "type": "physical_evidence",
+        "source": "tampered_usb_drive.jpg",
+        "timestamp": "2026-10-04T10:17:15",
+        "content": "tampered_usb_drive_jpg_simulated_bytes",
+        "filename": "tampered_usb_drive.jpg",
+        "location": "Workstation Cubicle 14 (PC Tower USB Port 2)",
+        "description": "Recovered physical USB flash drive containing staged payload script. Custody seal intact.",
+        "collector": "Hardware Evidence Specialist",
+        "processing_status": "verified",
+        "media_path": "/evidence/tampered_usb_drive.jpg",
+    },
+    {
+        "evidence_id": "EVD-009",
+        "type": "document_evidence",
+        "source": "forensic_intake_report.txt",
+        "timestamp": "2026-10-04T10:12:00",
+        "content": "CYBER INCIDENT INTAKE & FORENSIC EVIDENCE CUSTODY RECORD",
+        "filename": "forensic_intake_report.txt",
+        "location": "SOC Incident Queue (Terminal A)",
+        "description": "Formal security operations center incident intake report initiating case CASE-001.",
+        "collector": "SOC Shift Supervisor",
+        "processing_status": "verified",
+        "media_path": "/evidence/forensic_intake_report.txt",
     },
 ]
 
@@ -63,7 +146,6 @@ def _find_data_file(rel_path: Union[str, Path]) -> Path:
         if candidate.is_file():
             return candidate
     return p
-
 
 
 def load_normalized_events_file(file_path: Union[str, Path]) -> List[Dict[str, Any]]:
@@ -81,7 +163,6 @@ def load_normalized_events_file(file_path: Union[str, Path]) -> List[Dict[str, A
     return data
 
 
-
 def ensure_forensic_evidence_records(db: Session, case_id: str) -> None:
     """Ensure baseline forensic evidence records exist in the database so foreign keys resolve."""
     for ev_info in DEFAULT_FORENSIC_EVIDENCE:
@@ -92,13 +173,28 @@ def ensure_forensic_evidence_records(db: Session, case_id: str) -> None:
         ).first()
 
         if not existing:
+            real_file = Path("data/evidence") / ev_info.get("filename", "")
+            if real_file.is_file():
+                ev_hash = calculate_sha256(real_file)
+                file_size = real_file.stat().st_size
+            else:
+                ev_hash = calculate_sha256(ev_info["content"])
+                file_size = len(ev_info["content"])
+
             db_ev = EvidenceModel(
                 evidence_id=ev_id,
                 case_id=case_id,
                 type=ev_info["type"],
                 source=ev_info["source"],
                 timestamp=ev_info["timestamp"],
-                hash=calculate_sha256(ev_info["content"]),
+                hash=ev_hash,
+                filename=ev_info.get("filename"),
+                file_size_bytes=file_size,
+                location=ev_info.get("location"),
+                description=ev_info.get("description"),
+                collector=ev_info.get("collector"),
+                processing_status=ev_info.get("processing_status", "verified"),
+                media_path=ev_info.get("media_path"),
             )
             db.add(db_ev)
     db.commit()
