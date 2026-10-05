@@ -39,6 +39,20 @@ Digital forensic investigators face critical friction when analyzing enterprise 
 
 ---
 
+## Prototype Screenshots
+
+> [!NOTE]
+> Prototype screenshots and UI demonstration captures should be placed in `docs/screenshots/`. Actual UI captures of the workbench, 2D Cytoscape graph, and 3D Cyber Twin should be added prior to final hackathon evaluation.
+
+| View | Description | Screenshot Location |
+|---|---|---|
+| **Investigation Workbench** | Synchronized investigation dashboard with case selector and incident metrics | `docs/screenshots/workbench.png` *(pending capture)* |
+| **2D Relationship Graph** | Force-directed entity-relationship network with attack-path isolation | `docs/screenshots/relationship-graph.png` *(pending capture)* |
+| **Chronological Timeline** | MITRE ATT&CK classified event progression and tactical badges | `docs/screenshots/timeline.png` *(pending capture)* |
+| **3D Cyber Twin Replay** | Three.js spatial enterprise zone visualization and threat replay | `docs/screenshots/3d-cyber-twin.png` *(pending capture)* |
+
+---
+
 ## 3. Technology Stack & Implementation Architecture
 
 | Layer | Prototype Implementation | Scalable Production Target |
@@ -106,6 +120,22 @@ Cyber-Twin/
 │   └── processed/            # Normalized events and incident_reconstruction.json
 └── docs/                     # Architectural and integration documentation
 ```
+
+---
+
+## Deployment
+
+The current prototype is intended to run locally.
+
+**Live deployment:** Not publicly deployed.
+
+---
+
+## Credentials & Setup
+
+Cyber-Twin does not require external credentials or API keys for the local prototype.
+
+All required data fixtures, synthetic evidence logs, and configuration defaults are bundled within the repository. Follow the [Running the Prototype](#6-running-the-prototype) instructions below to run the complete stack locally.
 
 ---
 
