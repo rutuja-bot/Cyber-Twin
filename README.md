@@ -41,15 +41,35 @@ Digital forensic investigators face critical friction when analyzing enterprise 
 
 ## Prototype Screenshots
 
-> [!NOTE]
-> Prototype screenshots and UI demonstration captures should be placed in `docs/screenshots/`. Actual UI captures of the workbench, 2D Cytoscape graph, and 3D Cyber Twin should be added prior to final hackathon evaluation.
+### 1. Investigation Workbench
+Unified triage dashboard displaying case metrics, synchronized chronological timeline, 2D Cytoscape relationship graph, and 3D Cyber Twin infrastructure preview.
 
-| View | Description | Screenshot Location |
-|---|---|---|
-| **Investigation Workbench** | Synchronized investigation dashboard with case selector and incident metrics | `docs/screenshots/workbench.png` *(pending capture)* |
-| **2D Relationship Graph** | Force-directed entity-relationship network with attack-path isolation | `docs/screenshots/relationship-graph.png` *(pending capture)* |
-| **Chronological Timeline** | MITRE ATT&CK classified event progression and tactical badges | `docs/screenshots/timeline.png` *(pending capture)* |
-| **3D Cyber Twin Replay** | Three.js spatial enterprise zone visualization and threat replay | `docs/screenshots/3d-cyber-twin.png` *(pending capture)* |
+![Investigation Workbench](docs/screenshots/dashboard.jpeg)
+
+### 2. Entity & Attack Path Graph
+Interactive topological network reconstruction mapping identities, workstations, processes, sensitive files, and C2 endpoints with contextual node inspection.
+
+![Entity & Attack Path Graph](docs/screenshots/graph.jpeg)
+
+### 3. Chronological Incident Timeline & Event Inspector
+Sequenced forensic progression mapped to MITRE ATT&CK tactics with tactical badges, event details, and raw source log provenance.
+
+![Chronological Incident Timeline](docs/screenshots/timeline.jpeg)
+
+### 4. Interactive Incident Replay & 3D Cyber Twin
+Spatial WebGL digital twin organizing enterprise infrastructure into security zones with time-synchronized breach progression replay controls.
+
+![Interactive Incident Replay & 3D Cyber Twin](docs/screenshots/replay.jpeg)
+
+### 5. Evidence Vault & Cryptographic Chain of Custody
+Multi-source log intake cataloging raw forensic artifacts (`auth.log`, `endpoint.log`, `server.log`, `file_access.log`, `firewall.log`) verified with SHA-256 hashes.
+
+![Evidence Vault & Cryptographic Chain of Custody](docs/screenshots/evidence.jpeg)
+
+### 6. Incident Cases Dossier
+Case management workspace listing active investigations, severity classifications, investigation statuses, and linked evidence dossiers.
+
+![Incident Cases Dossier](docs/screenshots/cases.jpeg)
 
 ---
 
