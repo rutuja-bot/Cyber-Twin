@@ -1,9 +1,6 @@
 # Cyber-Twin
 **Cyber Twin — Interactive Cyber Incident Reconstruction & Replay for Digital Forensic Investigation**
 
-*She Solves 3.0 (Round 2) — Prototype Submission*
-*Team:* **Let Her Code**
-
 ---
 
 ## 1. Executive Summary & Problem Statement
@@ -17,7 +14,7 @@ Digital forensic investigators face critical friction when analyzing enterprise 
 
 ---
 
-## 2. Core Solution Pillars (Round 1 PPT Alignment)
+## 2. Core Solution Pillars
 
 1. **Incident Reconstruction**:
    - Ingestion and parsing of heterogeneous enterprise logs (`auth.log`, `endpoint.log`, `server.log`, `file_access.log`, `firewall.log`).
@@ -84,9 +81,6 @@ Case management workspace listing active investigations, severity classification
 | **Database & Models** | SQLite (SQLAlchemy ORM, in-memory & file storage) | PostgreSQL (Relational) + Neo4j (Graph DB) |
 | **Forensic Engine** | Python 3 regex & structured log parsers, STIX 2.1 graph correlation | Apache Kafka / Flink streaming + STIX 2.1 pipeline |
 | **Evidence Integrity** | SHA-256 cryptographic hashing & line-level evidence anchors | SHA-256 + Immutable Ledger / WORM storage |
-
-*Note on Physical vs. Digital Forensics:*
-The Cyber Twin prototype is strictly focused on **enterprise digital cybersecurity log forensics**. References in early exploratory concepts to physical crime scenes, CCTV, Blender, or OpenCV are part of future multi-modal research roadmap initiatives, while the active prototype implements pure digital log parsing, network topology, and 3D cyber infrastructure replay.
 
 ---
 
@@ -159,12 +153,6 @@ All required data fixtures, synthetic evidence logs, and configuration defaults 
 
 ---
 
-## License
-
-Cyber-Twin is licensed under the [MIT License](LICENSE).
-
----
-
 ## 6. Running the Prototype
 
 ### Prerequisites
@@ -201,3 +189,10 @@ node frontend/src/visualization/verifyCoreIntegration.js
 # Frontend production build:
 npm --prefix frontend run build
 ```
+---
+
+## 7. Liscence
+
+Cyber-Twin is licensed under the [MIT License](LICENSE).
+
+---
